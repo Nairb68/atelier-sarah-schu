@@ -153,8 +153,10 @@ const server = http.createServer((req, res) => {
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
 
     const headers = { 'Content-Type': contentType };
-    if (ext === '.json') {
+    if (ext === '.json' || ext === '.html' || ext === '.js') {
       headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+      headers['Pragma'] = 'no-cache';
+      headers['Expires'] = '0';
     }
 
     res.writeHead(200, headers);

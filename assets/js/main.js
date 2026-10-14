@@ -100,6 +100,7 @@
 
     // Hero Showcase
     if (a.heroEyebrow) updateElementText('#hero-eyebrow-text', a.heroEyebrow);
+    if (a.quote) updateElementText('#hero-title', a.quote);
     if (a.heroBio) updateElementText('#hero-desc-text', a.heroBio);
     if (a.heroImage) {
       updateElementSrc('#hero-main-img', a.heroImage);

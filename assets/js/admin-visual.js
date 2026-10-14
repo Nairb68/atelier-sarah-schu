@@ -1401,6 +1401,22 @@
         }
       }
     });
+
+    // Créations du portfolio éditées in-situ
+    document.querySelectorAll('.artwork-card').forEach(card => {
+      const projId = card.getAttribute('data-project-id');
+      const p = siteData.projects?.find(x => x.id === projId);
+      if (p) {
+        const titleEl = card.querySelector('[data-field="title"]');
+        const catLabelEl = card.querySelector('[data-field="categoryLabel"]');
+        const locEl = card.querySelector('[data-field="location"]');
+        const techEl = card.querySelector('[data-field="technique"]');
+        if (titleEl) p.title = titleEl.textContent.trim().replace(/^«\s*|\s*»$/g, '');
+        if (catLabelEl) p.categoryLabel = catLabelEl.textContent.trim();
+        if (locEl) p.location = locEl.textContent.trim();
+        if (techEl) p.technique = techEl.textContent.trim();
+      }
+    });
   }
 
   /**
