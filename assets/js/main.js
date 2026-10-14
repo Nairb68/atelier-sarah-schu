@@ -569,28 +569,56 @@
    * Coordonnées & Liens
    */
   function renderContactInfo() {
+    if (!siteData || !siteData.artist) return;
     const a = siteData.artist;
-    updateElementText('#contact-phone-text', a.phone);
-    updateElementText('#contact-email-text', a.email);
-    updateElementText('#contact-location-text', a.location);
+    const cleanPhone = (a.phoneClean || a.phone || '').replace(/\s+/g, '');
 
-    const phoneLink = document.getElementById('contact-phone-link');
-    if (phoneLink) {
-      phoneLink.href = `tel:${a.phoneClean || a.phone.replace(/\s+/g, '')}`;
-      phoneLink.textContent = a.phone;
-    }
+    // Téléphone : synchronisation de tous les liens et textes
+    const phoneLinks = document.querySelectorAll('a[href^="tel:"], .contact-phone-link, #contact-phone-link, #mobile-nav-phone');
+    phoneLinks.forEach(link => {
+      link.href = `tel:${cleanPhone}`;
+    });
+    const phoneTexts = document.querySelectorAll('#contact-phone-text, .contact-phone-text, #mobile-nav-phone-text');
+    phoneTexts.forEach(el => {
+      el.textContent = a.phone;
+    });
 
-    const emailLink = document.getElementById('contact-email-link');
-    if (emailLink) {
-      emailLink.href = `mailto:${a.email}`;
-      emailLink.textContent = a.email;
-    }
+    // Email : synchronisation de tous les liens et textes
+    const emailLinks = document.querySelectorAll('a[href^="mailto:"], .contact-email-link, #contact-email-link, #footer-email-link');
+    emailLinks.forEach(link => {
+      link.href = `mailto:${a.email}`;
+    });
+    const emailTexts = document.querySelectorAll('#contact-email-text, .contact-email-text');
+    emailTexts.forEach(el => {
+      el.textContent = a.email;
+    });
 
-    const igLinks = document.querySelectorAll('.link-instagram');
-    igLinks.forEach(link => { link.href = a.instagram; });
+    // Localisation
+    const locEls = document.querySelectorAll('#contact-location-text, .contact-location-text');
+    locEls.forEach(el => {
+      el.textContent = a.location;
+    });
 
-    const fbLinks = document.querySelectorAll('.link-facebook');
-    fbLinks.forEach(link => { link.href = a.facebook; });
+    // Instagram
+    const igLinks = document.querySelectorAll('.link-instagram, .nav-link-ig, a[href*="instagram.com"]');
+    igLinks.forEach(link => {
+      if (a.instagram) link.href = a.instagram;
+    });
+    const igHandles = document.querySelectorAll('.contact-ig-handle, #contact-ig-text, #header-ig-text, #mobile-ig-text');
+    igHandles.forEach(el => {
+      if (a.instagramHandle) {
+        el.textContent = a.instagramHandle;
+      } else if (a.instagram) {
+        const parts = a.instagram.replace(/\/+$/, '').split('/');
+        el.textContent = '@' + parts[parts.length - 1];
+      }
+    });
+
+    // Facebook
+    const fbLinks = document.querySelectorAll('.link-facebook, a[href*="facebook.com"]');
+    fbLinks.forEach(link => {
+      if (a.facebook) link.href = a.facebook;
+    });
   }
 
   /* ==========================================================================

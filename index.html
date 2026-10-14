@@ -80,8 +80,8 @@
           <li><a href="#domaines" class="nav-link">Aquarelle</a></li>
           <li><a href="#artiste" class="nav-link">L'artiste</a></li>
           <li>
-            <a href="https://www.instagram.com/sarahschu.art" target="_blank" rel="noopener" class="nav-link nav-link-ig">
-              <i class="fa-brands fa-instagram"></i> @sarahschu.art
+            <a href="https://www.instagram.com/sarahschu.art" target="_blank" rel="noopener" class="nav-link nav-link-ig link-instagram">
+              <i class="fa-brands fa-instagram"></i> <span class="contact-ig-handle">@sarahschu.art</span>
             </a>
           </li>
         </ul>
@@ -122,12 +122,12 @@
       <li><a href="#contact" class="mobile-nav-link">Demande de devis</a></li>
     </ul>
     <div class="mobile-nav-footer">
-      <a href="tel:+33675450497" class="btn-header-cta" style="justify-content: center; width: 100%; padding: 0.6rem 1rem; font-size: 0.85rem;">
-        <i class="fa-solid fa-phone"></i> 06 75 45 04 97
+      <a href="tel:+33675450497" id="mobile-nav-phone" class="btn-header-cta contact-phone-link" style="justify-content: center; width: 100%; padding: 0.6rem 1rem; font-size: 0.85rem;">
+        <i class="fa-solid fa-phone"></i> <span id="mobile-nav-phone-text" class="contact-phone-text">06 75 45 04 97</span>
       </a>
       <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.82rem; margin-top: 0.2rem;">
-        <a href="https://www.instagram.com/sarahschu.art" target="_blank" rel="noopener" style="color: var(--text-muted); font-weight: 500;">
-          <i class="fa-brands fa-instagram"></i> @sarahschu.art
+        <a href="https://www.instagram.com/sarahschu.art" target="_blank" rel="noopener" class="link-instagram" style="color: var(--text-muted); font-weight: 500;">
+          <i class="fa-brands fa-instagram"></i> <span class="contact-ig-handle">@sarahschu.art</span>
         </a>
         <a href="admin.html" style="color: var(--text-faint); font-size: 0.76rem;">
           <i class="fa-solid fa-lock"></i> Espace Artiste
@@ -164,7 +164,7 @@
             <a href="#catalogue" class="btn-dark-pill">
               Découvrir les fresques &darr;
             </a>
-            <a href="https://www.instagram.com/sarahschu.art" target="_blank" rel="noopener" class="btn-underline-link">
+            <a href="https://www.instagram.com/sarahschu.art" target="_blank" rel="noopener" class="btn-underline-link link-instagram">
               Écrire sur Instagram &#8599;
             </a>
           </div>
@@ -500,7 +500,9 @@
                   <div class="contact-item-icon"><i class="fa-solid fa-phone"></i></div>
                   <div>
                     <div class="contact-item-lbl">Téléphone</div>
-                    <a href="tel:+33675450497" class="contact-item-val">06 75 45 04 97</a>
+                    <a href="tel:+33675450497" id="contact-phone-link" class="contact-item-val contact-phone-link">
+                      <span id="contact-phone-text" class="contact-phone-text">06 75 45 04 97</span>
+                    </a>
                   </div>
                 </div>
 
@@ -508,7 +510,9 @@
                   <div class="contact-item-icon"><i class="fa-solid fa-envelope"></i></div>
                   <div>
                     <div class="contact-item-lbl">E-mail</div>
-                    <a href="mailto:sarah.schu16@gmail.com" class="contact-item-val">sarah.schu16@gmail.com</a>
+                    <a href="mailto:sarah.schu16@gmail.com" id="contact-email-link" class="contact-item-val contact-email-link">
+                      <span id="contact-email-text" class="contact-email-text">sarah.schu16@gmail.com</span>
+                    </a>
                   </div>
                 </div>
 
@@ -516,7 +520,10 @@
                   <div class="contact-item-icon"><i class="fa-solid fa-location-dot"></i></div>
                   <div>
                     <div class="contact-item-lbl">Localisation de l'Atelier</div>
-                    <div class="contact-item-val">Zimmerbach / Colmar / Munster<br><span style="font-size: 0.85rem; color: var(--text-muted);">Déplacements en Alsace &amp; France</span></div>
+                    <div class="contact-item-val">
+                      <span id="contact-location-text" class="contact-location-text">Zimmerbach / Colmar / Munster</span><br>
+                      <span style="font-size: 0.85rem; color: var(--text-muted);">Déplacements en Alsace &amp; France</span>
+                    </div>
                   </div>
                 </div>
 
@@ -524,7 +531,9 @@
                   <div class="contact-item-icon"><i class="fa-brands fa-instagram"></i></div>
                   <div>
                     <div class="contact-item-lbl">Instagram officiel</div>
-                    <a href="https://www.instagram.com/sarahschu.art" target="_blank" rel="noopener" class="contact-item-val">@sarahschu.art</a>
+                    <a href="https://www.instagram.com/sarahschu.art" target="_blank" rel="noopener" id="contact-ig-link" class="contact-item-val link-instagram">
+                      <span class="contact-ig-handle">@sarahschu.art</span>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -560,13 +569,13 @@
             Fresques personnalisées, trompe-l'œil poétiques &amp; décors peints à la main en Alsace.
           </p>
           <div class="footer-social-row">
-            <a href="https://www.instagram.com/sarahschu.art" target="_blank" rel="noopener" aria-label="Instagram">
+            <a href="https://www.instagram.com/sarahschu.art" target="_blank" rel="noopener" aria-label="Instagram" class="link-instagram">
               <i class="fa-brands fa-instagram"></i>
             </a>
-            <a href="https://www.facebook.com/profile.php?id=100017365335884" target="_blank" rel="noopener" aria-label="Facebook">
+            <a href="https://www.facebook.com/profile.php?id=100017365335884" target="_blank" rel="noopener" aria-label="Facebook" class="link-facebook">
               <i class="fa-brands fa-facebook"></i>
             </a>
-            <a href="mailto:sarah.schu16@gmail.com" aria-label="Email">
+            <a href="mailto:sarah.schu16@gmail.com" aria-label="Email" id="footer-email-link" class="contact-email-link">
               <i class="fa-solid fa-envelope"></i>
             </a>
           </div>
@@ -671,6 +680,6 @@
   </div>
 
   <!-- Scripts -->
-  <script src="assets/js/main.js?v=2"></script>
+  <script src="assets/js/main.js?v=3"></script>
 </body>
 </html>

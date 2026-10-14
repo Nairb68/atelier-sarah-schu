@@ -377,6 +377,7 @@
     setText('#contact-phone-text', a.phone);
     setText('#contact-email-text', a.email);
     setText('#contact-location-text', a.location);
+    setText('#contact-instagram-text', a.instagramHandle || (a.instagram ? '@' + a.instagram.replace(/\/+$/, '').split('/').pop() : '@sarahschu.art'));
 
     // Rendu du Catalogue des Œuvres
     renderVisualPortfolio();
@@ -922,7 +923,8 @@
       '#about-bio-text',
       '#contact-phone-text',
       '#contact-email-text',
-      '#contact-location-text'
+      '#contact-location-text',
+      '#contact-instagram-text'
     ];
 
     editables.forEach(sel => {
@@ -1319,6 +1321,11 @@
     a.phoneClean = a.phone.replace(/\s+/g, '');
     a.email = getText('#contact-email-text') || a.email;
     a.location = getText('#contact-location-text') || a.location;
+    const igVal = getText('#contact-instagram-text');
+    if (igVal) {
+      a.instagramHandle = igVal.startsWith('@') ? igVal : '@' + igVal.replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, '');
+      a.instagram = igVal.startsWith('http') ? igVal : `https://www.instagram.com/${igVal.replace('@', '')}`;
+    }
 
     // Chiffres Clés
     document.querySelectorAll('.trust-item').forEach(item => {
