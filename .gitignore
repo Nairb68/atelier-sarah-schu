@@ -1,0 +1,11 @@
+# Systèmes d'exploitation
+.DS_Store
+Thumbs.db
+
+# Dépendances Node.js
+node_modules/
+npm-debug.log*
+
+# Fichiers temporaires
+.env
+*.tmp

@@ -1,0 +1,12 @@
+{
+  "name": "sarah-schu-art",
+  "version": "1.0.0",
+  "description": "Site vitrine et espace d'administration visuel pour l'artiste Sarah Schu",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": ["sarah-schu", "portfolio", "fresque-murale", "artiste", "vitrine"],
+  "author": "Atelier Sarah Schu",
+  "license": "MIT"
+}

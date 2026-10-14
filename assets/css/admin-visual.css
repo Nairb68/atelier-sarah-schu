@@ -1,0 +1,675 @@
+/* ==========================================================================
+   ATELIER SARAH SCHU — CSS DE L'ÉDITEUR VISUEL EN VUE RÉELLE (IN SITU)
+   Permet d'éditer le site directement sans boîtes de dialogue
+   ========================================================================== */
+
+/* Barre Administrative Flottante */
+.visual-admin-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #1C1917;
+  color: #FAF8F5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  z-index: 10000;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.35);
+  font-family: var(--font-sans);
+}
+
+body.admin-mode {
+  padding-top: 60px;
+}
+
+.admin-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.admin-bar-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #ffffff;
+}
+
+.admin-bar-badge {
+  background: rgba(175, 82, 57, 0.25);
+  color: #E88469;
+  border: 1px solid rgba(175, 82, 57, 0.4);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+}
+
+.admin-bar-status {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.8rem;
+  color: #A3A19D;
+}
+
+.admin-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22C55E;
+}
+
+.admin-status-dot.dirty {
+  background: #F59E0B;
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.admin-bar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.btn-admin-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn-admin-preview {
+  background: rgba(255, 255, 255, 0.1);
+  color: #FAF8F5;
+}
+
+.btn-admin-preview:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.btn-admin-add {
+  background: rgba(255, 255, 255, 0.12);
+  color: #FAF8F5;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-admin-add:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-admin-save {
+  background: #AF5239;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(175, 82, 57, 0.4);
+}
+
+.btn-admin-save:hover {
+  background: #92402a;
+  transform: translateY(-1px);
+}
+
+.btn-admin-exit {
+  background: transparent;
+  color: #A3A19D;
+  padding: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.btn-admin-exit:hover {
+  color: #ffffff;
+}
+
+/* Éléments éditables en direct (contenteditable) */
+[contenteditable="true"] {
+  outline: none;
+  cursor: text;
+  position: relative;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+body.admin-mode [contenteditable="true"]:hover {
+  outline: 1.5px dashed rgba(175, 82, 57, 0.6);
+  outline-offset: 4px;
+  background: rgba(175, 82, 57, 0.04);
+  border-radius: 4px;
+}
+
+body.admin-mode [contenteditable="true"]:focus {
+  outline: 2px solid #AF5239;
+  outline-offset: 4px;
+  background: #ffffff;
+  box-shadow: 0 4px 15px rgba(175, 82, 57, 0.15);
+  border-radius: 4px;
+}
+
+/* Désactivation du mode édition pour aperçu pur */
+body.preview-active [contenteditable="true"]:hover,
+body.preview-active [contenteditable="true"]:focus {
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+body.preview-active .photo-change-overlay,
+body.preview-active .card-admin-actions,
+body.preview-active .card-add-new-project,
+body.preview-active .btn-admin-change-photo {
+  display: none !important;
+}
+
+/* Boutons de Remplacement Photo au Survol */
+.photo-change-overlay {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(28, 25, 23, 0.88);
+  backdrop-filter: blur(4px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.45rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  z-index: 80;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.artwork-frame:hover .photo-change-overlay,
+.arch-window:hover .photo-change-overlay,
+.artist-arch-frame:hover .photo-change-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.photo-change-overlay:hover {
+  background: #AF5239;
+  border-color: #AF5239;
+}
+
+/* Bouton Dédié Changement Photo Portrait Artiste */
+.btn-admin-change-photo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+  width: 100%;
+  padding: 0.65rem 1.2rem;
+  background: #AF5239;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(175, 82, 57, 0.35);
+}
+
+.btn-admin-change-photo:hover {
+  background: #92402a;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(175, 82, 57, 0.45);
+}
+
+/* Boutons d'Action sur les Cartes Œuvres */
+.card-admin-actions {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  display: flex;
+  gap: 0.4rem;
+  z-index: 70;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.artwork-card:hover .card-admin-actions {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.btn-card-admin {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(28, 25, 23, 0.85);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.btn-card-admin:hover {
+  transform: scale(1.1);
+}
+
+.btn-card-admin.delete:hover {
+  background: #DC2626;
+  border-color: #DC2626;
+}
+
+.btn-card-admin.manage:hover {
+  background: #AF5239;
+  border-color: #AF5239;
+}
+
+.btn-card-admin.move-prev:hover,
+.btn-card-admin.move-next:hover {
+  background: #AF5239;
+  border-color: #AF5239;
+}
+
+.btn-card-admin.drag-handle {
+  cursor: grab;
+}
+
+.btn-card-admin.drag-handle:active {
+  cursor: grabbing;
+}
+
+.btn-card-admin.drag-handle:hover {
+  background: #44403C;
+}
+
+/* Badge Numérique de Position (#1, #2, ...) */
+.artwork-order-badge {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.8rem;
+  background: rgba(28, 25, 23, 0.88);
+  backdrop-filter: blur(4px);
+  color: #FAF8F5;
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  z-index: 75;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.artwork-card:hover .artwork-order-badge {
+  transform: scale(1.08);
+  background: #AF5239;
+  border-color: #AF5239;
+}
+
+/* Effets Drag & Drop Visuels */
+.artwork-card[draggable="true"] {
+  user-select: none;
+}
+
+.artwork-card.is-dragging {
+  opacity: 0.35;
+  transform: scale(0.96);
+  border: 2px dashed #AF5239 !important;
+}
+
+.artwork-card.drag-over-prev {
+  box-shadow: -6px 0 0 0 #AF5239, 0 10px 25px rgba(175, 82, 57, 0.25) !important;
+  transform: translateX(4px);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.artwork-card.drag-over-next {
+  box-shadow: 6px 0 0 0 #AF5239, 0 10px 25px rgba(175, 82, 57, 0.25) !important;
+  transform: translateX(-4px);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Bouton Exporter JSON dans la barre admin */
+.btn-admin-export {
+  background: rgba(255, 255, 255, 0.12);
+  color: #FAF8F5;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-admin-export:hover {
+  background: rgba(255, 255, 255, 0.22);
+  transform: translateY(-1px);
+}
+
+body.preview-active .artwork-order-badge {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .card-admin-actions {
+    opacity: 0.95;
+    transform: none;
+  }
+}
+
+/* Carte « Ajouter une œuvre » dans la grille du catalogue */
+.card-add-new-project {
+  border: 2px dashed rgba(175, 82, 57, 0.4);
+  background: rgba(175, 82, 57, 0.03);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  min-height: 320px;
+}
+
+.card-add-new-project:hover {
+  border-color: #AF5239;
+  background: rgba(175, 82, 57, 0.08);
+  transform: translateY(-3px);
+}
+
+.card-add-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #AF5239;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 6px 16px rgba(175, 82, 57, 0.3);
+}
+
+.card-add-title {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  color: var(--text-main);
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+.card-add-sub {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Tiroir Latéral Glissant pour Détails d'une Œuvre */
+.admin-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 25, 23, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 12000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.admin-drawer-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.admin-drawer {
+  position: fixed;
+  top: 0;
+  right: -520px;
+  width: 100%;
+  max-width: 500px;
+  height: 100vh;
+  background: #ffffff;
+  z-index: 12001;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.admin-drawer.active {
+  right: 0;
+}
+
+.admin-drawer-header {
+  padding: 1.4rem 1.8rem;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FAF8F5;
+}
+
+.admin-drawer-title {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
+  color: var(--text-main);
+}
+
+.admin-drawer-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border-light);
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-main);
+}
+
+.admin-drawer-body {
+  padding: 1.8rem;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.admin-drawer-footer {
+  padding: 1.2rem 1.8rem;
+  border-top: 1px solid var(--border-light);
+  background: #FAF8F5;
+  display: flex;
+  gap: 0.8rem;
+}
+
+/* Toast de notification */
+.admin-toast-badge {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1C1917;
+  color: #ffffff;
+  padding: 0.85rem 1.8rem;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  z-index: 15000;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.admin-toast-badge.active {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.admin-toast-badge.success {
+  background: #1E3A2F;
+  border: 1px solid #2E8B57;
+}
+
+/* Modale de Connexion / Mot de passe */
+.admin-auth-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 25, 23, 0.92);
+  backdrop-filter: blur(10px);
+  z-index: 20000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.admin-auth-screen.hidden {
+  display: none !important;
+}
+
+.admin-auth-box {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 3rem 2.5rem;
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+}
+
+.admin-auth-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 1.2rem;
+  border: 3px solid #AF5239;
+}
+
+.admin-auth-title {
+  font-family: var(--font-serif);
+  font-size: 1.8rem;
+  color: var(--text-main);
+  margin-bottom: 0.4rem;
+}
+
+.admin-auth-desc {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  margin-bottom: 1.8rem;
+}
+
+.admin-auth-input {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-card);
+  font-size: 1.1rem;
+  text-align: center;
+  margin-bottom: 1.2rem;
+  outline: none;
+}
+
+.admin-auth-input:focus {
+  border-color: #AF5239;
+}
+
+.admin-auth-btn {
+  width: 100%;
+  padding: 1rem;
+  border-radius: 9999px;
+  background: #AF5239;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.admin-auth-btn:hover {
+  background: #92402a;
+}
+
+/* ==========================================================================
+   ADAPTATION MOBILE & TABLETTE DE L'ÉDITEUR
+   ========================================================================== */
+@media (max-width: 860px) {
+  .visual-admin-bar {
+    height: auto;
+    min-height: 54px;
+    padding: 0.5rem 1rem;
+    gap: 0.6rem;
+  }
+  body.admin-mode {
+    padding-top: 64px;
+  }
+  .admin-bar-badge {
+    display: none;
+  }
+  .admin-bar-status {
+    display: none;
+  }
+  .btn-admin-bar {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 580px) {
+  .visual-admin-bar {
+    padding: 0.4rem 0.8rem;
+  }
+  .admin-bar-brand span {
+    display: none;
+  }
+  .btn-admin-preview span,
+  .btn-admin-add span,
+  .btn-admin-save span {
+    display: none;
+  }
+  .btn-admin-bar {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.92rem;
+  }
+  .admin-drawer {
+    width: 100%;
+    max-width: 100%;
+    right: -100%;
+  }
+}
+
+/* En mode aperçu visiteur dans l'admin, les cartes d'œuvres ouvrent la modale lightbox */
+body.preview-active .artwork-card {
+  cursor: pointer;
+}
+

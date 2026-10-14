@@ -1,0 +1,519 @@
+{
+  "artist": {
+    "name": "Sarah Schu",
+    "brandName": "Sarah Schu",
+    "title": "Artiste Peintre Muraliste & Illustratrice",
+    "tagline": "Fresques personnalisées pour particuliers & professionnels en Alsace",
+    "quote": "J'embellis vos murs, peints à la main, en Alsace.",
+    "bioShort": "Diplômée de la prestigieuse École Émile Cohl (Lyon) et d'Artline (Paris), je conçois et réalise des fresques in situ, des trompe-l'œil d'exception et des décors muraux sur mesure pour résidences de prestige, architectes d'intérieur, collectivités et établissements de santé en Alsace et dans toute la France.",
+    "bioFull": "Je m'appelle Sarah Schu, artiste peintre muraliste installée en Alsace.\n\nFormée au concept art et à la composition visuelle à l'École Artline à Paris (2020-2022), j'ai poursuivi mon apprentissage académique comme Dessinateur praticien à l'École Émile Cohl à Lyon (2023-2025). Cette double exigence me confère une maîtrise rigoureuse de la perspective spatiale, de la morphologie, de la colorimétrie et des techniques picturales in situ.\n\nJ'interviens auprès de particuliers exigeants, d'architectes d'intérieur, d'établissements de santé (EHPAD, foyers spécialisés) et de collectivités pour métamorphoser des volumes architecturaux. Chaque création est une pièce unique peinte entièrement à la main à l'acrylique fine, étudiée en résonance absolue avec la lumière naturelle, les lignes du bâti et l'esprit du lieu.",
+    "location": "Zimmerbach / Colmar / Munster (Alsace, Grand Est)",
+    "coverage": "Alsace (Colmar, Vallée de Munster, Strasbourg, Mulhouse, Sélestat) et déplacements sur toute la France",
+    "phone": "06 75 45 04 97",
+    "phoneClean": "0675450497",
+    "email": "sarah.schu16@gmail.com",
+    "instagram": "https://www.instagram.com/sarahschu.art",
+    "instagramHandle": "@sarahschu.art",
+    "facebook": "https://www.facebook.com/profile.php?id=100017365335884",
+    "profilePhoto": "assets/images/profile_fb.jpg",
+    "artistInActionPhoto": "assets/images/post1_DeMNkRqDLyA_01.jpg",
+    "adminPasswordHash": "sarah2024",
+    "brandSubtitle": "ATELIER DE FRESQUES & AQUARELLE · ALSACE",
+    "heroImage": "assets/images/hero_vignes_alsace.jpg",
+    "heroEyebrow": "FRESQUES PERSONNALISÉES · PARTICULIERS & PROFESSIONNELS · ALSACE 🥨",
+    "heroBio": "Des fresques personnalisées, imaginées pour votre lieu et peintes à la main, pour votre intérieur comme pour votre activité professionnelle. Je donne aussi des cours d'aquarelle et je réalise des illustrations."
+  },
+  "stats": [
+    {
+      "value": "100%",
+      "label": "Fait main à l'acrylique"
+    },
+    {
+      "value": "+50",
+      "label": "Projets & Fresques créés"
+    },
+    {
+      "value": "25m",
+      "label": "Plus grande fresque réalisée"
+    },
+    {
+      "value": "Sur mesure",
+      "label": "Chaque projet est unique"
+    }
+  ],
+  "formations": [
+    {
+      "school": "École ÉMILE COHL",
+      "years": "2023 - 2025",
+      "diploma": "Dessinateur praticien",
+      "city": "Lyon",
+      "description": "Perfectionnement en dessin d'observation, modèle vivant, morphologie, perspective et techniques picturales traditionnelles."
+    },
+    {
+      "school": "École ARTLINE",
+      "years": "2020 - 2022",
+      "diploma": "Concept art et illustration",
+      "city": "Paris",
+      "description": "Maîtrise de l'illustration numérique, création d'univers visuels, colorimétrie et design narratif."
+    }
+  ],
+  "competences": [
+    {
+      "name": "Fresques & Trompe-l'œil",
+      "level": 95
+    },
+    {
+      "name": "Illustrations & Contes jeunesse",
+      "level": 92
+    },
+    {
+      "name": "Peinture acrylique & In Situ",
+      "level": 95
+    },
+    {
+      "name": "Suite Adobe & Digital Art",
+      "level": 89
+    },
+    {
+      "name": "Modèle vivant & Observation",
+      "level": 88
+    },
+    {
+      "name": "Design de logo & Branding",
+      "level": 78
+    }
+  ],
+  "services": [
+    {
+      "id": "fresques-particuliers",
+      "badge": "Particuliers",
+      "title": "Fresques Personnalisées pour Intérieurs",
+      "subtitle": "Séjours, chambres, montées d'escalier & pièces de vie",
+      "description": "Une fresque unique pensée en résonance avec vos meubles, la luminosité de votre pièce et vos goûts. Panoramas alsaciens, vignobles, montagnes apaisantes ou compositions végétales.",
+      "points": [
+        "Étude préalable sur photo & esquisse personnalisée avant de peindre",
+        "Peintures acryliques de haute qualité, inodores et écologiques",
+        "Intégration harmonieuse à vos plinthes, boiseries et mobilier",
+        "Finition vernie protectrice lavable pour traverser les années"
+      ]
+    },
+    {
+      "id": "fresques-pros-collectivites",
+      "badge": "Professionnels & Santé",
+      "title": "Fresques pour Entreprises, Hôtels & EHPAD",
+      "subtitle": "Commerces, restaurants, résidences & établissements de santé",
+      "description": "Donnez une âme singulière à vos espaces d'accueil. Décoration identitaire pour restaurants et brasseries (ex: Brasserie KS), ou fresques apaisantes pour les résidents d'EHPAD et foyers de vie.",
+      "points": [
+        "Grands formats monumentaux (ex: fresque de 25m x 3m à Lyon)",
+        "Démarche participative et bienveillante pour les lieux de soin",
+        "Mise en valeur de votre identité et du patrimoine local",
+        "Respect strict des contraintes techniques et d'accueil du public"
+      ]
+    },
+    {
+      "id": "trompe-loeil",
+      "badge": "Perspective & Illusion",
+      "title": "Trompe-l'Œil & Portes Dérobées",
+      "subtitle": "Ouvrir une fenêtre imaginaire, agrandir l'espace",
+      "description": "Effacez les parois aveugles ou les portes intérieures en créant l'illusion d'une ouverture vers la nature. Une maîtrise rigoureuse de la perspective et du travail des matières.",
+      "points": [
+        "Maîtrise des points de fuite issue de l'École Émile Cohl",
+        "Effets de profondeur saisissants adaptés à la lumière réelle",
+        "Idéal pour couloirs, entrées, alcôves et portes",
+        "Peinture in situ sur bois ou maçonnerie préparée"
+      ]
+    },
+    {
+      "id": "aquarelle-illustration",
+      "badge": "Aquarelle & Création",
+      "title": "Cours d'Aquarelle & Illustrations Originales",
+      "subtitle": "Ateliers créatifs en Alsace, albums & créations sur mesure",
+      "description": "Transmettre la joie de la couleur et concevoir des univers graphiques soignés. Je propose des initiations et cours d'aquarelle en Alsace, ainsi que des projets d'illustration et d'édition.",
+      "points": [
+        "Ateliers d'aquarelle conviviaux tous niveaux",
+        "Illustration jeunesse (ex: livre Les Aventures de Giada)",
+        "Création d'identités visuelles et chartes graphiques (ex: HCVM)",
+        "Toiles et œuvres originales sur commande"
+      ]
+    }
+  ],
+  "processus": [
+    {
+      "step": "01",
+      "title": "Échange & Écoute",
+      "description": "Vous m'envoyez une photo de votre mur avec les dimensions approximatives et vos envies (ambiance, thématique, teintes). Nous définissons ensemble l'esprit du projet."
+    },
+    {
+      "step": "02",
+      "title": "Esquisse & Maquette Virtuelle",
+      "description": "Je conçois un croquis sur mesure et je l'intègre directement sur la photo de votre pièce pour vous permettre de visualiser le résultat avant le premier coup de pinceau."
+    },
+    {
+      "step": "03",
+      "title": "Réalisation In Situ",
+      "description": "Je me déplace chez vous ou dans votre établissement pour peindre la fresque à la main avec passion, précision et propreté."
+    },
+    {
+      "step": "04",
+      "title": "Vernis & Finitions",
+      "description": "Application d'un vernis de protection mat ou satiné pour garantir une longévité maximale et un nettoyage facile de votre œuvre unique."
+    }
+  ],
+  "projects": [
+    {
+      "id": "proj-vignes-cigogne",
+      "title": "Les Vignes & la Cigogne",
+      "category": "fresques",
+      "categoryLabel": "Particuliers & Résidentiel",
+      "location": "Alsace",
+      "year": "2026",
+      "technique": "Peinture murale acrylique in situ",
+      "description": "Fresque murale panoramique intégrée dans un séjour alsacien à colombages. Vue plongeante sur les coteaux de vignes, le clocher villageois et une cigogne en vol. Teintes douces et lumineuses.",
+      "mainImage": "assets/images/hero_vignes_alsace.jpg",
+      "gallery": [
+        "assets/images/hero_vignes_alsace.jpg"
+      ],
+      "palette": [
+        {
+          "color": "#8DA07B",
+          "name": "Vert vigne"
+        },
+        {
+          "color": "#C8A25D",
+          "name": "Ocre blé"
+        },
+        {
+          "color": "#8CA6BD",
+          "name": "Bleu ciel"
+        },
+        {
+          "color": "#EFE6D8",
+          "name": "Lin chaud"
+        }
+      ],
+      "featured": true
+    },
+    {
+      "id": "proj-trompe-loeil-foret",
+      "title": "Trompe-l'œil Porte & Cimes Forestières",
+      "category": "peintures",
+      "categoryLabel": "Trompe-l'œil & Peintures",
+      "location": "Secteur Colmar / Munster",
+      "year": "2026",
+      "description": "Et si votre porte devenait une fenêtre ouverte sur la nature ? Trompe-l'œil réalisé entièrement à la main sur une porte intérieure, représentant un sentier sous les sapins qui s'ouvre vers les sommets bleutés. L'effet de perspective fait disparaître la menuiserie pour ouvrir l'espace.",
+      "technique": "Acrylique sur bois préparé",
+      "mainImage": "assets/images/post1_DeMNkRqDLyA_01.jpg",
+      "gallery": [
+        "assets/images/post1_DeMNkRqDLyA_01.jpg",
+        "assets/images/post1_DeMNkRqDLyA_02.jpg",
+        "assets/images/post1_DeMNkRqDLyA_03.jpg"
+      ],
+      "featured": true
+    },
+    {
+      "id": "proj-chambre-montagne-wintzenheim",
+      "title": "Chambre d'adulte : Invitation au voyage alpin",
+      "category": "fresques",
+      "categoryLabel": "Particuliers & Résidentiel",
+      "location": "Wintzenheim (Alsace)",
+      "year": "2025",
+      "description": "Fresque murale panoramique en tête de lit dans une chambre parentale. Harmonisation subtile des teintes : beige chaud, terracotta, bleu ardoise et gris brumeux, avec dégradés de crêtes vosgiennes, soleil d'or et nuages poétiques. Une atmosphère chaleureuse invitant au repos.",
+      "technique": "Peinture murale acrylique mate",
+      "mainImage": "assets/images/post2_Dd9GbcwDM6-_01.jpg",
+      "gallery": [
+        "assets/images/post2_Dd9GbcwDM6-_01.jpg",
+        "assets/images/post2_Dd9GbcwDM6-_02.jpg",
+        "assets/images/post2_Dd9GbcwDM6-_03.jpg",
+        "assets/images/post2_Dd9GbcwDM6-_04.jpg",
+        "assets/images/post2_Dd9GbcwDM6-_05.jpg",
+        "assets/images/post2_Dd9GbcwDM6-_06.jpg",
+        "assets/images/post2_Dd9GbcwDM6-_07.jpg",
+        "assets/images/post2_Dd9GbcwDM6-_08.jpg",
+        "assets/images/post2_Dd9GbcwDM6-_09.jpg"
+      ],
+      "featured": true
+    },
+    {
+      "id": "proj-foyer-munster",
+      "title": "Fresque participative au Foyer Caroline Bestelda",
+      "category": "collectivites",
+      "categoryLabel": "Professionnels & Santé",
+      "location": "Munster (Haut-Rhin)",
+      "year": "2026",
+      "description": "Projet artistique et solidaire mené avec les résidents et l'animatrice Périne. Sarah a conçu et peint la composition principale, puis les résidents ont participé activement au pochoir (feuilles, motifs floraux). Un moment de convivialité créative qui a illuminé les espaces de vie du foyer.",
+      "technique": "Fresque collaborative acrylique",
+      "mainImage": "assets/images/post3_DcwC2nIDP7o_01.jpg",
+      "gallery": [
+        "assets/images/post3_DcwC2nIDP7o_01.jpg",
+        "assets/images/post3_DcwC2nIDP7o_02.jpg",
+        "assets/images/post3_DcwC2nIDP7o_03.jpg",
+        "assets/images/post3_DcwC2nIDP7o_04.jpg",
+        "assets/images/post3_DcwC2nIDP7o_05.jpg"
+      ],
+      "featured": true
+    },
+    {
+      "id": "proj-parcharmonie-lyon",
+      "title": "Fresque monumentale 'La Nature Pop du Parcharmonie'",
+      "category": "fresques",
+      "categoryLabel": "Particuliers & Résidentiel",
+      "location": "Lyon 3e (Résidence Studilodge)",
+      "year": "2025",
+      "description": "Fresque murale extérieure de 25 mètres de long par 3 mètres de haut. Sarah Schu a assuré la direction artistique et la réalisation complète de cette immense œuvre végétale aux teintes pop et éclatantes, transformant le jardin de la résidence en havre de vitalité et d'inspiration.",
+      "technique": "Peinture monumentale extérieure (25m x 3m)",
+      "mainImage": "assets/images/post5_DbvmLZBDKnI_09.jpg",
+      "gallery": [
+        "assets/images/post5_DbvmLZBDKnI_09.jpg",
+        "assets/images/post5_DbvmLZBDKnI_01.jpg",
+        "assets/images/post5_DbvmLZBDKnI_02.jpg",
+        "assets/images/post5_DbvmLZBDKnI_03.jpg"
+      ],
+      "featured": true
+    },
+    {
+      "id": "proj-couturiere-breitenbach",
+      "title": "Trompe-l'œil 'La Couturière à la Perle'",
+      "category": "peintures",
+      "categoryLabel": "Trompe-l'œil & Peintures",
+      "location": "Breitenbach (Alsace)",
+      "year": "2024",
+      "description": "Création d'un trompe-l'œil réaliste en fausse fenêtre sur le bardage d'un garage chez un particulier. Hommage pictural d'inspiration classique mettant en scène une couturière dans son atelier avec son chat.",
+      "technique": "Acrylique extérieure sur façade",
+      "mainImage": "assets/images/post5_DbvmLZBDKnI_08.jpg",
+      "gallery": [
+        "assets/images/post5_DbvmLZBDKnI_08.jpg",
+        "assets/images/post5_DbvmLZBDKnI_16.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "proj-ehpad-vallee-munster",
+      "title": "Fresque paysagère apaisante en EHPAD",
+      "category": "collectivites",
+      "categoryLabel": "Professionnels & Santé",
+      "location": "Vallée de Munster",
+      "year": "2025",
+      "description": "Création d'un vaste paysage de France au cœur de l'EHPAD pour offrir aux résidents un horizon doux et une invitation quotidienne à l'évasion, aux souvenirs et à la sérénité.",
+      "technique": "Peinture acrylique murale",
+      "mainImage": "assets/images/post6_DbvRrRNMqEq_01.jpg",
+      "gallery": [
+        "assets/images/post6_DbvRrRNMqEq_01.jpg"
+      ],
+      "featured": true
+    },
+    {
+      "id": "proj-chambre-enfant-musique",
+      "title": "Fresque Botanique & Musicale In Situ",
+      "category": "fresques",
+      "categoryLabel": "Particuliers & Résidentiel",
+      "location": "Griesbach",
+      "year": "2024",
+      "description": "Création murale alliant végétation délicate et motifs musicaux pour un intérieur résidentiel. Réalisée à l'acrylique fine.",
+      "technique": "Peinture acrylique intérieure",
+      "mainImage": "assets/images/post5_DbvmLZBDKnI_10.jpg",
+      "gallery": [
+        "assets/images/post5_DbvmLZBDKnI_10.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "proj-brasserie-ks-colmar",
+      "title": "Fresque didactique & Décoration chez Brasserie KS",
+      "category": "fresques",
+      "categoryLabel": "Particuliers & Résidentiel",
+      "location": "Colmar",
+      "year": "2022",
+      "description": "Habillage mural graphique illustrant le processus de brassage artisanal de la bière (empâtage, filtration, ébullition, fermentation, mise en bouteille) entourant la verrière d'atelier.",
+      "technique": "Fresque murale monochrome & signalétique",
+      "mainImage": "assets/images/post5_DbvmLZBDKnI_04.jpg",
+      "gallery": [
+        "assets/images/post5_DbvmLZBDKnI_04.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "proj-chambre-bebe-acrylique",
+      "title": "Panorama Sylvestre & Faune Douce In Situ",
+      "category": "fresques",
+      "categoryLabel": "Particuliers & Résidentiel",
+      "location": "Alsace",
+      "year": "2025",
+      "description": "Fresque murale sur mesure aux teintes minérales apaisantes, pensée pour une harmonie parfaite avec la lumière de la pièce.",
+      "technique": "Acrylique murale douce",
+      "mainImage": "assets/images/post4_DclYtKysI_P_01.jpg",
+      "gallery": [
+        "assets/images/post4_DclYtKysI_P_01.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "proj-livre-giada",
+      "title": "Création Éditoriale : Album Illustré Jeunesse",
+      "category": "illustrations",
+      "categoryLabel": "Aquarelle & Illustrations",
+      "location": "Édition jeunesse",
+      "year": "2026",
+      "description": "Direction artistique, colorimétrie et ensemble des planches illustrées pour la publication du livre de Laurence Jolly.",
+      "technique": "Illustration numérique & mise en page éditoriale",
+      "mainImage": "assets/images/post5_DbvmLZBDKnI_05.jpg",
+      "gallery": [
+        "assets/images/post5_DbvmLZBDKnI_05.jpg"
+      ],
+      "featured": true
+    },
+    {
+      "id": "proj-logo-hcvm",
+      "title": "Identité Visuelle & Logo HCVM",
+      "category": "graphisme",
+      "categoryLabel": "Identité & Édition",
+      "location": "Munster",
+      "year": "2026",
+      "description": "Création du nouveau logo officiel du Handball Club de la Vallée de Munster (HCVM). Un emblème fort mêlant le cerf vosgien, le ballon de handball dans les ramures et la crête montagnarde (lettre M).",
+      "technique": "Vectoriel, charte maillots, déclinaisons web & print",
+      "mainImage": "assets/images/post5_DbvmLZBDKnI_06.jpg",
+      "gallery": [
+        "assets/images/post5_DbvmLZBDKnI_06.jpg"
+      ],
+      "featured": true
+    },
+    {
+      "id": "proj-flyers-noel-colmar",
+      "title": "Supports Print 'Colmar la Magie de Noël'",
+      "category": "graphisme",
+      "categoryLabel": "Identité & Édition",
+      "location": "Colmar",
+      "year": "2024",
+      "description": "Conception de dépliants et supports de communication pour les 6 marchés de Noël de Colmar, travaillant la hiérarchie de l'information et l'esthétique festive alsacienne.",
+      "technique": "Print & Mise en page",
+      "mainImage": "assets/images/post5_DbvmLZBDKnI_07.jpg",
+      "gallery": [
+        "assets/images/post5_DbvmLZBDKnI_07.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "proj-bande-dessinee",
+      "title": "Projets de Bandes Dessinées & Storyboard",
+      "category": "illustrations",
+      "categoryLabel": "Aquarelle & Illustrations",
+      "location": "École Émile Cohl / Projets personnels",
+      "year": "2025",
+      "description": "Planches de bandes dessinées explorant divers registres : narration historique en noir et blanc, théâtre classique à l'aquarelle et comédie moderne colorée ('It's a Match!').",
+      "technique": "Encre de Chine, aquarelle & colorisation numérique",
+      "mainImage": "assets/images/post5_DbvmLZBDKnI_11.jpg",
+      "gallery": [
+        "assets/images/post5_DbvmLZBDKnI_11.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "proj-illustrations-numeriques",
+      "title": "Panoramas Numériques & Paysages",
+      "category": "illustrations",
+      "categoryLabel": "Aquarelle & Illustrations",
+      "location": "Créations personnelles",
+      "year": "2025",
+      "description": "Études de lumière et d'architecture : perspective maritime de Venise et crêtes baignées de lumière dorée au coucher du soleil.",
+      "technique": "Suite Adobe, Procreate & tablette graphique",
+      "mainImage": "assets/images/post5_DbvmLZBDKnI_12.jpg",
+      "gallery": [
+        "assets/images/post5_DbvmLZBDKnI_12.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "proj-parc-isometrique",
+      "title": "Le Parc d'Attraction Isométrique",
+      "category": "illustrations",
+      "categoryLabel": "Aquarelle & Illustrations",
+      "location": "Projet de groupe créatif",
+      "year": "2024",
+      "description": "Conception d'un immense parc d'attraction en perspective isométrique où chaque manège s'inspire d'un instrument de musique (flûte, orgue, violoncelle, cuivres).",
+      "technique": "Perspective isométrique & dessin à la ligne",
+      "mainImage": "assets/images/post5_DbvmLZBDKnI_13.jpg",
+      "gallery": [
+        "assets/images/post5_DbvmLZBDKnI_13.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "proj-latelier-dartiste",
+      "title": "Peinture d'ambiance 'L'Atelier d'Artiste'",
+      "category": "peintures",
+      "categoryLabel": "Trompe-l'œil & Peintures",
+      "location": "Atelier",
+      "year": "2025",
+      "description": "Scène intimiste d'un atelier sous verrière baigné de lumière naturelle, bibliothèque, chevalet et poêle en fonte. Recherche d'ambiance chaleureuse.",
+      "technique": "Aquarelle, lavis & techniques mixtes",
+      "mainImage": "assets/images/post5_DbvmLZBDKnI_14.jpg",
+      "gallery": [
+        "assets/images/post5_DbvmLZBDKnI_14.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "proj-modele-vivant-etudes",
+      "title": "Études de Modèle Vivant & Natures Mortes",
+      "category": "peintures",
+      "categoryLabel": "Trompe-l'œil & Peintures",
+      "location": "Atelier Émile Cohl",
+      "year": "2024",
+      "description": "Travail d'observation académique : modèle vivant au fusain sur grand format, nature morte au pastel sec et étude de couple à l'acrylique.",
+      "technique": "Fusain, pastels secs & acrylique",
+      "mainImage": "assets/images/post5_DbvmLZBDKnI_15.jpg",
+      "gallery": [
+        "assets/images/post5_DbvmLZBDKnI_15.jpg"
+      ],
+      "featured": false
+    }
+  ],
+  "temoignages": [
+    {
+      "author": "Foyer Caroline Bestelda",
+      "role": "Direction & Équipe d'animation (Périne)",
+      "location": "Munster",
+      "quote": "Un grand merci à Sarah pour ce merveilleux projet avec nos résidents ! Elle a su créer une ambiance bienveillante où chacun a pu participer avec fierté. Le résultat illumine nos couloirs au quotidien."
+    },
+    {
+      "author": "Sophie & Marc L.",
+      "role": "Particuliers (Chambre parentale)",
+      "location": "Wintzenheim",
+      "quote": "Nous voulions une ambiance montagne douce et apaisante. Sarah a parfaitement su adapter les teintes et les proportions à notre pièce. C'est bien plus beau qu'un papier peint, c'est une véritable œuvre d'art vivante !"
+    },
+    {
+      "author": "Résidence Studilodge",
+      "role": "Direction de résidence étudiante",
+      "location": "Lyon 3e",
+      "quote": "Sarah a mené de main de maître la réalisation de notre fresque de 25 mètres. Son professionnalisme, son énergie et son sens des couleurs ont métamorphosé notre cour extérieure."
+    },
+    {
+      "author": "Brasserie KS",
+      "role": "Fondateurs",
+      "location": "Colmar",
+      "quote": "La fresque didactique réalisée par Sarah explique notre métier aux visiteurs avec beaucoup de style et de clarté. Un travail d'artiste soigné et parfaitement exécuté."
+    }
+  ],
+  "faq": [
+    {
+      "question": "Sur quels types de supports pouvez-vous peindre ?",
+      "answer": "Tous types de murs intérieurs (placo, plâtre, brique peinte), portes en bois, têtes de lit, ainsi que sur des façades extérieures préparées, terrasses ou même surfaces vitrées."
+    },
+    {
+      "question": "Comment se déroule l'estimation du tarif ?",
+      "answer": "Chaque projet étant unique, le devis est établi sur mesure sans engagement. Il dépend de la surface (en m²), de la complexité du motif, de la préparation du support et de la localisation."
+    },
+    {
+      "question": "Combien de temps prend la réalisation d'une fresque ?",
+      "answer": "Généralement entre 1 et 3 jours pour un pan de mur intérieur chez un particulier. Pour des chantiers monumentaux (comme la fresque de 25m à Lyon), cela peut s'échelonner sur une à deux semaines."
+    },
+    {
+      "question": "Les peintures utilisées dégagent-elles des odeurs ?",
+      "answer": "Non ! J'utilise exclusivement des peintures acryliques professionnelles à l'eau, sans solvant nocif ni odeur forte. Vous pouvez réintégrer votre chambre dès la fin du chantier en toute sérénité."
+    },
+    {
+      "question": "Jusqu'où vous déplacez-vous ?",
+      "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
+    }
+  ],
+  "lastUpdated": "2026-10-14T08:58:22.316Z"
+}

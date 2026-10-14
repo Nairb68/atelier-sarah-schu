@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Éditeur Visuel In Situ — Atelier Sarah Schu</title>
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Favicon & Identité -->
+  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+  <link rel="apple-touch-icon" href="assets/images/logo-sarah-schu.jpg">
+
+  <!-- Polices Google : Playfair Display & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Feuilles de Styles : Style Réel du Site + Moteur Visuel Admin -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/admin-visual.css">
+</head>
+<body class="admin-mode">
+
+  <!-- ==========================================================================
+       ÉCRAN DE CONNEXION / MOT DE PASSE (SÉCURITÉ ARTISTE)
+       ========================================================================== -->
+  <div id="admin-auth-screen" class="admin-auth-screen">
+    <div class="admin-auth-box">
+      <img src="assets/images/logo-sarah-schu.jpg" alt="Atelier Sarah Schu" class="admin-auth-avatar" style="border-radius: 16px; object-fit: contain; background: #FFFFFF; padding: 4px;">
+      <h2 class="admin-auth-title">Espace Édition Directe</h2>
+      <p class="admin-auth-desc">Atelier Sarah Schu &bull; Modification visuelle en vue réelle</p>
+      
+      <input type="password" id="admin-auth-input" class="admin-auth-input" placeholder="Mot de passe d'accès" autofocus>
+      <button id="admin-auth-btn" class="admin-auth-btn">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Déverrouiller le site
+      </button>
+      <p style="margin-top: 1.2rem; font-size: 0.8rem; color: #78716C;">
+        Mot de passe initial : <strong>sarah2024</strong>
+      </p>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       BARRE ADMINISTRATIVE FLOTTANTE EN TÊTE (LA BARRE ATELIER)
+       ========================================================================== -->
+  <aside class="visual-admin-bar" id="visual-admin-bar">
+    <div class="admin-bar-left">
+      <div class="admin-bar-brand">
+        <img src="assets/images/logo-emblem.png" alt="Emblème" style="height: 22px; width: auto; vertical-align: middle; margin-right: 6px;">
+        <span>Atelier Sarah Schu</span>
+      </div>
+      <span class="admin-bar-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> Mode Vue Réelle</span>
+      <div class="admin-bar-status">
+        <span class="admin-status-dot"></span>
+        <span id="admin-status-text">Synchronisé en direct</span>
+      </div>
+    </div>
+    
+    <div class="admin-bar-actions">
+      <button id="admin-bar-add-btn" class="btn-admin-bar btn-admin-add" type="button">
+        <i class="fa-solid fa-plus"></i> Ajouter une création
+      </button>
+      <button id="admin-bar-export-btn" class="btn-admin-bar btn-admin-export" type="button" title="Télécharger le fichier site-data.json à jour">
+        <i class="fa-solid fa-download"></i> Exporter JSON
+      </button>
+      <button id="admin-bar-preview-btn" class="btn-admin-bar btn-admin-preview" type="button">
+        <i class="fa-solid fa-eye"></i> Aperçu visiteur
+      </button>
+      <button id="admin-bar-save-btn" class="btn-admin-bar btn-admin-save" type="button">
+        <i class="fa-solid fa-cloud-arrow-up"></i> Sauvegarder &amp; Publier
+      </button>
+      <button id="admin-bar-exit-btn" class="btn-admin-bar btn-admin-exit" type="button" title="Quitter le mode édition">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       TIROIR LATÉRAL : GESTION DÉTAILLÉE D'UNE ŒUVRE & PHOTOS MULTIPLES
+       ========================================================================== -->
+  <div id="admin-drawer-backdrop" class="admin-drawer-backdrop"></div>
+  <aside id="admin-drawer" class="admin-drawer" aria-label="Gestion détaillée d'une œuvre">
+    <div class="admin-drawer-header">
+      <h3 class="admin-drawer-title" id="drawer-project-title">Gérer la création</h3>
+      <button id="drawer-close-btn" class="admin-drawer-close" type="button" aria-label="Fermer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    
+    <div class="admin-drawer-body">
+      <div>
+        <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 0.35rem;">Titre de l'œuvre *</label>
+        <input type="text" id="drawer-title-input" class="form-input" placeholder="Ex: Les Vignes & la Cigogne">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 0.8rem;">
+        <div>
+          <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 0.35rem;">Catégorie *</label>
+          <select id="drawer-cat-input" class="form-select">
+            <option value="fresques">Particuliers &amp; Résidentiel</option>
+            <option value="collectivites">Professionnels &amp; Santé</option>
+            <option value="peintures">Trompe-l'œil &amp; Peintures</option>
+            <option value="illustrations">Aquarelle &amp; Illustrations</option>
+            <option value="graphisme">Identité &amp; Édition</option>
+          </select>
+        </div>
+        <div>
+          <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 0.35rem;">Position dans la galerie</label>
+          <select id="drawer-position-input" class="form-select"></select>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+        <div>
+          <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 0.35rem;">Commune / Lieu</label>
+          <input type="text" id="drawer-loc-input" class="form-input" placeholder="Ex: Wintzenheim">
+        </div>
+        <div>
+          <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 0.35rem;">Année</label>
+          <input type="text" id="drawer-year-input" class="form-input" placeholder="2026">
+        </div>
+      </div>
+
+      <div>
+        <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 0.35rem;">Technique &amp; Support</label>
+        <input type="text" id="drawer-tech-input" class="form-input" placeholder="Ex: Peinture murale acrylique in situ">
+      </div>
+
+      <div>
+        <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 0.35rem;">Photos &amp; Diaporama de l'œuvre</label>
+        <div id="drawer-gallery-strip"></div>
+        <button id="drawer-add-photo-btn" type="button" class="btn-admin-bar btn-admin-add" style="margin-top: 0.6rem; width: 100%; justify-content: center; background: #FAF8F5; color: var(--text-main); border: 1.5px dashed var(--border-card);">
+          <i class="fa-solid fa-camera"></i> Ajouter une photo à cette création
+        </button>
+      </div>
+
+      <div>
+        <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 0.35rem;">Description &amp; Histoire du projet</label>
+        <textarea id="drawer-desc-input" class="form-textarea" rows="4" placeholder="Harmonisation des teintes, ambiance..."></textarea>
+      </div>
+    </div>
+
+    <div class="admin-drawer-footer">
+      <button id="drawer-cancel-btn" type="button" class="btn-admin-bar btn-admin-preview" style="color: var(--text-muted); background: #eee;">
+        Annuler
+      </button>
+      <button id="drawer-save-btn" type="button" class="btn-admin-bar btn-admin-save" style="flex: 1; justify-content: center;">
+        <i class="fa-solid fa-check"></i> Valider les modifications
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       EN-TÊTE / NAVIGATION ATELIER (SITE RÉEL)
+       ========================================================================== -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      
+      <!-- Logo Officiel Atelier Sarah Schu -->
+      <a href="#accueil" class="brand-link" aria-label="Sarah Schu - Accueil">
+        <img src="assets/images/logo-emblem.png" alt="Emblème Atelier Sarah Schu" class="brand-logo-emblem">
+        <div class="brand-text">
+          <span class="brand-name">Sarah Schu</span>
+          <span class="brand-sub">ATELIER DE FRESQUES &amp; AQUARELLE &bull; ALSACE</span>
+        </div>
+      </a>
+
+      <!-- Menu Principal Bureau -->
+      <nav class="nav-desktop" aria-label="Navigation principale">
+        <ul class="nav-links">
+          <li><a href="#catalogue" class="nav-link">Fresques</a></li>
+          <li><a href="#domaines" class="nav-link">Particuliers &amp; Pros</a></li>
+          <li><a href="#domaines" class="nav-link">Aquarelle</a></li>
+          <li><a href="#artiste" class="nav-link">L'artiste</a></li>
+          <li>
+            <a href="https://www.instagram.com/sarahschu.art" target="_blank" rel="noopener" class="nav-link nav-link-ig">
+              <i class="fa-brands fa-instagram"></i> @sarahschu.art
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Action & Toggle Mobile -->
+      <div class="nav-actions">
+        <a href="#contact" class="btn-header-cta">Parler de mon projet</a>
+      </div>
+
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================================================
+         HERO SECTION (STYLE BOUTIQUE ATELIER & ARCHED SHOWCASE)
+         ========================================================================== -->
+    <section id="accueil" class="hero-section">
+      <div class="container hero-container">
+        
+        <!-- Colonne Gauche : Titre, Déclaration & Pilules -->
+        <div class="hero-content">
+          
+          <div class="hero-eyebrow">
+            <span id="hero-eyebrow-text">FRESQUES PERSONNALISÉES &bull; PARTICULIERS &amp; PROFESSIONNELS &bull; ALSACE 🥨</span>
+          </div>
+
+          <h1 class="hero-title" id="hero-title">
+            J'embellis vos<br>
+            murs, peints à la<br>
+            main, en Alsace.
+          </h1>
+
+          <p class="hero-desc" id="hero-desc-text">
+            Des fresques personnalisées, imaginées pour votre lieu et peintes à la main, pour votre intérieur comme pour votre activité professionnelle. Je donne aussi des cours d'aquarelle et je réalise des illustrations.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#catalogue" class="btn-dark-pill">
+              Découvrir les fresques &darr;
+            </a>
+            <a href="https://www.instagram.com/sarahschu.art" target="_blank" rel="noopener" class="btn-underline-link">
+              Écrire sur Instagram &#8599;
+            </a>
+          </div>
+
+          <!-- Pilules de Catégories (Filtres Rapides) -->
+          <div class="hero-tags">
+            <button class="hero-tag-pill active" data-filter="all">Tous</button>
+            <button class="hero-tag-pill" data-filter="fresques">Particuliers</button>
+            <button class="hero-tag-pill" data-filter="collectivites">Professionnels</button>
+            <button class="hero-tag-pill" data-filter="peintures">Trompe-l'œil</button>
+            <button class="hero-tag-pill" data-filter="illustrations">Aquarelle &amp; Illustrations</button>
+            <button class="hero-tag-pill" data-filter="graphisme">Identité &amp; Édition</button>
+          </div>
+
+        </div>
+
+        <!-- Colonne Droite : Vitrine Arched Showcase avec Échantillons de Couleurs -->
+        <div class="hero-visual">
+          <div class="arch-card">
+            <div class="arch-window">
+              <img id="hero-main-img" src="assets/images/hero_vignes_alsace.jpg" alt="Fresque murale Les Vignes &amp; la Cigogne par Sarah Schu">
+              <span class="arch-badge">Visuel d'exemple</span>
+            </div>
+            
+            <div class="arch-footer">
+              <div class="arch-artwork-info">
+                <div class="arch-artwork-title">« Les Vignes &amp; la Cigogne »</div>
+                <div class="arch-artwork-sub">Séjour &bull; Alsace</div>
+              </div>
+
+              <div class="arch-palette">
+                <div class="palette-dots">
+                  <span class="palette-dot" style="background-color: #8DA07B;" title="Vert vigne"></span>
+                  <span class="palette-dot" style="background-color: #C8A25D;" title="Ocre blé"></span>
+                  <span class="palette-dot" style="background-color: #8CA6BD;" title="Bleu ciel"></span>
+                  <span class="palette-dot" style="background-color: #EFE6D8;" title="Lin chaud"></span>
+                </div>
+                <span class="palette-label">Vert vigne</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         BANDEAU DE CONFIANCE & CHIFFRES CLÉS
+         ========================================================================== -->
+    <section class="trust-strip" aria-label="Points forts de l'atelier">
+      <div class="container">
+        <div class="trust-grid" id="stats-grid-container">
+          <!-- Injecté dynamiquement -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         CATALOGUE DES RÉALISATIONS (PORTFOLIO)
+         ========================================================================== -->
+    <section id="catalogue" class="section">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="section-eyebrow">PORTFOLIO D'ŒUVRES &bull; ÉDITION IN SITU</div>
+          <h2 class="section-title">Découvrez les <span class="italic-serif">fresques</span></h2>
+          <p class="section-desc">
+            Cliquez sur un texte pour le modifier directement, ou survolez une photo pour la remplacer.
+          </p>
+        </div>
+
+        <!-- Filtres Horizontaux -->
+        <div class="catalog-filters" role="tablist">
+          <button class="filter-pill active" data-filter="all">Toutes les créations</button>
+          <button class="filter-pill" data-filter="fresques">Particuliers &amp; Résidentiel</button>
+          <button class="filter-pill" data-filter="collectivites">Professionnels &amp; Santé</button>
+          <button class="filter-pill" data-filter="peintures">Trompe-l'œil &amp; Peintures</button>
+          <button class="filter-pill" data-filter="illustrations">Aquarelle &amp; Illustrations</button>
+          <button class="filter-pill" data-filter="graphisme">Identité &amp; Édition</button>
+        </div>
+
+        <!-- Grille des Créations -->
+        <div class="gallery-grid" id="portfolio-grid-container">
+          <!-- Injecté dynamiquement avec boutons d'édition in situ -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         PARTICULIERS & PROFESSIONNELS (DOMAINES DE PROJET)
+         ========================================================================== -->
+    <section id="domaines" class="section section-tinted">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="section-eyebrow">ACCOMPAGNEMENT SUR MESURE</div>
+          <h2 class="section-title">Particuliers &amp; <span class="italic-serif">Professionnels</span></h2>
+          <p class="section-desc">
+            De la fresque murale intimiste d'un salon jusqu'au décor monumental d'un établissement d'accueil.
+          </p>
+        </div>
+
+        <div class="services-grid" id="services-grid-container">
+          <!-- Rendu dynamique -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         L'ARTISTE — SARAH SCHU
+         ========================================================================== -->
+    <section id="artiste" class="section">
+      <div class="container">
+        
+        <!-- En-tête de Section Centré et Harmonieux -->
+        <div class="section-header" style="max-width: 820px; margin: 0 auto 3.5rem; text-align: center;">
+          <div class="section-eyebrow">L'HISTOIRE DE L'ATELIER &bull; SARAH SCHU</div>
+          <h2 class="section-title">Une passion du dessin &amp; des <span class="italic-serif">couleurs</span></h2>
+          <p class="section-desc" style="margin: 0 auto;">
+            Diplômée de l'École Émile Cohl à Lyon et d'Artline à Paris, je conçois et peins des décors muraux in situ en résonance absolue avec l'esprit de votre lieu de vie.
+          </p>
+        </div>
+
+        <div class="artist-grid">
+          
+          <!-- Colonne Gauche : Portrait en Arche & Titres Académiques -->
+          <div class="artist-visual">
+            <div class="artist-arch-frame">
+              <img id="about-photo" src="assets/images/profile_fb.jpg" alt="Sarah Schu artiste peintre muraliste en Alsace">
+            </div>
+            
+            <button type="button" id="btn-change-artist-photo" class="btn-admin-change-photo">
+              <i class="fa-solid fa-camera"></i> Changer la photo de l'artiste
+            </button>
+
+            <div class="artist-badge">
+              <div class="artist-badge-name">Sarah Schu</div>
+              <div class="artist-badge-loc">Artiste Peintre Muraliste &bull; Zimmerbach (Alsace)</div>
+              <div class="artist-badge-schools">
+                <i class="fa-solid fa-graduation-cap" style="color: var(--accent-terra);"></i> Émile Cohl (Lyon) &bull; Artline (Paris)
+              </div>
+            </div>
+          </div>
+
+          <!-- Colonne Droite : Histoire & Formations -->
+          <div class="artist-text">
+            <div id="about-bio-text" class="artist-bio-body">
+              <!-- Injecté dynamiquement -->
+            </div>
+
+            <!-- Formations Académiques -->
+            <div style="margin-top: 2.2rem;">
+              <h3 style="font-family: var(--font-serif); font-size: 1.3rem; margin-bottom: 1.2rem; color: var(--text-main);">
+                <i class="fa-solid fa-award" style="color: var(--accent-terra); margin-right: 0.5rem;"></i> Formations Académiques
+              </h3>
+              <div class="academic-cards" id="formations-container">
+                <!-- Injecté dynamiquement -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         LA MÉTHODE IN SITU (COMMENT ÇA SE PASSE)
+         ========================================================================== -->
+    <section id="methode" class="section section-tinted">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="section-eyebrow">DÉMARCHE SIMPLE &amp; RASSURANTE</div>
+          <h2 class="section-title">Comment se passe <span class="italic-serif">votre projet</span>&nbsp;?</h2>
+          <p class="section-desc">
+            De la première idée jusqu'au dernier coup de pinceau, je vous accompagne à chaque étape.
+          </p>
+        </div>
+
+        <div class="steps-grid" id="process-grid-container">
+          <!-- Injecté dynamiquement -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         TÉMOIGNAGES & RÉFÉRENCES EN ALSACE
+         ========================================================================== -->
+    <section id="avis" class="section">
+      <div class="container">
+        
+        <div class="section-header">
+          <div class="section-eyebrow">RETOURS D'EXPÉRIENCE</div>
+          <h2 class="section-title">Ils ont confié <span class="italic-serif">leurs murs</span></h2>
+          <p class="section-desc">
+            Particuliers, foyers de vie, brasseries et résidences : quelques témoignages sur mes interventions in situ.
+          </p>
+        </div>
+
+        <div class="testimonials-slider-wrapper">
+          <div class="testimonials-viewport" id="testimonials-viewport">
+            <div class="testimonials-track" id="testimonials-grid-container">
+              <!-- Injecté dynamiquement -->
+            </div>
+          </div>
+
+          <div class="testimonials-controls">
+            <button type="button" class="slider-arrow-btn" id="testimonials-prev-btn" aria-label="Avis précédent">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <div class="testimonials-dots" id="testimonials-dots-container"></div>
+            <button type="button" class="slider-arrow-btn" id="testimonials-next-btn" aria-label="Avis suivant">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         QUESTIONS FRÉQUENTES (FAQ)
+         ========================================================================== -->
+    <section id="faq" class="section section-tinted">
+      <div class="container" style="max-width: 900px;">
+        
+        <div class="section-header" style="text-align: center;">
+          <div class="section-eyebrow">TOUT CE QU'IL FAUT SAVOIR</div>
+          <h2 class="section-title">Questions <span class="italic-serif">fréquentes</span></h2>
+          <p class="section-desc" style="margin: 0 auto;">
+            Tarifs, préparation du mur, durabilité et délais.
+          </p>
+        </div>
+
+        <div class="faq-list" id="faq-list-container">
+          <!-- Injecté dynamiquement -->
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         CONTACT / COORDONNÉES
+         ========================================================================== -->
+    <section id="contact" class="section">
+      <div class="container">
+        
+        <div class="contact-box">
+          <div class="section-header" style="text-align: center; margin-bottom: 2rem;">
+            <div class="section-eyebrow">COORDONNÉES DE L'ATELIER</div>
+            <h2 class="section-title">Vos informations de <span class="italic-serif">contact</span></h2>
+            <p class="section-desc" style="margin: 0 auto;">
+              Cliquez directement ci-dessous pour modifier vos numéros, adresses ou courriels.
+            </p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+            <div class="contact-item" style="background: #FAF8F5; padding: 1.5rem; border-radius: 12px;">
+              <div class="contact-item-icon"><i class="fa-solid fa-phone"></i></div>
+              <div>
+                <div class="contact-item-lbl">Téléphone</div>
+                <div id="contact-phone-text" class="contact-item-val" contenteditable="true">06 75 45 04 97</div>
+              </div>
+            </div>
+
+            <div class="contact-item" style="background: #FAF8F5; padding: 1.5rem; border-radius: 12px;">
+              <div class="contact-item-icon"><i class="fa-solid fa-envelope"></i></div>
+              <div>
+                <div class="contact-item-lbl">E-mail</div>
+                <div id="contact-email-text" class="contact-item-val" contenteditable="true">sarah.schu16@gmail.com</div>
+              </div>
+            </div>
+
+            <div class="contact-item" style="background: #FAF8F5; padding: 1.5rem; border-radius: 12px;">
+              <div class="contact-item-icon"><i class="fa-solid fa-location-dot"></i></div>
+              <div>
+                <div class="contact-item-lbl">Localisation</div>
+                <div id="contact-location-text" class="contact-item-val" contenteditable="true">Zimmerbach / Colmar / Munster (Alsace)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================================================
+       PIED DE PAGE (FOOTER)
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom-bar">
+        <div>&copy; 2026 Sarah Schu &bull; Atelier de Fresques &amp; Aquarelle &bull; Mode Édition Directe</div>
+        <div style="display: flex; gap: 1.5rem; align-items: center;">
+          <a href="index.html" class="footer-admin-link">
+            <i class="fa-solid fa-arrow-left"></i> Voir le site public
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       MODALE D'EXPOSITION (VISIONNEUSE PLEIN ÉCRAN - ZÉRO DÉFILEMENT)
+       ========================================================================== -->
+  <div id="lightbox-modal" class="exhibition-theater" role="dialog" aria-modal="true" aria-label="Aperçu d'une œuvre">
+    <div class="theater-wrapper">
+      
+      <!-- Barre Supérieure : Titre & Fermeture -->
+      <header class="theater-topbar">
+        <div class="theater-title-wrap">
+          <span id="lightbox-category" class="theater-cat-pill">FRESQUE SUR MESURE</span>
+          <h3 id="lightbox-title" class="theater-title">Titre de la fresque</h3>
+          <span class="theater-meta-dot">&bull;</span>
+          <span id="lightbox-location" class="theater-loc">Alsace</span>
+          <span class="theater-meta-dot">&bull;</span>
+          <span id="lightbox-year" class="theater-year">2026</span>
+        </div>
+
+        <div class="theater-actions">
+          <span id="lightbox-counter-badge" class="theater-badge">1 / 1</span>
+          <button id="lightbox-close-btn" class="theater-close-btn" aria-label="Fermer la visionneuse">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scène Centrale : Espace d'Exposition Atelier (Lumière douce & Halo Ambiant) -->
+      <div class="theater-stage" id="lightbox-viewer-area">
+        <div id="lightbox-ambient-backdrop" class="theater-ambient-backdrop" aria-hidden="true"></div>
+
+        <button id="lightbox-prev-btn" class="theater-nav-btn theater-prev" aria-label="Image précédente">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <div class="theater-artwork">
+          <img id="lightbox-img" src="" alt="Vue de la fresque">
+        </div>
+
+        <button id="lightbox-next-btn" class="theater-nav-btn theater-next" aria-label="Image suivante">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Barre Inférieure : Spécifications, Miniatures & Contact -->
+      <footer class="theater-bottombar">
+        <div class="theater-info-col">
+          <div id="lightbox-technique" class="theater-tech">Peinture acrylique in situ</div>
+          <div id="lightbox-desc" class="theater-desc">Description de la création</div>
+        </div>
+
+        <!-- Galerie de Miniatures (si plusieurs vues) -->
+        <div class="theater-thumbs-wrap">
+          <div id="lightbox-carousel" class="theater-thumbs-strip"></div>
+        </div>
+
+        <div class="theater-cta-wrap">
+          <button type="button" id="lightbox-admin-close-btn" class="btn-theater-cta">
+            <i class="fa-solid fa-check"></i> Fermer l'aperçu
+          </button>
+        </div>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- Scripts du Moteur Visuel In Situ -->
+  <script src="assets/js/admin-visual.js"></script>
+</body>
+</html>
