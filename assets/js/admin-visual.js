@@ -1188,18 +1188,60 @@
   }
 
   /**
-   * Compresse une image avant upload admin (max 2000px, JPEG 85%)
+   * Compresse et optimise une image avant upload admin (max 2000px, JPEG 85%)
+   * Intègre le décodeur UTIF pour la conversion automatique des fichiers TIFF
    */
-  function compressImageFile(file, maxWidth = 2000, quality = 0.85) {
-    return new Promise((resolve) => {
-      if (!file || !file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => resolve(null);
-        reader.readAsDataURL(file);
-        return;
-      }
+  async function compressImageFile(file, maxWidth = 2000, quality = 0.85) {
+    if (!file) return null;
 
+    const isTiff = (file.name && file.name.match(/\.(tiff?|tif)$/i)) || (file.type && file.type.includes('tiff'));
+
+    // Décodage spécialisé pour les fichiers TIFF via UTIF
+    if (isTiff && typeof UTIF !== 'undefined') {
+      try {
+        const buffer = await file.arrayBuffer();
+        const ifds = UTIF.decode(buffer);
+        if (ifds && ifds.length > 0) {
+          UTIF.decodeImage(buffer, ifds[0]);
+          const rgba = UTIF.toRGBA8(ifds[0]);
+          const origW = ifds[0].width;
+          const origH = ifds[0].height;
+
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = origW;
+          tempCanvas.height = origH;
+          const tCtx = tempCanvas.getContext('2d');
+          const imgData = tCtx.createImageData(origW, origH);
+          imgData.data.set(rgba);
+          tCtx.putImageData(imgData, 0, 0);
+
+          let width = origW;
+          let height = origH;
+          if (width > maxWidth || height > maxWidth) {
+            if (width > height) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            } else {
+              width = Math.round((width * maxWidth) / height);
+              height = maxWidth;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(tempCanvas, 0, 0, width, height);
+
+          return canvas.toDataURL('image/jpeg', quality);
+        }
+      } catch (err) {
+        console.warn('Erreur décodage TIFF avec UTIF:', err);
+      }
+    }
+
+    // Traitement standard (JPEG, PNG, WebP, etc.)
+    return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const img = new Image();
@@ -1225,7 +1267,10 @@
 
           resolve(canvas.toDataURL('image/jpeg', quality));
         };
-        img.onerror = () => resolve(e.target.result);
+        img.onerror = () => {
+          // En cas d'erreur avec le constructeur Image, on retourne la dataURL brute
+          resolve(e.target.result);
+        };
         img.src = e.target.result;
       };
       reader.onerror = () => resolve(null);
@@ -1234,49 +1279,91 @@
   }
 
   /**
-   * Sélecteur de fichier et upload (serveur Node ou local)
+   * Traite et téléverse un fichier unique (compresse + upload serveur / fallback dataUrl)
    */
-  function triggerImageUpload(callback) {
-    let input = document.getElementById('global-photo-input');
-    if (!input) {
-      input = document.createElement('input');
-      input.type = 'file';
-      input.id = 'global-photo-input';
-      input.accept = 'image/*';
-      input.style.display = 'none';
-      document.body.appendChild(input);
+  async function uploadSingleFile(file) {
+    if (!file) return null;
+    const base64Data = await compressImageFile(file, 2000, 0.85);
+    if (!base64Data) return null;
+
+    const cleanFileName = (file.name ? file.name.replace(/\.[^/.]+$/, "") : "photo") + ".jpg";
+
+    try {
+      const resp = await fetch('/api/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image: base64Data, filename: cleanFileName })
+      });
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.success && data.url) {
+          return data.url;
+        }
+      }
+    } catch (err) {
+      console.warn('Mode hors-ligne ou upload serveur indisponible, utilisation directe dataURL:', err);
     }
 
+    return base64Data;
+  }
+
+  /**
+   * Sélecteur universel de fichier et téléversement
+   * Supporte la sélection unique (par défaut) ou multiple (options.multiple = true)
+   */
+  function triggerImageUpload(callback, options = {}) {
+    const isMultiple = !!options.multiple;
+    
+    // Création d'un élément input neuf pour chaque appel pour éviter le bug de re-sélection du même fichier
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*, .jpg, .jpeg, .png, .webp, .tif, .tiff, .heic';
+    if (isMultiple) input.multiple = true;
+    input.style.position = 'fixed';
+    input.style.top = '-9999px';
+    input.style.left = '-9999px';
+    input.style.opacity = '0';
+    document.body.appendChild(input);
+
     input.onchange = async () => {
-      if (!input.files || !input.files[0]) return;
-      const file = input.files[0];
-
-      // Compression automatique à la volée avant upload
-      const base64Data = await compressImageFile(file, 2000, 0.85);
-      if (!base64Data) return;
-
-      const cleanFileName = (file.name ? file.name.replace(/\.[^/.]+$/, "") : "photo") + ".jpg";
-
-      // Tentative d'upload sur le serveur Node /api/upload
       try {
-        const resp = await fetch('/api/upload', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ image: base64Data, filename: cleanFileName })
-        });
-        if (resp.ok) {
-          const data = await resp.json();
-          if (data.success && data.url) {
-            callback(data.url);
-            return;
+        if (!input.files || input.files.length === 0) return;
+        const files = Array.from(input.files);
+
+        if (typeof options.onStart === 'function') {
+          options.onStart(files.length);
+        }
+
+        const uploadedUrls = [];
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          if (typeof options.onProgress === 'function') {
+            options.onProgress(i + 1, files.length, file.name);
           }
+          const url = await uploadSingleFile(file);
+          if (url) uploadedUrls.push(url);
+        }
+
+        if (uploadedUrls.length > 0) {
+          if (isMultiple) {
+            callback(uploadedUrls);
+          } else {
+            callback(uploadedUrls[0]);
+          }
+        } else {
+          showToast("Impossible de charger la photo sélectionnée. Vérifiez le format du fichier.", "error");
         }
       } catch (err) {
-        // Si mode hors ligne ou statique, on utilise directement la data-URI
+        console.error('Erreur lors de l\'importation photo:', err);
+        showToast("Erreur lors de l'importation de la photo.", "error");
+      } finally {
+        if (typeof options.onFinish === 'function') {
+          options.onFinish();
+        }
+        if (input.parentNode) {
+          input.parentNode.removeChild(input);
+        }
       }
-
-      callback(base64Data);
-      input.value = '';
     };
 
     input.click();
@@ -1583,10 +1670,88 @@
 
     if (addPhotoBtn) {
       addPhotoBtn.addEventListener('click', () => {
-        triggerImageUpload((url) => {
-          drawerGallery.push(url);
+        const origBtnHtml = addPhotoBtn.innerHTML;
+        triggerImageUpload((urls) => {
+          urls.forEach(u => drawerGallery.push(u));
           renderDrawerGallery();
+          showToast(`${urls.length} photo${urls.length > 1 ? 's ajoutées' : ' ajoutée'} à la création !`, 'success');
+        }, {
+          multiple: true,
+          onStart: (count) => {
+            addPhotoBtn.disabled = true;
+            addPhotoBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Préparation de ${count} photo${count > 1 ? 's' : ''}...`;
+          },
+          onProgress: (current, total, name) => {
+            addPhotoBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Traitement (${current}/${total})...`;
+          },
+          onFinish: () => {
+            addPhotoBtn.disabled = false;
+            addPhotoBtn.innerHTML = origBtnHtml;
+          }
         });
+      });
+    }
+
+    // Support Glisser-Déposer de photos directement sur la zone de galerie
+    const strip = document.getElementById('drawer-gallery-strip');
+    async function handleDroppedFiles(fileList) {
+      if (!fileList || fileList.length === 0) return;
+      const files = Array.from(fileList).filter(f => f.type.startsWith('image/') || (f.name && f.name.match(/\.(jpe?g|png|webp|tiff?|tif|heic)$/i)));
+      if (files.length === 0) {
+        showToast("Seuls les fichiers images sont acceptés.", "error");
+        return;
+      }
+
+      const origBtnHtml = addPhotoBtn ? addPhotoBtn.innerHTML : '';
+      if (addPhotoBtn) {
+        addPhotoBtn.disabled = true;
+        addPhotoBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Traitement de ${files.length} photo(s)...`;
+      }
+
+      const uploaded = [];
+      for (let i = 0; i < files.length; i++) {
+        if (addPhotoBtn) {
+          addPhotoBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Traitement (${i + 1}/${files.length})...`;
+        }
+        const url = await uploadSingleFile(files[i]);
+        if (url) uploaded.push(url);
+      }
+
+      if (uploaded.length > 0) {
+        uploaded.forEach(u => drawerGallery.push(u));
+        renderDrawerGallery();
+        showToast(`${uploaded.length} photo${uploaded.length > 1 ? 's ajoutées' : ' ajoutée'} par glisser-déposer !`, 'success');
+      }
+
+      if (addPhotoBtn) {
+        addPhotoBtn.disabled = false;
+        addPhotoBtn.innerHTML = origBtnHtml;
+      }
+    }
+
+    if (strip) {
+      ['dragenter', 'dragover'].forEach(evt => {
+        strip.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          strip.style.borderColor = 'var(--accent-terra)';
+          strip.style.backgroundColor = 'rgba(196, 112, 79, 0.08)';
+        });
+      });
+      ['dragleave', 'drop'].forEach(evt => {
+        strip.addEventListener(evt, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          strip.style.borderColor = '';
+          strip.style.backgroundColor = '';
+        });
+      });
+      strip.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.dataTransfer && e.dataTransfer.files) {
+          handleDroppedFiles(e.dataTransfer.files);
+        }
       });
     }
 
@@ -1673,32 +1838,61 @@
 
     if (drawerGallery.length === 0) {
       container.innerHTML = `
-        <div style="text-align: center; padding: 1.5rem; color: var(--text-faint); font-size: 0.85rem; border: 1.5px dashed var(--border-card); border-radius: 8px;">
-          Aucune photo ajoutée pour l'instant. Cliquez ci-dessous pour ajouter une ou plusieurs vues de votre fresque.
+        <div style="text-align: center; padding: 1.5rem; color: var(--text-faint); font-size: 0.85rem; border: 1.5px dashed var(--border-card); border-radius: 8px; cursor: pointer; transition: all 0.2s;" id="drawer-dropzone-empty">
+          <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.8rem; color: var(--accent-terra); margin-bottom: 0.5rem; display: block;"></i>
+          <strong>Glissez-déposez vos photos ici</strong><br>
+          <span style="font-size: 0.78rem; color: var(--text-muted);">ou cliquez sur le bouton ci-dessous pour sélectionner un ou plusieurs fichiers</span>
         </div>
       `;
+      const emptyBox = document.getElementById('drawer-dropzone-empty');
+      if (emptyBox) {
+        emptyBox.addEventListener('click', () => {
+          const addBtn = document.getElementById('drawer-add-photo-btn');
+          if (addBtn) addBtn.click();
+        });
+      }
       return;
     }
 
     container.innerHTML = `
-      <div style="display: flex; gap: 0.6rem; overflow-x: auto; padding: 0.5rem 0;">
+      <div style="display: flex; gap: 0.6rem; overflow-x: auto; padding: 0.5rem 0; align-items: center;">
         ${drawerGallery.map((src, idx) => `
-          <div style="position: relative; width: 72px; height: 72px; flex-shrink: 0; border-radius: 8px; overflow: hidden; border: 1.5px solid var(--border-card);">
-            <img src="${src}" alt="vue ${idx + 1}" style="width: 100%; height: 100%; object-fit: cover;">
-            <button class="drawer-rm-photo" data-idx="${idx}" style="position: absolute; top: 2px; right: 2px; width: 20px; height: 20px; border-radius: 50%; background: rgba(220,38,38,0.9); color: #fff; border: none; font-size: 0.65rem; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+          <div style="position: relative; width: 78px; height: 78px; flex-shrink: 0; border-radius: 8px; overflow: hidden; border: 2px solid ${idx === 0 ? 'var(--accent-terra)' : 'var(--border-card)'}; box-shadow: 0 2px 6px rgba(0,0,0,0.06); background: #fff;" title="${idx === 0 ? 'Photo de couverture principale' : 'Photo secondaire (cliquez pour définir en principale)'}">
+            <img src="${src}" alt="vue ${idx + 1}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" class="drawer-thumb-img" data-idx="${idx}">
+            <button class="drawer-rm-photo" data-idx="${idx}" type="button" style="position: absolute; top: 3px; right: 3px; width: 22px; height: 22px; border-radius: 50%; background: rgba(220,38,38,0.92); color: #fff; border: none; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2;" title="Supprimer cette photo">
               <i class="fa-solid fa-xmark"></i>
             </button>
-            ${idx === 0 ? '<span style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.7); color: #fff; font-size: 0.58rem; text-align: center; text-transform: uppercase;">Principale</span>' : ''}
+            ${idx === 0 
+              ? '<span style="position: absolute; bottom: 0; left: 0; right: 0; background: var(--accent-terra); color: #fff; font-size: 0.58rem; font-weight: 700; text-align: center; text-transform: uppercase; padding: 2px 0; letter-spacing: 0.5px;">★ Principale</span>' 
+              : `<button class="drawer-set-main" data-idx="${idx}" type="button" style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(30,30,30,0.75); color: #fff; font-size: 0.55rem; text-align: center; border: none; cursor: pointer; padding: 2px 0;" title="Définir comme photo principale">Mettre en 1ère</button>`
+            }
           </div>
         `).join('')}
+      </div>
+      <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 0.25rem;">
+        ${drawerGallery.length} photo${drawerGallery.length > 1 ? 's' : ''} au total. La première photo est la couverture sur le catalogue.
       </div>
     `;
 
     container.querySelectorAll('.drawer-rm-photo').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
         const idx = parseInt(btn.getAttribute('data-idx'), 10);
         drawerGallery.splice(idx, 1);
         renderDrawerGallery();
+      });
+    });
+
+    container.querySelectorAll('.drawer-set-main, .drawer-thumb-img').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const idx = parseInt(el.getAttribute('data-idx'), 10);
+        if (idx > 0 && idx < drawerGallery.length) {
+          const [selected] = drawerGallery.splice(idx, 1);
+          drawerGallery.unshift(selected);
+          renderDrawerGallery();
+          showToast('Photo principale mise à jour !', 'info');
+        }
       });
     });
   }
