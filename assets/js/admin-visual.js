@@ -184,7 +184,7 @@
     setText('#hero-desc-text', a.heroBio || '');
 
     // Photos principales
-    setImg('#hero-main-img', a.heroImage || 'assets/images/hero_vignes_alsace.jpg');
+    setImg('#hero-main-img', a.heroImage || 'assets/images/post2_Dd9GbcwDM6-_01.jpg');
     setImg('#about-photo', a.profilePhoto || 'assets/images/profile_fb.jpg');
 
     // Chiffres Clés

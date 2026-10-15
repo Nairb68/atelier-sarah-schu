@@ -19,7 +19,7 @@
     "artistInActionPhoto": "assets/images/post1_DeMNkRqDLyA_01.jpg",
     "adminPasswordHash": "sarah2024",
     "brandSubtitle": "ATELIER DE FRESQUES & AQUARELLE · ALSACE",
-    "heroImage": "assets/images/hero_vignes_alsace.jpg",
+    "heroImage": "assets/images/post2_Dd9GbcwDM6-_01.jpg",
     "heroEyebrow": "FRESQUES PERSONNALISÉES · PARTICULIERS & PROFESSIONNELS · ALSACE 🥨",
     "heroBio": "Des fresques personnalisées, imaginées pour votre lieu et peintes à la main, pour votre intérieur comme pour votre activité professionnelle. Je donne aussi des cours d'aquarelle et je réalise des illustrations."
   },
@@ -161,34 +161,38 @@
   ],
   "projects": [
     {
-      "id": "proj-vignes-cigogne",
-      "title": "Les Vignes & la Cigogne",
+      "id": "proj-chambre-montagne-wintzenheim",
+      "title": "Chambre d'adulte : Invitation au voyage alpin",
       "category": "fresques",
       "categoryLabel": "Particuliers & Résidentiel",
-      "location": "Alsace",
-      "year": "2026",
+      "location": "Wintzenheim (Alsace)",
+      "year": "2025",
       "technique": "Peinture murale acrylique in situ",
-      "description": "Fresque murale panoramique intégrée dans un séjour alsacien à colombages. Vue plongeante sur les coteaux de vignes, le clocher villageois et une cigogne en vol. Teintes douces et lumineuses.",
-      "mainImage": "assets/images/hero_vignes_alsace.jpg",
+      "description": "Fresque murale panoramique en tête de lit dans une chambre parentale. Harmonisation subtile des teintes : beige chaud, terracotta, bleu ardoise et gris brumeux, avec dégradés de crêtes vosgiennes, soleil d'or et nuages poétiques. Une atmosphère chaleureuse invitant au repos.",
+      "mainImage": "assets/images/post2_Dd9GbcwDM6-_01.jpg",
       "gallery": [
-        "assets/images/hero_vignes_alsace.jpg"
+        "assets/images/post2_Dd9GbcwDM6-_01.jpg",
+        "assets/images/post2_Dd9GbcwDM6-_03.jpg",
+        "assets/images/post2_Dd9GbcwDM6-_04.jpg",
+        "assets/images/post2_Dd9GbcwDM6-_05.jpg",
+        "assets/images/post2_Dd9GbcwDM6-_07.jpg"
       ],
       "palette": [
         {
-          "color": "#8DA07B",
-          "name": "Vert vigne"
+          "color": "#C86D51",
+          "name": "Terracotta soleil"
         },
         {
-          "color": "#C8A25D",
-          "name": "Ocre blé"
+          "color": "#D8C7B5",
+          "name": "Beige brume"
         },
         {
-          "color": "#8CA6BD",
-          "name": "Bleu ciel"
+          "color": "#7C959E",
+          "name": "Bleu ardoise"
         },
         {
-          "color": "#EFE6D8",
-          "name": "Lin chaud"
+          "color": "#47585F",
+          "name": "Vert sapin foncé"
         }
       ],
       "featured": true
@@ -200,36 +204,13 @@
       "categoryLabel": "Trompe-l'œil & Peintures",
       "location": "Secteur Colmar / Munster",
       "year": "2026",
-      "description": "Et si votre porte devenait une fenêtre ouverte sur la nature ? Trompe-l'œil réalisé entièrement à la main sur une porte intérieure, représentant un sentier sous les sapins qui s'ouvre vers les sommets bleutés. L'effet de perspective fait disparaître la menuiserie pour ouvrir l'espace.",
       "technique": "Acrylique sur bois préparé",
-      "mainImage": "assets/images/post1_DeMNkRqDLyA_01.jpg",
+      "description": "Et si votre porte devenait une fenêtre ouverte sur la nature ? Trompe-l'œil réalisé entièrement à la main sur une porte intérieure, représentant un sentier sous les sapins qui s'ouvre vers les sommets bleutés. L'effet de perspective fait disparaître la menuiserie pour ouvrir l'espace.",
+      "mainImage": "assets/images/post1_DeMNkRqDLyA_03.jpg",
       "gallery": [
+        "assets/images/post1_DeMNkRqDLyA_03.jpg",
         "assets/images/post1_DeMNkRqDLyA_01.jpg",
-        "assets/images/post1_DeMNkRqDLyA_02.jpg",
-        "assets/images/post1_DeMNkRqDLyA_03.jpg"
-      ],
-      "featured": true
-    },
-    {
-      "id": "proj-chambre-montagne-wintzenheim",
-      "title": "Chambre d'adulte : Invitation au voyage alpin",
-      "category": "fresques",
-      "categoryLabel": "Particuliers & Résidentiel",
-      "location": "Wintzenheim (Alsace)",
-      "year": "2025",
-      "description": "Fresque murale panoramique en tête de lit dans une chambre parentale. Harmonisation subtile des teintes : beige chaud, terracotta, bleu ardoise et gris brumeux, avec dégradés de crêtes vosgiennes, soleil d'or et nuages poétiques. Une atmosphère chaleureuse invitant au repos.",
-      "technique": "Peinture murale acrylique mate",
-      "mainImage": "assets/images/post2_Dd9GbcwDM6-_01.jpg",
-      "gallery": [
-        "assets/images/post2_Dd9GbcwDM6-_01.jpg",
-        "assets/images/post2_Dd9GbcwDM6-_02.jpg",
-        "assets/images/post2_Dd9GbcwDM6-_03.jpg",
-        "assets/images/post2_Dd9GbcwDM6-_04.jpg",
-        "assets/images/post2_Dd9GbcwDM6-_05.jpg",
-        "assets/images/post2_Dd9GbcwDM6-_06.jpg",
-        "assets/images/post2_Dd9GbcwDM6-_07.jpg",
-        "assets/images/post2_Dd9GbcwDM6-_08.jpg",
-        "assets/images/post2_Dd9GbcwDM6-_09.jpg"
+        "assets/images/post1_DeMNkRqDLyA_02.jpg"
       ],
       "featured": true
     },
@@ -240,8 +221,8 @@
       "categoryLabel": "Professionnels & Santé",
       "location": "Munster (Haut-Rhin)",
       "year": "2026",
-      "description": "Projet artistique et solidaire mené avec les résidents et l'animatrice Périne. Sarah a conçu et peint la composition principale, puis les résidents ont participé activement au pochoir (feuilles, motifs floraux). Un moment de convivialité créative qui a illuminé les espaces de vie du foyer.",
       "technique": "Fresque collaborative acrylique",
+      "description": "Projet artistique et solidaire mené avec les résidents et l'animatrice Périne. Sarah a conçu et peint la composition principale (l'Arbre des 4 Saisons), puis les résidents ont participé activement au pochoir (feuilles, motifs floraux). Un moment de convivialité créative qui a illuminé les espaces de vie du foyer.",
       "mainImage": "assets/images/post3_DcwC2nIDP7o_01.jpg",
       "gallery": [
         "assets/images/post3_DcwC2nIDP7o_01.jpg",
@@ -259,14 +240,12 @@
       "categoryLabel": "Particuliers & Résidentiel",
       "location": "Lyon 3e (Résidence Studilodge)",
       "year": "2025",
-      "description": "Fresque murale extérieure de 25 mètres de long par 3 mètres de haut. Sarah Schu a assuré la direction artistique et la réalisation complète de cette immense œuvre végétale aux teintes pop et éclatantes, transformant le jardin de la résidence en havre de vitalité et d'inspiration.",
       "technique": "Peinture monumentale extérieure (25m x 3m)",
+      "description": "Fresque murale extérieure de 25 mètres de long par 3 mètres de haut. Sarah Schu a assuré la direction artistique et la réalisation complète de cette immense œuvre végétale aux teintes pop et éclatantes, transformant le jardin de la résidence en havre de vitalité et d'inspiration.",
       "mainImage": "assets/images/post5_DbvmLZBDKnI_09.jpg",
       "gallery": [
         "assets/images/post5_DbvmLZBDKnI_09.jpg",
-        "assets/images/post5_DbvmLZBDKnI_01.jpg",
-        "assets/images/post5_DbvmLZBDKnI_02.jpg",
-        "assets/images/post5_DbvmLZBDKnI_03.jpg"
+        "assets/images/parcharmonie_action_crop.jpg"
       ],
       "featured": true
     },
@@ -277,12 +256,12 @@
       "categoryLabel": "Trompe-l'œil & Peintures",
       "location": "Breitenbach (Alsace)",
       "year": "2024",
-      "description": "Création d'un trompe-l'œil réaliste en fausse fenêtre sur le bardage d'un garage chez un particulier. Hommage pictural d'inspiration classique mettant en scène une couturière dans son atelier avec son chat.",
       "technique": "Acrylique extérieure sur façade",
-      "mainImage": "assets/images/post5_DbvmLZBDKnI_08.jpg",
+      "description": "Création d'un trompe-l'œil réaliste en fausse fenêtre sur le bardage d'un garage chez un particulier. Hommage pictural d'inspiration classique mettant en scène une couturière dans son atelier avec son chat.",
+      "mainImage": "assets/images/couturiere_breitenbach_crop.jpg",
       "gallery": [
-        "assets/images/post5_DbvmLZBDKnI_08.jpg",
-        "assets/images/post5_DbvmLZBDKnI_16.jpg"
+        "assets/images/couturiere_breitenbach_crop.jpg",
+        "assets/images/post5_DbvmLZBDKnI_08.jpg"
       ],
       "featured": false
     },
@@ -293,8 +272,8 @@
       "categoryLabel": "Professionnels & Santé",
       "location": "Vallée de Munster",
       "year": "2025",
-      "description": "Création d'un vaste paysage de France au cœur de l'EHPAD pour offrir aux résidents un horizon doux et une invitation quotidienne à l'évasion, aux souvenirs et à la sérénité.",
       "technique": "Peinture acrylique murale",
+      "description": "Création d'un vaste paysage de montagne et rivière de France au bout d'un couloir d'EHPAD pour offrir aux résidents un horizon doux et une invitation quotidienne à l'évasion, aux souvenirs et à la sérénité.",
       "mainImage": "assets/images/post6_DbvRrRNMqEq_01.jpg",
       "gallery": [
         "assets/images/post6_DbvRrRNMqEq_01.jpg"
@@ -302,44 +281,62 @@
       "featured": true
     },
     {
-      "id": "proj-chambre-enfant-musique",
-      "title": "Fresque Botanique & Musicale In Situ",
-      "category": "fresques",
-      "categoryLabel": "Particuliers & Résidentiel",
-      "location": "Griesbach",
-      "year": "2024",
-      "description": "Création murale alliant végétation délicate et motifs musicaux pour un intérieur résidentiel. Réalisée à l'acrylique fine.",
-      "technique": "Peinture acrylique intérieure",
-      "mainImage": "assets/images/post5_DbvmLZBDKnI_10.jpg",
+      "id": "proj-brasserie-ks-colmar",
+      "title": "Fresque didactique & Décoration chez Brasserie KS",
+      "category": "collectivites",
+      "categoryLabel": "Professionnels & Santé",
+      "location": "Colmar",
+      "year": "2022",
+      "technique": "Fresque murale monochrome & signalétique",
+      "description": "Habillage mural graphique illustrant le processus de brassage artisanal de la bière (empâtage, filtration, ébullition, fermentation, mise en bouteille) entourant la verrière d'atelier.",
+      "mainImage": "assets/images/brasserie_ks_crop.jpg",
       "gallery": [
+        "assets/images/brasserie_ks_crop.jpg",
         "assets/images/post5_DbvmLZBDKnI_10.jpg"
       ],
       "featured": false
     },
     {
-      "id": "proj-brasserie-ks-colmar",
-      "title": "Fresque didactique & Décoration chez Brasserie KS",
+      "id": "proj-chambre-enfant-musique",
+      "title": "Fresque Murale 'Les Instruments de Musique'",
       "category": "fresques",
       "categoryLabel": "Particuliers & Résidentiel",
-      "location": "Colmar",
-      "year": "2022",
-      "description": "Habillage mural graphique illustrant le processus de brassage artisanal de la bière (empâtage, filtration, ébullition, fermentation, mise en bouteille) entourant la verrière d'atelier.",
-      "technique": "Fresque murale monochrome & signalétique",
-      "mainImage": "assets/images/post5_DbvmLZBDKnI_04.jpg",
+      "location": "Griesbach (Alsace)",
+      "year": "2024",
+      "technique": "Peinture acrylique intérieure",
+      "description": "Création murale alliant batterie, guitares, saxophone, violon et clavier pour une chambre d'enfant. Réalisée à l'acrylique fine avec composition dynamique.",
+      "mainImage": "assets/images/instruments_griesbach_crop.jpg",
       "gallery": [
-        "assets/images/post5_DbvmLZBDKnI_04.jpg"
+        "assets/images/instruments_griesbach_crop.jpg",
+        "assets/images/post5_DbvmLZBDKnI_10.jpg"
       ],
       "featured": false
     },
     {
-      "id": "proj-chambre-bebe-acrylique",
-      "title": "Panorama Sylvestre & Faune Douce In Situ",
+      "id": "proj-vaches-dany-breitenbach",
+      "title": "Fresque 'Vaches à Dany' sur Balcon en Verre",
+      "category": "peintures",
+      "categoryLabel": "Trompe-l'œil & Peintures",
+      "location": "Breitenbach (Alsace)",
+      "year": "2023",
+      "technique": "Peinture acrylique sur verre extérieur",
+      "description": "Portraits à l'acrylique de vaches vosgiennes peints directement sur les garde-corps vitrés d'une terrasse et balcon d'un chalet alsacien.",
+      "mainImage": "assets/images/vaches_breitenbach_crop.jpg",
+      "gallery": [
+        "assets/images/vaches_breitenbach_crop.jpg",
+        "assets/images/post5_DbvmLZBDKnI_10.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "proj-chambre-enfants-guide",
+      "title": "Fresques pour Chambres d'Enfants & Univers Poétiques",
       "category": "fresques",
       "categoryLabel": "Particuliers & Résidentiel",
       "location": "Alsace",
       "year": "2025",
-      "description": "Fresque murale sur mesure aux teintes minérales apaisantes, pensée pour une harmonie parfaite avec la lumière de la pièce.",
-      "technique": "Acrylique murale douce",
+      "technique": "Acrylique murale inodore & lavable",
+      "description": "Démarche sur-mesure pour les chambres d'enfants et de bébés : création 100% personnalisée, peintures écologiques sans solvants, maquette visuelle sur photo préalable et composition pensée en harmonie avec le mobilier.",
       "mainImage": "assets/images/post4_DclYtKysI_P_01.jpg",
       "gallery": [
         "assets/images/post4_DclYtKysI_P_01.jpg"
@@ -353,8 +350,8 @@
       "categoryLabel": "Aquarelle & Illustrations",
       "location": "Édition jeunesse",
       "year": "2026",
-      "description": "Direction artistique, colorimétrie et ensemble des planches illustrées pour la publication du livre de Laurence Jolly.",
       "technique": "Illustration numérique & mise en page éditoriale",
+      "description": "Direction artistique, colorimétrie et ensemble des planches illustrées pour la publication du livre 'Les aventures de Giada' de Laurence Jolly.",
       "mainImage": "assets/images/post5_DbvmLZBDKnI_05.jpg",
       "gallery": [
         "assets/images/post5_DbvmLZBDKnI_05.jpg"
@@ -368,8 +365,8 @@
       "categoryLabel": "Identité & Édition",
       "location": "Munster",
       "year": "2026",
-      "description": "Création du nouveau logo officiel du Handball Club de la Vallée de Munster (HCVM). Un emblème fort mêlant le cerf vosgien, le ballon de handball dans les ramures et la crête montagnarde (lettre M).",
       "technique": "Vectoriel, charte maillots, déclinaisons web & print",
+      "description": "Création du nouveau logo officiel du Handball Club de la Vallée de Munster (HCVM). Un emblème fort mêlant le cerf vosgien, le ballon de handball dans les ramures et la crête montagnarde (lettre M).",
       "mainImage": "assets/images/post5_DbvmLZBDKnI_06.jpg",
       "gallery": [
         "assets/images/post5_DbvmLZBDKnI_06.jpg"
@@ -383,8 +380,8 @@
       "categoryLabel": "Identité & Édition",
       "location": "Colmar",
       "year": "2024",
-      "description": "Conception de dépliants et supports de communication pour les 6 marchés de Noël de Colmar, travaillant la hiérarchie de l'information et l'esthétique festive alsacienne.",
       "technique": "Print & Mise en page",
+      "description": "Conception de dépliants et supports de communication pour les 6 marchés de Noël de Colmar, travaillant la hiérarchie de l'information et l'esthétique festive alsacienne.",
       "mainImage": "assets/images/post5_DbvmLZBDKnI_07.jpg",
       "gallery": [
         "assets/images/post5_DbvmLZBDKnI_07.jpg"
@@ -398,8 +395,8 @@
       "categoryLabel": "Aquarelle & Illustrations",
       "location": "École Émile Cohl / Projets personnels",
       "year": "2025",
-      "description": "Planches de bandes dessinées explorant divers registres : narration historique en noir et blanc, théâtre classique à l'aquarelle et comédie moderne colorée ('It's a Match!').",
       "technique": "Encre de Chine, aquarelle & colorisation numérique",
+      "description": "Planches de bandes dessinées explorant divers registres : narration historique en noir et blanc, théâtre classique à l'aquarelle et comédie moderne colorée ('It's a Match!').",
       "mainImage": "assets/images/post5_DbvmLZBDKnI_11.jpg",
       "gallery": [
         "assets/images/post5_DbvmLZBDKnI_11.jpg"
@@ -413,8 +410,8 @@
       "categoryLabel": "Aquarelle & Illustrations",
       "location": "Créations personnelles",
       "year": "2025",
-      "description": "Études de lumière et d'architecture : perspective maritime de Venise et crêtes baignées de lumière dorée au coucher du soleil.",
       "technique": "Suite Adobe, Procreate & tablette graphique",
+      "description": "Études de lumière et d'architecture : perspective maritime de Venise et crêtes baignées de lumière dorée au coucher du soleil.",
       "mainImage": "assets/images/post5_DbvmLZBDKnI_12.jpg",
       "gallery": [
         "assets/images/post5_DbvmLZBDKnI_12.jpg"
@@ -428,8 +425,8 @@
       "categoryLabel": "Aquarelle & Illustrations",
       "location": "Projet de groupe créatif",
       "year": "2024",
-      "description": "Conception d'un immense parc d'attraction en perspective isométrique où chaque manège s'inspire d'un instrument de musique (flûte, orgue, violoncelle, cuivres).",
       "technique": "Perspective isométrique & dessin à la ligne",
+      "description": "Conception d'un immense parc d'attraction en perspective isométrique où chaque manège s'inspire d'un instrument de musique (flûte, orgue, violoncelle, cuivres).",
       "mainImage": "assets/images/post5_DbvmLZBDKnI_13.jpg",
       "gallery": [
         "assets/images/post5_DbvmLZBDKnI_13.jpg"
@@ -443,8 +440,8 @@
       "categoryLabel": "Trompe-l'œil & Peintures",
       "location": "Atelier",
       "year": "2025",
-      "description": "Scène intimiste d'un atelier sous verrière baigné de lumière naturelle, bibliothèque, chevalet et poêle en fonte. Recherche d'ambiance chaleureuse.",
       "technique": "Aquarelle, lavis & techniques mixtes",
+      "description": "Scène intimiste d'un atelier sous verrière baigné de lumière naturelle, bibliothèque, chevalet et poêle en fonte. Recherche d'ambiance chaleureuse.",
       "mainImage": "assets/images/post5_DbvmLZBDKnI_14.jpg",
       "gallery": [
         "assets/images/post5_DbvmLZBDKnI_14.jpg"
@@ -458,8 +455,8 @@
       "categoryLabel": "Trompe-l'œil & Peintures",
       "location": "Atelier Émile Cohl",
       "year": "2024",
-      "description": "Travail d'observation académique : modèle vivant au fusain sur grand format, nature morte au pastel sec et étude de couple à l'acrylique.",
       "technique": "Fusain, pastels secs & acrylique",
+      "description": "Travail d'observation académique : modèle vivant au fusain sur grand format, nature morte au pastel sec et étude de couple à l'acrylique.",
       "mainImage": "assets/images/post5_DbvmLZBDKnI_15.jpg",
       "gallery": [
         "assets/images/post5_DbvmLZBDKnI_15.jpg"
@@ -515,5 +512,5 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-14T08:58:22.316Z"
+  "lastUpdated": "2026-10-15T13:12:00.000Z"
 }
