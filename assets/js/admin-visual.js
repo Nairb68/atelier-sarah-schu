@@ -142,6 +142,7 @@
     }
 
     initDrawerListeners();
+    initInboxHandlers();
   }
 
   /**
@@ -1263,6 +1264,158 @@
     renderVisualPortfolio();
     markDirty();
     showToast(`L'œuvre « ${title} » a été supprimée du site.`, 'info');
+  }
+
+  /* ==========================================================================
+     BOÎTE DE RÉCEPTION DES DEMANDES DE PROJET / DEVIS (DOUBLE SÉCURITÉ)
+     ========================================================================== */
+  let inboxMessages = [];
+
+  function initInboxHandlers() {
+    const inboxBtn = document.getElementById('admin-bar-inbox-btn');
+    const drawer = document.getElementById('admin-inbox-drawer');
+    const backdrop = document.getElementById('admin-drawer-backdrop');
+    const closeBtn = document.getElementById('inbox-close-btn');
+    const closeBtnBottom = document.getElementById('inbox-close-btn-bottom');
+    const refreshBtn = document.getElementById('inbox-refresh-btn');
+
+    if (inboxBtn) {
+      inboxBtn.addEventListener('click', openInboxDrawer);
+    }
+
+    const closeInbox = () => {
+      if (drawer) drawer.classList.remove('active');
+      if (backdrop) backdrop.classList.remove('active');
+    };
+
+    if (closeBtn) closeBtn.addEventListener('click', closeInbox);
+    if (closeBtnBottom) closeBtnBottom.addEventListener('click', closeInbox);
+
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', async () => {
+        refreshBtn.innerHTML = '<i class="fa-solid fa-rotate fa-spin"></i>';
+        await fetchInboxMessages();
+        renderInboxMessages();
+        setTimeout(() => {
+          refreshBtn.innerHTML = '<i class="fa-solid fa-rotate"></i> Actualiser';
+        }, 500);
+      });
+    }
+
+    // Chargement initial des messages
+    fetchInboxMessages().then(() => updateInboxBadge());
+  }
+
+  async function fetchInboxMessages() {
+    try {
+      const resp = await fetch('/api/messages?v=' + Date.now());
+      if (resp.ok) {
+        inboxMessages = await resp.json();
+      }
+    } catch (e) {
+      console.warn('Lecture des messages impossible', e);
+    }
+  }
+
+  function updateInboxBadge() {
+    const badge = document.getElementById('admin-inbox-badge');
+    if (!badge) return;
+    if (inboxMessages && inboxMessages.length > 0) {
+      badge.textContent = inboxMessages.length;
+      badge.style.display = 'inline-block';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
+  function openInboxDrawer() {
+    const drawer = document.getElementById('admin-inbox-drawer');
+    const backdrop = document.getElementById('admin-drawer-backdrop');
+    fetchInboxMessages().then(() => {
+      renderInboxMessages();
+      updateInboxBadge();
+    });
+    if (drawer) drawer.classList.add('active');
+    if (backdrop) backdrop.classList.add('active');
+  }
+
+  function renderInboxMessages() {
+    const container = document.getElementById('inbox-messages-list');
+    if (!container) return;
+
+    if (!inboxMessages || inboxMessages.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+          <i class="fa-solid fa-inbox" style="font-size: 2.5rem; color: #D6D3D1; margin-bottom: 0.8rem; display: block;"></i>
+          <p style="font-size: 0.95rem; font-weight: 600;">Aucune demande de projet pour le moment.</p>
+          <p style="font-size: 0.8rem; color: var(--text-faint); margin-top: 0.4rem; line-height: 1.5;">
+            Dès qu'un visiteur remplit le formulaire sur le site, sa demande apparaîtra ici et vous recevrez un e-mail avec ses coordonnées et sa photo.
+          </p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = inboxMessages.map((m) => {
+      const dateFormatted = m.date ? new Date(m.date).toLocaleDateString('fr-FR', {
+        day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      }) : '';
+
+      return `
+        <div class="inbox-msg-card" style="background: #FAF8F5; border: 1px solid var(--border-card); border-radius: 12px; padding: 1.1rem; margin-bottom: 1rem; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem; gap: 0.5rem;">
+            <div>
+              <strong style="font-size: 1rem; color: var(--text-main);">${escapeHtml(m.nom || 'Sans nom')}</strong>
+              <div style="font-size: 0.78rem; color: var(--text-faint);">${dateFormatted}</div>
+            </div>
+            <span style="background: var(--accent-terra-light); color: var(--accent-terra); font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 6px;">
+              ${escapeHtml(m.typeProjet || 'Projet')}
+            </span>
+          </div>
+
+          <div style="display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 0.8rem; font-size: 0.85rem;">
+            ${m.tel ? `<a href="tel:${escapeHtml(m.tel)}" style="color: var(--accent-terra); font-weight: 600; text-decoration: none;"><i class="fa-solid fa-phone"></i> ${escapeHtml(m.tel)}</a>` : ''}
+            ${m.email ? `<a href="mailto:${escapeHtml(m.email)}" style="color: var(--accent-terra); font-weight: 600; text-decoration: none;"><i class="fa-solid fa-envelope"></i> ${escapeHtml(m.email)}</a>` : ''}
+            ${m.dimensions ? `<span style="color: var(--text-muted);"><i class="fa-solid fa-ruler-combined"></i> ${escapeHtml(m.dimensions)}</span>` : ''}
+          </div>
+
+          <div style="background: #FFFFFF; border-radius: 8px; padding: 0.8rem; font-size: 0.88rem; color: var(--text-main); line-height: 1.5; margin-bottom: 0.8rem; border-left: 3px solid var(--accent-terra); white-space: pre-wrap;">
+            ${escapeHtml(m.message || '')}
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+            <button class="btn-admin-bar btn-admin-danger btn-del-msg" data-id="${m.id}" type="button" style="padding: 4px 10px; font-size: 0.75rem;">
+              <i class="fa-solid fa-trash"></i> Supprimer
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    container.querySelectorAll('.btn-del-msg').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-id');
+        if (!confirm('Supprimer cette demande de devis ?')) return;
+        try {
+          await fetch('/api/messages/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+          });
+          inboxMessages = inboxMessages.filter(x => x.id !== id);
+          renderInboxMessages();
+          updateInboxBadge();
+          showToast('Demande supprimée', 'info');
+        } catch(e) {
+          alert('Erreur suppression');
+        }
+      });
+    });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
   /**

@@ -60,6 +60,9 @@
     </div>
     
     <div class="admin-bar-actions">
+      <button id="admin-bar-inbox-btn" class="btn-admin-bar" type="button" style="background: #292524; color: #FAF8F5;" title="Voir les demandes de devis reçues">
+        <i class="fa-solid fa-inbox"></i> Demandes <span id="admin-inbox-badge" style="display: none; background: var(--accent-terra); color: white; border-radius: 999px; padding: 1px 7px; font-size: 0.72rem; margin-left: 4px; font-weight: 700;">0</span>
+      </button>
       <button id="admin-bar-add-btn" class="btn-admin-bar btn-admin-add" type="button">
         <i class="fa-solid fa-plus"></i> Ajouter une création
       </button>
@@ -149,6 +152,33 @@
       </button>
       <button id="drawer-save-btn" type="button" class="btn-admin-bar btn-admin-save" style="flex: 1; justify-content: center;">
         <i class="fa-solid fa-check"></i> Valider les modifications
+      </button>
+    </div>
+  </aside>
+
+  <!-- ==========================================================================
+       TIROIR LATÉRAL : BOÎTE DE RÉCEPTION DES DEMANDES DE PROJET / DEVIS
+       ========================================================================== -->
+  <aside id="admin-inbox-drawer" class="admin-drawer" aria-label="Boîte de réception des demandes de projet" style="max-width: 520px;">
+    <div class="admin-drawer-header">
+      <h3 class="admin-drawer-title"><i class="fa-solid fa-inbox" style="color: var(--accent-terra); margin-right: 8px;"></i> Demandes de Devis</h3>
+      <button id="inbox-close-btn" class="admin-drawer-close" type="button" aria-label="Fermer">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    
+    <div class="admin-drawer-body" id="inbox-drawer-body" style="padding: 1.2rem;">
+      <div id="inbox-messages-list">
+        <!-- Rendu dynamique des messages -->
+      </div>
+    </div>
+
+    <div class="admin-drawer-footer">
+      <button id="inbox-refresh-btn" type="button" class="btn-admin-bar btn-admin-preview" style="color: var(--text-main); background: #eee;">
+        <i class="fa-solid fa-rotate"></i> Actualiser
+      </button>
+      <button id="inbox-close-btn-bottom" type="button" class="btn-admin-bar" style="flex: 1; justify-content: center; background: #292524; color: white;">
+        Fermer
       </button>
     </div>
   </aside>
@@ -601,6 +631,6 @@
   </div>
 
   <!-- Scripts du Moteur Visuel In Situ -->
-  <script src="assets/js/admin-visual.js?v=3"></script>
+  <script src="assets/js/admin-visual.js?v=4"></script>
 </body>
 </html>

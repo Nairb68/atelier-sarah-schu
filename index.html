@@ -432,26 +432,32 @@
           <div class="contact-grid">
             
             <!-- Formulaire -->
-            <form id="devis-form" class="contact-form">
+            <form id="devis-form" class="contact-form" action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
+              <!-- Configuration Web3Forms & Sécurité Anti-Spam -->
+              <input type="hidden" name="access_key" value="fe10a643-944e-4a1d-9d04-9b384cff82f1">
+              <input type="hidden" name="subject" value="Nouvelle demande de projet fresque — Atelier Sarah Schu">
+              <input type="hidden" name="from_name" value="Atelier Sarah Schu (Site Web)">
+              <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
+
               <div class="form-row">
                 <div class="form-group">
                   <label for="devis-nom">Votre nom &bull; prénom *</label>
-                  <input type="text" id="devis-nom" class="form-input" placeholder="Ex: Marie Fischer" required>
+                  <input type="text" id="devis-nom" name="name" class="form-input" placeholder="Ex: Marie Fischer" required>
                 </div>
                 <div class="form-group">
                   <label for="devis-email">Votre adresse e-mail *</label>
-                  <input type="email" id="devis-email" class="form-input" placeholder="Ex: marie@exemple.fr" required>
+                  <input type="email" id="devis-email" name="email" class="form-input" placeholder="Ex: marie@exemple.fr" required>
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group">
                   <label for="devis-tel">Téléphone</label>
-                  <input type="tel" id="devis-tel" class="form-input" placeholder="Ex: 06 00 00 00 00">
+                  <input type="tel" id="devis-tel" name="phone" class="form-input" placeholder="Ex: 06 00 00 00 00">
                 </div>
                 <div class="form-group">
                   <label for="devis-type">Type de projet *</label>
-                  <select id="devis-type" class="form-select">
+                  <select id="devis-type" name="type_projet" class="form-select">
                     <option value="Fresque pour séjour / chambre">Fresque pour séjour / chambre</option>
                     <option value="Trompe-l'œil sur porte ou mur">Trompe-l'œil sur porte ou mur</option>
                     <option value="Projet professionnel / Commerce / EHPAD">Projet professionnel / Commerce / EHPAD</option>
@@ -464,18 +470,18 @@
 
               <div class="form-group">
                 <label for="devis-dimensions">Dimensions approximatives &amp; Commune en Alsace</label>
-                <input type="text" id="devis-dimensions" class="form-input" placeholder="Ex: Mur de 3m x 2m50 à Colmar, Munster...">
+                <input type="text" id="devis-dimensions" name="dimensions_commune" class="form-input" placeholder="Ex: Mur de 3m x 2m50 à Colmar, Munster...">
               </div>
 
               <div class="form-group">
                 <label for="devis-message">Décrivez votre envie ou votre pièce *</label>
-                <textarea id="devis-message" class="form-textarea" rows="4" placeholder="Ambiance souhaitée, thématique (paysage, vignes, forêt, moderne...), luminosité..." required></textarea>
+                <textarea id="devis-message" name="message" class="form-textarea" rows="4" placeholder="Ambiance souhaitée, thématique (paysage, vignes, forêt, moderne...), luminosité..." required></textarea>
               </div>
 
               <!-- Zone Photo du Mur -->
               <div class="form-group">
                 <label>Photo de votre mur (Facultatif mais recommandé)</label>
-                <input type="file" id="devis-photo-mur" accept="image/*" style="display: none;">
+                <input type="file" id="devis-photo-mur" name="attachment" accept="image/*" style="display: none;">
                 <div id="upload-zone-mur" class="upload-dropzone">
                   <span id="upload-zone-label">
                     <i class="fa-solid fa-cloud-arrow-up" style="color: var(--accent-terra); font-size: 1.4rem; display: block; margin-bottom: 0.4rem;"></i>
@@ -680,6 +686,6 @@
   </div>
 
   <!-- Scripts -->
-  <script src="assets/js/main.js?v=3"></script>
+  <script src="assets/js/main.js?v=4"></script>
 </body>
 </html>

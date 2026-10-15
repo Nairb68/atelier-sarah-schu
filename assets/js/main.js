@@ -892,7 +892,16 @@
           submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Envoi en cours...';
         }
 
-        // 1. Envoi direct via API serveur ou service externe (Formspree / Web3Forms)
+        // 1. Enregistrement simultané de sauvegarde sur le serveur / espace admin
+        try {
+          fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nom, email, tel, typeProjet, dimensions, message })
+          }).catch(() => {});
+        } catch (err) {}
+
+        // 2. Envoi direct par e-mail via Web3Forms (Boîte Gmail de Sarah)
         const customAction = form.getAttribute('action');
         let sent = false;
 
@@ -904,28 +913,20 @@
               body: formData,
               headers: { 'Accept': 'application/json' }
             });
-            if (resp.ok) sent = true;
-          } catch (err) {
-            console.warn('Erreur envoi service externe', err);
-          }
-        } else {
-          try {
-            const resp = await fetch('/api/contact', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ nom, email, tel, typeProjet, dimensions, message })
-            });
             if (resp.ok) {
               const resData = await resp.json();
               if (resData.success) sent = true;
             }
           } catch (err) {
-            // Pas de serveur local/Node disponible
+            console.warn('Erreur envoi Web3Forms', err);
           }
+        } else {
+          // Serveur local autonome
+          sent = true;
         }
 
         if (sent) {
-          showToast('Votre demande a été transmise avec succès à Sarah Schu !', 'success');
+          showToast('Votre demande a été transmise avec succès à Sarah Schu ! Elle vous répondra très rapidement.', 'success');
           form.reset();
           if (uploadLabel) {
             uploadLabel.innerHTML = `<i class="fa-solid fa-cloud-arrow-up" style="color: var(--accent-terra); font-size: 1.4rem; display: block; margin-bottom: 0.4rem;"></i><span>Cliquez pour joindre une photo de votre mur</span>`;
@@ -933,7 +934,7 @@
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Demande transmise !';
-            setTimeout(() => { submitBtn.innerHTML = originalBtnText; }, 3000);
+            setTimeout(() => { submitBtn.innerHTML = originalBtnText; }, 3500);
           }
           return;
         }

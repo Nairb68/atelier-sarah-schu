@@ -112,7 +112,9 @@ const server = http.createServer((req, res) => {
             messages = JSON.parse(fs.readFileSync(MESSAGES_FILE, 'utf-8'));
           } catch(e) {}
         }
+        msg.id = 'msg-' + Date.now();
         msg.date = new Date().toISOString();
+        msg.read = false;
         messages.unshift(msg);
         fs.writeFileSync(MESSAGES_FILE, JSON.stringify(messages, null, 2), 'utf-8');
         console.log(`📩 Nouvelle demande de projet reçue de : ${msg.nom} (${msg.email})`);
@@ -121,6 +123,49 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ success: true, message: 'Demande enregistrée avec succès' }));
       } catch (err) {
         console.error('Erreur traitement contact:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
+  // --- API : Lecture de la liste des demandes de projet (Espace Admin) ---
+  if (pathname === '/api/messages' && req.method === 'GET') {
+    const MESSAGES_FILE = path.join(ROOT, 'data', 'messages.json');
+    let messages = [];
+    if (fs.existsSync(MESSAGES_FILE)) {
+      try {
+        messages = JSON.parse(fs.readFileSync(MESSAGES_FILE, 'utf-8'));
+      } catch(e) {}
+    }
+    res.writeHead(200, { 
+      'Content-Type': 'application/json',
+      'Cache-Control': 'no-cache, no-store, must-revalidate'
+    });
+    res.end(JSON.stringify(messages));
+    return;
+  }
+
+  // --- API : Suppression d'une demande de projet ---
+  if (pathname === '/api/messages/delete' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const { id } = JSON.parse(body);
+        const MESSAGES_FILE = path.join(ROOT, 'data', 'messages.json');
+        let messages = [];
+        if (fs.existsSync(MESSAGES_FILE)) {
+          try {
+            messages = JSON.parse(fs.readFileSync(MESSAGES_FILE, 'utf-8'));
+          } catch(e) {}
+        }
+        messages = messages.filter(m => m.id !== id);
+        fs.writeFileSync(MESSAGES_FILE, JSON.stringify(messages, null, 2), 'utf-8');
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true }));
+      } catch (err) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: false, error: err.message }));
       }
