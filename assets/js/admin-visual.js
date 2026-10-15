@@ -476,6 +476,9 @@
     setText('#contact-instagram-text', a.instagramHandle || (a.instagram ? '@' + a.instagram.replace(/\/+$/, '').split('/').pop() : '@sarahschu.art'));
     setText('#contact-facebook-text', a.facebook ? (a.facebook.includes('profile.php') ? 'Sarah Schu Art' : a.facebook.replace(/\/+$/, '').split('/').pop()) : 'Sarah Schu Art');
 
+    // Rendu dynamique des filtres de catégories
+    renderCategoryFilters();
+
     // Rendu du Catalogue des Œuvres
     renderVisualPortfolio();
   }
@@ -483,9 +486,54 @@
   let activeFilter = 'all';
 
   /**
-   * Filtres synchronisés du catalogue
+   * Liste dynamique des catégories (depuis siteData.categories et projets)
    */
-  function initPortfolioFilters() {
+  function getCategoriesList() {
+    const list = siteData.categories ? [...siteData.categories] : [];
+    const existingIds = new Set(list.map(c => c.id));
+    (siteData.projects || []).forEach(p => {
+      if (p.category && !existingIds.has(p.category)) {
+        list.push({
+          id: p.category,
+          label: p.categoryLabel || p.category,
+          shortLabel: p.category
+        });
+        existingIds.add(p.category);
+      }
+    });
+    return list;
+  }
+
+  /**
+   * Rendu dynamique et synchronisé des filtres (Hero tags + Pills catalogue)
+   */
+  function renderCategoryFilters() {
+    const categories = getCategoriesList();
+
+    const heroTags = document.getElementById('hero-tags-container') || document.querySelector('.hero-tags');
+    if (heroTags) {
+      heroTags.innerHTML = `
+        <button class="hero-tag-pill ${activeFilter === 'all' ? 'active' : ''}" data-filter="all">Tous</button>
+        ${categories.map(c => `
+          <button class="hero-tag-pill ${activeFilter === c.id ? 'active' : ''}" data-filter="${escapeHtml(c.id)}">${escapeHtml(c.shortLabel || c.label)}</button>
+        `).join('')}
+      `;
+    }
+
+    const catFilters = document.getElementById('catalog-filters-container') || document.querySelector('.catalog-filters');
+    if (catFilters) {
+      catFilters.innerHTML = `
+        <button class="filter-pill ${activeFilter === 'all' ? 'active' : ''}" data-filter="all">Toutes les créations</button>
+        ${categories.map(c => `
+          <button class="filter-pill ${activeFilter === c.id ? 'active' : ''}" data-filter="${escapeHtml(c.id)}">${escapeHtml(c.label)}</button>
+        `).join('')}
+      `;
+    }
+
+    bindFilterEvents();
+  }
+
+  function bindFilterEvents() {
     const filterPills = document.querySelectorAll('.filter-pill');
     const heroTagPills = document.querySelectorAll('.hero-tag-pill');
 
@@ -511,18 +559,25 @@
     }
 
     filterPills.forEach(pill => {
-      pill.addEventListener('click', () => {
+      pill.onclick = () => {
         const cat = pill.getAttribute('data-filter');
         applyFilter(cat, false);
-      });
+      };
     });
 
     heroTagPills.forEach(pill => {
-      pill.addEventListener('click', () => {
+      pill.onclick = () => {
         const cat = pill.getAttribute('data-filter');
         applyFilter(cat, true);
-      });
+      };
     });
+  }
+
+  /**
+   * Filtres synchronisés du catalogue (initialisation)
+   */
+  function initPortfolioFilters() {
+    renderCategoryFilters();
   }
 
   /**
@@ -1201,6 +1256,17 @@
     const drawer = document.getElementById('admin-drawer');
     const backdrop = document.getElementById('admin-drawer-backdrop');
     const titleEl = document.getElementById('drawer-project-title');
+    const newCatBox = document.getElementById('drawer-new-cat-box');
+    const newCatInput = document.getElementById('drawer-new-cat-name');
+    if (newCatBox) newCatBox.style.display = 'none';
+    if (newCatInput) newCatInput.value = '';
+
+    // Remplissage dynamique des catégories
+    const catSelect = document.getElementById('drawer-cat-input');
+    const cats = getCategoriesList();
+    if (catSelect) {
+      catSelect.innerHTML = cats.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`).join('');
+    }
 
     drawerGallery = [];
 
@@ -1219,7 +1285,8 @@
     } else {
       titleEl.textContent = 'Ajouter une nouvelle création';
       setValue('#drawer-title-input', '');
-      setValue('#drawer-cat-input', 'fresques');
+      const firstCat = (cats && cats.length > 0) ? cats[0].id : 'fresques';
+      setValue('#drawer-cat-input', firstCat);
       setValue('#drawer-loc-input', 'Alsace');
       setValue('#drawer-year-input', new Date().getFullYear().toString());
       setValue('#drawer-tech-input', 'Acrylique in situ');
@@ -1273,6 +1340,85 @@
     const saveBtn = document.getElementById('drawer-save-btn');
     const addPhotoBtn = document.getElementById('drawer-add-photo-btn');
 
+    // Gestion de la création d'une nouvelle catégorie par l'artiste
+    const newCatBtn = document.getElementById('drawer-new-cat-btn');
+    const newCatBox = document.getElementById('drawer-new-cat-box');
+    const newCatInput = document.getElementById('drawer-new-cat-name');
+    const newCatConfirm = document.getElementById('drawer-add-cat-confirm');
+    const newCatCancel = document.getElementById('drawer-add-cat-cancel');
+
+    if (newCatBtn && newCatBox) {
+      newCatBtn.addEventListener('click', () => {
+        const isHidden = newCatBox.style.display === 'none';
+        newCatBox.style.display = isHidden ? 'block' : 'none';
+        if (isHidden && newCatInput) {
+          newCatInput.value = '';
+          newCatInput.focus();
+        }
+      });
+    }
+
+    if (newCatCancel && newCatBox) {
+      newCatCancel.addEventListener('click', () => {
+        newCatBox.style.display = 'none';
+      });
+    }
+
+    function createNewCategory() {
+      if (!newCatInput) return;
+      const rawName = newCatInput.value.trim();
+      if (!rawName) {
+        alert('Veuillez entrer un nom pour la nouvelle catégorie.');
+        return;
+      }
+
+      let slug = rawName.toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+      if (!slug) slug = 'cat-' + Date.now();
+
+      if (!siteData.categories) siteData.categories = [];
+      let existing = siteData.categories.find(c => c.id === slug);
+      if (!existing) {
+        existing = { id: slug, label: rawName, shortLabel: rawName };
+        siteData.categories.push(existing);
+      } else {
+        existing.label = rawName;
+        existing.shortLabel = rawName;
+      }
+
+      // Recharger le sélecteur du tiroir
+      const catSelect = document.getElementById('drawer-cat-input');
+      if (catSelect) {
+        const cats = getCategoriesList();
+        catSelect.innerHTML = cats.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`).join('');
+        catSelect.value = slug;
+      }
+
+      // Mettre à jour immédiatement les filtres du site (Hero & Catalogue)
+      renderCategoryFilters();
+
+      // Fermer le formulaire d'ajout
+      newCatBox.style.display = 'none';
+      newCatInput.value = '';
+      markDirty();
+      showToast(`Nouvelle catégorie « ${rawName} » créée et intégrée au site !`, 'success');
+    }
+
+    if (newCatConfirm) {
+      newCatConfirm.addEventListener('click', createNewCategory);
+    }
+    if (newCatInput) {
+      newCatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          createNewCategory();
+        }
+      });
+    }
+
     if (closeBtn) closeBtn.addEventListener('click', closeProjectDrawer);
     if (cancelBtn) cancelBtn.addEventListener('click', closeProjectDrawer);
     if (backdrop) backdrop.addEventListener('click', closeAllDrawers);
@@ -1306,20 +1452,16 @@
           return;
         }
 
-        const catLabels = {
-          'fresques': 'Particuliers & Résidentiel',
-          'collectivites': 'Professionnels & Santé',
-          'peintures': "Trompe-l'œil & Peintures",
-          'illustrations': 'Aquarelle & Illustrations',
-          'graphisme': 'Identité & Édition'
-        };
+        const allCats = getCategoriesList();
+        const foundCat = allCats.find(c => c.id === cat);
+        const resolvedCategoryLabel = foundCat ? foundCat.label : (cat.charAt(0).toUpperCase() + cat.slice(1));
 
         if (activeDrawerProjectId) {
           const p = siteData.projects.find(x => x.id === activeDrawerProjectId);
           if (p) {
             p.title = title;
             p.category = cat;
-            p.categoryLabel = catLabels[cat] || cat;
+            p.categoryLabel = resolvedCategoryLabel;
             p.location = loc;
             p.year = year;
             p.technique = tech;
@@ -1341,7 +1483,7 @@
             id: 'proj-' + Date.now(),
             title: title,
             category: cat,
-            categoryLabel: catLabels[cat] || cat,
+            categoryLabel: resolvedCategoryLabel,
             location: loc,
             year: year,
             technique: tech,
@@ -1359,6 +1501,7 @@
         }
 
         closeProjectDrawer();
+        renderCategoryFilters();
         renderVisualPortfolio();
         markDirty();
         showToast(`Création « ${title} » enregistrée dans votre catalogue !`, 'success');
@@ -1793,7 +1936,17 @@
         const locEl = card.querySelector('[data-field="location"]');
         const techEl = card.querySelector('[data-field="technique"]');
         if (titleEl) p.title = titleEl.textContent.trim().replace(/^«\s*|\s*»$/g, '');
-        if (catLabelEl) p.categoryLabel = catLabelEl.textContent.trim();
+        if (catLabelEl) {
+          const newLabel = catLabelEl.textContent.trim();
+          p.categoryLabel = newLabel;
+          if (siteData.categories) {
+            const catItem = siteData.categories.find(c => c.id === p.category);
+            if (catItem) {
+              catItem.label = newLabel;
+              catItem.shortLabel = newLabel;
+            }
+          }
+        }
         if (locEl) p.location = locEl.textContent.trim();
         if (techEl) p.technique = techEl.textContent.trim();
       }

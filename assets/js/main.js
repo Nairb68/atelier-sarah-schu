@@ -109,6 +109,7 @@
 
     // Rendu des sections éditoriales
     renderStats();
+    renderCategoryFilters();
     renderPortfolio();
     renderServices();
     renderAbout();
@@ -236,15 +237,60 @@
   }
 
   /**
-   * Filtres synchronisés du catalogue (Hero tags + Pills catalogue)
+   * Liste dynamique des catégories (depuis siteData.categories et projets)
    */
-  function initPortfolioFilters() {
+  function getCategoriesList() {
+    const list = siteData.categories ? [...siteData.categories] : [];
+    const existingIds = new Set(list.map(c => c.id));
+    (siteData.projects || []).forEach(p => {
+      if (p.category && !existingIds.has(p.category)) {
+        list.push({
+          id: p.category,
+          label: p.categoryLabel || p.category,
+          shortLabel: p.category
+        });
+        existingIds.add(p.category);
+      }
+    });
+    return list;
+  }
+
+  /**
+   * Rendu dynamique et synchronisé des filtres (Hero tags + Pills catalogue)
+   */
+  function renderCategoryFilters() {
+    const categories = getCategoriesList();
+
+    const heroTags = document.getElementById('hero-tags-container') || document.querySelector('.hero-tags');
+    if (heroTags) {
+      heroTags.innerHTML = `
+        <button class="hero-tag-pill ${activeFilter === 'all' ? 'active' : ''}" data-filter="all">Tous</button>
+        ${categories.map(c => `
+          <button class="hero-tag-pill ${activeFilter === c.id ? 'active' : ''}" data-filter="${escapeHtml(c.id)}">${escapeHtml(c.shortLabel || c.label)}</button>
+        `).join('')}
+      `;
+    }
+
+    const catFilters = document.getElementById('catalog-filters-container') || document.querySelector('.catalog-filters');
+    if (catFilters) {
+      catFilters.innerHTML = `
+        <button class="filter-pill ${activeFilter === 'all' ? 'active' : ''}" data-filter="all">Toutes les créations</button>
+        ${categories.map(c => `
+          <button class="filter-pill ${activeFilter === c.id ? 'active' : ''}" data-filter="${escapeHtml(c.id)}">${escapeHtml(c.label)}</button>
+        `).join('')}
+      `;
+    }
+
+    bindFilterEvents();
+  }
+
+  function bindFilterEvents() {
     const filterPills = document.querySelectorAll('.filter-pill');
     const heroTagPills = document.querySelectorAll('.hero-tag-pill');
 
     function applyFilter(category, shouldScroll = false) {
       activeFilter = category || 'all';
-      portfolioLimit = DEFAULT_PORTFOLIO_LIMIT; // Réinitialise la limite pour un affichage propre
+      portfolioLimit = DEFAULT_PORTFOLIO_LIMIT;
 
       filterPills.forEach(p => {
         p.classList.toggle('active', (p.getAttribute('data-filter') || 'all') === activeFilter);
@@ -265,17 +311,17 @@
     }
 
     filterPills.forEach(pill => {
-      pill.addEventListener('click', () => {
+      pill.onclick = () => {
         const cat = pill.getAttribute('data-filter');
         applyFilter(cat, false);
-      });
+      };
     });
 
     heroTagPills.forEach(pill => {
-      pill.addEventListener('click', () => {
+      pill.onclick = () => {
         const cat = pill.getAttribute('data-filter');
         applyFilter(cat, true);
-      });
+      };
     });
   }
 
@@ -998,9 +1044,10 @@
           }
         }
 
-        // 2. Enregistrement direct sur le serveur / espace admin (avec photo embarquée)
+        // 2. ENREGISTREMENT PRIORITAIRE SUR LE SERVEUR / ESPACE ADMIN (avec AWAIT)
+        let serverSaved = false;
         try {
-          fetch('/api/contact', {
+          const sResp = await fetch('/api/contact', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -1012,28 +1059,33 @@
               message,
               photoData: photoResult?.dataUrl || null
             })
-          }).catch(() => {});
-        } catch (err) {}
+          });
+          if (sResp.ok) {
+            serverSaved = true;
+          }
+        } catch (err) {
+          console.warn('Erreur enregistrement serveur /api/contact', err);
+        }
 
-        // 3. Envoi par e-mail via Web3Forms avec véritable pièce jointe multipart/form-data
-        const customAction = form.getAttribute('action') || 'https://api.web3forms.com/submit';
+        // 3. ENVOI PAR E-MAIL VIA WEB3FORMS (avec noms de champs conformes)
         let sent = false;
+        const customAction = form.getAttribute('action') || 'https://api.web3forms.com/submit';
 
+        // Tentative 1 : avec FormData et pièce jointe réelle si photo présente
         try {
           const formData = new FormData();
           formData.append('access_key', 'fe10a643-944e-4a1d-9d04-9b384cff82f1');
           formData.append('subject', `Nouvelle demande de projet — ${nom} (${typeProjet})`);
           formData.append('from_name', 'Atelier Sarah Schu (Site Web)');
-          formData.append('Nom du contact', nom);
-          formData.append('Email', email);
-          formData.append('Téléphone', tel || 'Non renseigné');
-          formData.append('Type de projet', typeProjet);
-          formData.append('Dimensions & Lieu', dimensions || 'Non renseigné');
-          formData.append('Message / Description', message);
+          formData.append('name', nom);
+          formData.append('email', email);
+          formData.append('phone', tel || 'Non renseigné');
+          formData.append('type_projet', typeProjet);
+          formData.append('dimensions', dimensions || 'Non renseigné');
+          formData.append('message', message);
 
-          // Si une photo a été choisie, elle est attachée directement au mail reçu
           if (photoResult && photoResult.blob) {
-            const origName = fileInput.files[0].name || "photo_du_mur";
+            const origName = (fileInput.files[0] && fileInput.files[0].name) ? fileInput.files[0].name : "photo_du_mur";
             const cleanName = origName.replace(/\.[^/.]+$/, "") + ".jpg";
             formData.append('attachment', photoResult.blob, cleanName);
           }
@@ -1041,7 +1093,6 @@
           const resp = await fetch(customAction, {
             method: 'POST',
             body: formData
-            // Laisser le navigateur calculer automatiquement le boundary multipart/form-data
           });
 
           if (resp.ok) {
@@ -1049,10 +1100,42 @@
             if (resData.success) sent = true;
           }
         } catch (err) {
-          console.warn('Erreur transmission Web3Forms', err);
+          console.warn('Erreur tentative FormData Web3Forms', err);
         }
 
-        if (sent) {
+        // Tentative 2 : Repli Web3Forms JSON (si FormData est restreint)
+        if (!sent) {
+          try {
+            const jsonResp = await fetch(customAction, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+              },
+              body: JSON.stringify({
+                access_key: 'fe10a643-944e-4a1d-9d04-9b384cff82f1',
+                subject: `Nouvelle demande de projet — ${nom} (${typeProjet})`,
+                from_name: 'Atelier Sarah Schu (Site Web)',
+                name: nom,
+                email: email,
+                phone: tel || 'Non renseigné',
+                type_projet: typeProjet,
+                dimensions: dimensions || 'Non renseigné',
+                message: message,
+                photo_mur_jointe: photoResult ? "Oui (consultable dans l'Espace Admin)" : "Non"
+              })
+            });
+            if (jsonResp.ok) {
+              const resData = await jsonResp.json();
+              if (resData.success) sent = true;
+            }
+          } catch (err) {
+            console.warn('Erreur tentative JSON Web3Forms', err);
+          }
+        }
+
+        // 4. Succès si la demande est enregistrée sur le serveur OU reçue par email
+        if (serverSaved || sent) {
           showToast('Votre demande a été transmise avec succès à Sarah Schu ! Elle vous répondra très rapidement.', 'success');
           form.reset();
           if (uploadLabel) {

@@ -159,6 +159,33 @@
       "description": "Application d'un vernis de protection mat ou satiné pour garantir une longévité maximale et un nettoyage facile de votre œuvre unique."
     }
   ],
+  "categories": [
+    {
+      "id": "fresques",
+      "label": "Particuliers & Résidentiel",
+      "shortLabel": "Particuliers"
+    },
+    {
+      "id": "collectivites",
+      "label": "Professionnels & Santé",
+      "shortLabel": "Professionnels"
+    },
+    {
+      "id": "peintures",
+      "label": "Trompe-l'œil & Peintures",
+      "shortLabel": "Trompe-l'œil"
+    },
+    {
+      "id": "illustrations",
+      "label": "Aquarelle & Illustrations",
+      "shortLabel": "Aquarelle & Illustrations"
+    },
+    {
+      "id": "graphisme",
+      "label": "Identité & Édition",
+      "shortLabel": "Identité & Édition"
+    }
+  ],
   "projects": [
     {
       "id": "proj-chambre-montagne-wintzenheim",

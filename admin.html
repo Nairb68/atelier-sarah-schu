@@ -119,13 +119,20 @@
       <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 0.8rem;">
         <div>
           <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 0.35rem;">Catégorie *</label>
-          <select id="drawer-cat-input" class="form-select">
-            <option value="fresques">Particuliers &amp; Résidentiel</option>
-            <option value="collectivites">Professionnels &amp; Santé</option>
-            <option value="peintures">Trompe-l'œil &amp; Peintures</option>
-            <option value="illustrations">Aquarelle &amp; Illustrations</option>
-            <option value="graphisme">Identité &amp; Édition</option>
-          </select>
+          <div style="display: flex; gap: 0.4rem;">
+            <select id="drawer-cat-input" class="form-select" style="flex: 1;"></select>
+            <button id="drawer-new-cat-btn" type="button" class="btn-admin-bar" style="padding: 0 0.7rem; font-size: 0.78rem; white-space: nowrap; background: #fff; border: 1px solid var(--border-card);" title="Créer une nouvelle catégorie personnalisée">
+              <i class="fa-solid fa-plus"></i> Nouvelle
+            </button>
+          </div>
+          <div id="drawer-new-cat-box" style="display: none; margin-top: 0.5rem; background: #FAF8F5; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--border-card);">
+            <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.3rem;">Nom de la nouvelle catégorie</label>
+            <div style="display: flex; gap: 0.4rem;">
+              <input type="text" id="drawer-new-cat-name" class="form-input" placeholder="Ex: Dorure &amp; Feuilles d'or" style="font-size: 0.82rem; padding: 6px 8px;">
+              <button type="button" id="drawer-add-cat-confirm" class="btn-admin-bar btn-admin-save" style="padding: 4px 10px; font-size: 0.78rem;">Créer</button>
+              <button type="button" id="drawer-add-cat-cancel" class="btn-admin-bar" style="padding: 4px 8px; font-size: 0.78rem; background: #eee;">&times;</button>
+            </div>
+          </div>
         </div>
         <div>
           <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 0.35rem;">Position dans la galerie</label>
@@ -272,7 +279,7 @@
           </div>
 
           <!-- Pilules de Catégories (Filtres Rapides) -->
-          <div class="hero-tags">
+          <div class="hero-tags" id="hero-tags-container">
             <button class="hero-tag-pill active" data-filter="all">Tous</button>
             <button class="hero-tag-pill" data-filter="fresques">Particuliers</button>
             <button class="hero-tag-pill" data-filter="collectivites">Professionnels</button>
@@ -339,7 +346,7 @@
         </div>
 
         <!-- Filtres Horizontaux -->
-        <div class="catalog-filters" role="tablist">
+        <div class="catalog-filters" id="catalog-filters-container" role="tablist">
           <button class="filter-pill active" data-filter="all">Toutes les créations</button>
           <button class="filter-pill" data-filter="fresques">Particuliers &amp; Résidentiel</button>
           <button class="filter-pill" data-filter="collectivites">Professionnels &amp; Santé</button>
