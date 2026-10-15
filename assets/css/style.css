@@ -231,8 +231,10 @@ button {
   transition: color var(--transition-fast);
 }
 
-.nav-link:hover {
-  color: var(--text-main);
+.nav-link:hover,
+.nav-link.active {
+  color: var(--accent-terra);
+  font-weight: 600;
 }
 
 .nav-link-ig {
@@ -684,6 +686,7 @@ button {
    ========================================================================== */
 .section {
   padding: 5.5rem 0;
+  scroll-margin-top: 80px;
 }
 
 .section-tinted {

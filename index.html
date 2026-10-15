@@ -30,28 +30,54 @@
   <!-- Feuille de Style -->
   <link rel="stylesheet" href="assets/css/style.css">
 
-  <!-- Schema.org Microdata -->
+  <!-- Schema.org Microdata & Local SEO -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "VisualArtist",
     "name": "Sarah Schu",
     "alternateName": "Atelier Sarah Schu",
-    "url": "https://www.instagram.com/sarahschu.art",
+    "url": "https://atelier-sarah-schu.onrender.com/",
+    "sameAs": [
+      "https://www.instagram.com/sarahschu.art",
+      "https://www.facebook.com/profile.php?id=100017365335884"
+    ],
     "image": "assets/images/logo-sarah-schu.jpg",
     "telephone": "+33675450497",
     "email": "sarah.schu16@gmail.com",
+    "priceRange": "€€",
     "address": {
       "@type": "PostalAddress",
       "addressLocality": "Zimmerbach",
-      "addressRegion": "Haut-Rhin",
+      "addressRegion": "Haut-Rhin (Alsace)",
+      "postalCode": "68230",
       "addressCountry": "FR"
     },
-    "alumniOf": [
-      { "@type": "EducationalOrganization", "name": "École Émile Cohl" },
-      { "@type": "EducationalOrganization", "name": "École Artline" }
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": 48.0736,
+      "longitude": 7.2372
+    },
+    "areaServed": [
+      "Colmar",
+      "Vallée de Munster",
+      "Strasbourg",
+      "Mulhouse",
+      "Alsace",
+      "France"
     ],
-    "description": "Artiste peintre muraliste et illustratrice spécialisée dans les fresques in situ, trompe-l'œil et décors peints à la main en Alsace."
+    "alumniOf": [
+      { "@type": "EducationalOrganization", "name": "École Émile Cohl (Lyon)" },
+      { "@type": "EducationalOrganization", "name": "École Artline (Paris)" }
+    ],
+    "knowsAbout": [
+      "Fresques murales in situ",
+      "Trompe-l'œil sur mesure",
+      "Peinture acrylique murale",
+      "Aquarelle",
+      "Décoration murale d'art"
+    ],
+    "description": "Artiste peintre muraliste et illustratrice en Alsace. Diplômée Émile Cohl & Artline, Sarah Schu imagine et peint à la main des fresques in situ, trompe-l'œil et décors muraux d'exception pour résidences, commerces et collectivités."
   }
   </script>
 </head>
@@ -76,11 +102,12 @@
       <nav class="nav-desktop" aria-label="Navigation principale">
         <ul class="nav-links">
           <li><a href="#catalogue" class="nav-link">Fresques</a></li>
-          <li><a href="#domaines" class="nav-link">Particuliers &amp; Pros</a></li>
-          <li><a href="#domaines" class="nav-link">Aquarelle</a></li>
-          <li><a href="#artiste" class="nav-link">L'artiste</a></li>
+          <li><a href="#domaines" class="nav-link">Savoir-Faire</a></li>
+          <li><a href="#artiste" class="nav-link">L'Artiste</a></li>
+          <li><a href="#methode" class="nav-link">Démarche</a></li>
+          <li><a href="#avis" class="nav-link">Avis</a></li>
           <li>
-            <a href="https://www.instagram.com/sarahschu.art" target="_blank" rel="noopener" class="nav-link nav-link-ig link-instagram">
+            <a href="https://www.instagram.com/sarahschu.art" target="_blank" rel="noopener" class="nav-link nav-link-ig link-instagram" title="Instagram officiel">
               <i class="fa-brands fa-instagram"></i> <span class="contact-ig-handle">@sarahschu.art</span>
             </a>
           </li>
@@ -116,9 +143,11 @@
     <ul class="mobile-nav-links">
       <li><a href="#accueil" class="mobile-nav-link">Accueil</a></li>
       <li><a href="#catalogue" class="mobile-nav-link">Fresques &amp; Réalisations</a></li>
-      <li><a href="#domaines" class="mobile-nav-link">Particuliers &amp; Pros</a></li>
-      <li><a href="#artiste" class="mobile-nav-link">L'Artiste</a></li>
-      <li><a href="#methode" class="mobile-nav-link">Comment ça se passe</a></li>
+      <li><a href="#domaines" class="mobile-nav-link">Savoir-Faire &amp; Tarifs</a></li>
+      <li><a href="#artiste" class="mobile-nav-link">L'Artiste &amp; Parcours</a></li>
+      <li><a href="#methode" class="mobile-nav-link">Démarche pas à pas</a></li>
+      <li><a href="#avis" class="mobile-nav-link">Avis clients</a></li>
+      <li><a href="#faq" class="mobile-nav-link">Questions fréquentes</a></li>
       <li><a href="#contact" class="mobile-nav-link">Demande de devis</a></li>
     </ul>
     <div class="mobile-nav-footer">
@@ -592,8 +621,9 @@
           <ul class="footer-links">
             <li><a href="#accueil">Accueil</a></li>
             <li><a href="#catalogue">Catalogue des fresques</a></li>
-            <li><a href="#domaines">Particuliers &amp; Pros</a></li>
-            <li><a href="#artiste">L'Artiste</a></li>
+            <li><a href="#domaines">Savoir-Faire &amp; Tarifs</a></li>
+            <li><a href="#artiste">L'Artiste &amp; Démarche</a></li>
+            <li><a href="#avis">Avis &amp; Références</a></li>
             <li><a href="#contact">Demander un devis</a></li>
           </ul>
         </div>
@@ -686,6 +716,6 @@
   </div>
 
   <!-- Scripts -->
-  <script src="assets/js/main.js?v=6"></script>
+  <script src="assets/js/main.js?v=7"></script>
 </body>
 </html>

@@ -22,6 +22,7 @@
     initFaqAccordion();
     initQuoteForm();
     initHeaderScroll();
+    initScrollSpy();
 
     // Écoute des mises à jour directes en provenance de l'espace administration (multi-onglets)
     window.addEventListener('storage', (e) => {
@@ -1118,6 +1119,42 @@
         header.classList.remove('scrolled');
       }
     });
+  }
+
+  /**
+   * Suivi du défilement & surbrillance de la section active dans le menu
+   */
+  function initScrollSpy() {
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links .nav-link, .mobile-nav-link');
+    if (!sections.length || !navLinks.length) return;
+
+    const onScroll = () => {
+      let currentId = '';
+      const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+      sections.forEach(section => {
+        const top = section.offsetTop - 120;
+        const height = section.offsetHeight;
+        if (scrollY >= top && scrollY < top + height) {
+          currentId = section.getAttribute('id');
+        }
+      });
+
+      if (currentId) {
+        navLinks.forEach(link => {
+          const href = link.getAttribute('href');
+          if (href === '#' + currentId) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    setTimeout(onScroll, 120);
   }
 
   function showToast(message, type = 'info') {
