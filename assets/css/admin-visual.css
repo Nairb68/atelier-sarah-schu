@@ -107,6 +107,37 @@ body.admin-mode {
   background: rgba(255, 255, 255, 0.2);
 }
 
+.btn-admin-inbox {
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  font-weight: 700 !important;
+}
+
+.btn-admin-inbox:hover {
+  background: rgba(255, 255, 255, 0.28) !important;
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  transform: translateY(-1px);
+}
+
+.btn-admin-inbox i {
+  color: #E07A5F !important;
+}
+
+.btn-admin-inbox .btn-text {
+  color: #FFFFFF !important;
+}
+
+.btn-admin-inbox .inbox-count-pill {
+  background: #AF5239 !important;
+  color: #FFFFFF !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  padding: 1px 7px !important;
+  border-radius: 9999px !important;
+  margin-left: 0.25rem !important;
+}
+
 .btn-admin-add {
   background: rgba(255, 255, 255, 0.12);
   color: #FAF8F5;

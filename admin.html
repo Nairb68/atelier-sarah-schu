@@ -685,7 +685,20 @@
     <span>Sauvegarder</span>
   </button>
 
+  <!-- Visionneuse Plein Écran pour Photos de Demandes de Devis -->
+  <div id="admin-photo-viewer-modal" style="display: none; position: fixed; inset: 0; z-index: 999999; background: rgba(0,0,0,0.92); backdrop-filter: blur(10px); align-items: center; justify-content: center; padding: 1.5rem; flex-direction: column;">
+    <button id="admin-photo-viewer-close" type="button" style="position: absolute; top: 1.2rem; right: 1.5rem; background: rgba(255,255,255,0.25); color: #ffffff; border: none; width: 44px; height: 44px; border-radius: 50%; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" title="Fermer (Échap)">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div style="max-width: 92vw; max-height: 85vh; text-align: center; display: flex; flex-direction: column; align-items: center;">
+      <img id="admin-photo-viewer-img" src="" alt="Agrandissement photo du mur" style="max-width: 100%; max-height: 78vh; border-radius: 8px; object-fit: contain; box-shadow: 0 12px 48px rgba(0,0,0,0.6);">
+      <div id="admin-photo-viewer-caption" style="color: #FAF8F5; margin-top: 1rem; font-size: 0.95rem; font-family: var(--font-sans); font-weight: 600;"></div>
+    </div>
+  </div>
+
+  <!-- Décodeur d'images universel (support TIFF, etc.) -->
+  <script src="assets/js/utif.min.js"></script>
   <!-- Scripts du Moteur Visuel In Situ -->
-  <script src="assets/js/admin-visual.js?v=8"></script>
+  <script src="assets/js/admin-visual.js?v=9"></script>
 </body>
 </html>

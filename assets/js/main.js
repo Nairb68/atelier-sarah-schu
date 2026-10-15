@@ -956,13 +956,59 @@
    * - Un Blob JPEG léger (~150-250 Ko) pour pièce jointe e-mail réelle (Web3Forms attachment)
    * - Une dataUrl Base64 pour affichage immédiat et persistance admin
    */
-  function compressImageFileToBlobAndDataUrl(file, maxWidth = 1600, quality = 0.82) {
-    return new Promise((resolve) => {
-      if (!file || !file.type.startsWith('image/')) {
-        resolve({ blob: file, dataUrl: null });
-        return;
-      }
+  async function compressImageFileToBlobAndDataUrl(file, maxWidth = 1600, quality = 0.82) {
+    if (!file) return { blob: null, dataUrl: null };
 
+    const isTiff = (file.name && file.name.match(/\.(tiff?|tif)$/i)) || (file.type && file.type.includes('tiff'));
+
+    // Décodage spécialisé pour les images TIFF (non supportées nativement par les navigateurs web)
+    if (isTiff && typeof UTIF !== 'undefined') {
+      try {
+        const buffer = await file.arrayBuffer();
+        const ifds = UTIF.decode(buffer);
+        if (ifds && ifds.length > 0) {
+          UTIF.decodeImage(buffer, ifds[0]);
+          const rgba = UTIF.toRGBA8(ifds[0]);
+          const origW = ifds[0].width;
+          const origH = ifds[0].height;
+
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = origW;
+          tempCanvas.height = origH;
+          const tCtx = tempCanvas.getContext('2d');
+          const imgData = tCtx.createImageData(origW, origH);
+          imgData.data.set(rgba);
+          tCtx.putImageData(imgData, 0, 0);
+
+          let width = origW;
+          let height = origH;
+          if (width > maxWidth || height > maxWidth) {
+            if (width > height) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            } else {
+              width = Math.round((width * maxWidth) / height);
+              height = maxWidth;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(tempCanvas, 0, 0, width, height);
+
+          const dataUrl = canvas.toDataURL('image/jpeg', quality);
+          const blob = await new Promise(res => canvas.toBlob(b => res(b || file), 'image/jpeg', quality));
+          return { blob, dataUrl };
+        }
+      } catch (err) {
+        console.warn('Erreur décodage TIFF avec UTIF:', err);
+      }
+    }
+
+    // Traitement standard (JPEG, PNG, WebP, etc.)
+    return new Promise((resolve) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const img = new Image();

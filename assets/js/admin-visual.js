@@ -61,6 +61,8 @@
 
     if (!siteData) {
       alert('Impossible de charger les données du site.');
+    } else {
+      ensureCategoriesInitialized();
     }
   }
 
@@ -485,23 +487,55 @@
 
   let activeFilter = 'all';
 
+  const DEFAULT_SITE_CATEGORIES = [
+    { id: 'fresques', label: 'Particuliers & Résidentiel', shortLabel: 'Particuliers' },
+    { id: 'collectivites', label: 'Professionnels & Santé', shortLabel: 'Professionnels' },
+    { id: 'peintures', label: "Trompe-l'œil & Peintures", shortLabel: "Trompe-l'œil" },
+    { id: 'illustrations', label: 'Aquarelle & Illustrations', shortLabel: 'Aquarelle & Illustrations' },
+    { id: 'graphisme', label: 'Identité & Édition', shortLabel: 'Identité & Édition' },
+    { id: 'divers', label: 'Autres créations', shortLabel: 'Autres' }
+  ];
+
+  function ensureCategoriesInitialized() {
+    if (!siteData) return;
+    if (!siteData.categories || !Array.isArray(siteData.categories) || siteData.categories.length === 0) {
+      siteData.categories = DEFAULT_SITE_CATEGORIES.map(c => ({ ...c }));
+    }
+
+    const catMap = new Map();
+    siteData.categories.forEach(c => {
+      if (c && c.id) catMap.set(c.id, c);
+    });
+
+    // 1. S'assurer que les catégories maîtresses sont toujours présentes
+    DEFAULT_SITE_CATEGORIES.forEach(defCat => {
+      if (!catMap.has(defCat.id)) {
+        const item = { ...defCat };
+        siteData.categories.push(item);
+        catMap.set(defCat.id, item);
+      }
+    });
+
+    // 2. S'assurer que toutes les catégories des œuvres existantes sont bien indexées
+    (siteData.projects || []).forEach(p => {
+      if (p.category && !catMap.has(p.category)) {
+        const newCat = {
+          id: p.category,
+          label: p.categoryLabel || (p.category.charAt(0).toUpperCase() + p.category.slice(1)),
+          shortLabel: p.category
+        };
+        siteData.categories.push(newCat);
+        catMap.set(p.category, newCat);
+      }
+    });
+  }
+
   /**
    * Liste dynamique des catégories (depuis siteData.categories et projets)
    */
   function getCategoriesList() {
-    const list = siteData.categories ? [...siteData.categories] : [];
-    const existingIds = new Set(list.map(c => c.id));
-    (siteData.projects || []).forEach(p => {
-      if (p.category && !existingIds.has(p.category)) {
-        list.push({
-          id: p.category,
-          label: p.categoryLabel || p.category,
-          shortLabel: p.category
-        });
-        existingIds.add(p.category);
-      }
-    });
-    return list;
+    ensureCategoriesInitialized();
+    return siteData.categories ? [...siteData.categories] : [...DEFAULT_SITE_CATEGORIES];
   }
 
   /**
@@ -1338,7 +1372,7 @@
     const container = document.getElementById('drawer-cat-manage-list');
     if (!container) return;
 
-    const cats = siteData.categories && siteData.categories.length > 0 ? siteData.categories : getCategoriesList();
+    const cats = getCategoriesList();
     
     if (cats.length === 0) {
       container.innerHTML = '<div style="font-size: 0.72rem; color: var(--text-muted); text-align: center; padding: 0.4rem;">Aucune catégorie</div>';
@@ -1372,7 +1406,7 @@
   }
 
   function deleteCategory(catId) {
-    if (!siteData.categories) siteData.categories = [];
+    ensureCategoriesInitialized();
     const cat = siteData.categories.find(c => c.id === catId);
     if (!cat) return;
 
@@ -1501,7 +1535,7 @@
 
       if (!slug) slug = 'cat-' + Date.now();
 
-      if (!siteData.categories) siteData.categories = [];
+      ensureCategoriesInitialized();
       let existing = siteData.categories.find(c => c.id === slug);
       if (!existing) {
         existing = { id: slug, label: rawName, shortLabel: rawName };
@@ -1683,7 +1717,24 @@
   /* ==========================================================================
      BOÎTE DE RÉCEPTION DES DEMANDES DE PROJET / DEVIS (DOUBLE SÉCURITÉ)
      ========================================================================== */
-  let inboxMessages = [];
+  const LOCAL_INBOX_KEY = 'sarah_admin_inbox_messages_v1';
+
+  function getLocalInboxMessages() {
+    try {
+      const raw = localStorage.getItem(LOCAL_INBOX_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch(e) {
+      return [];
+    }
+  }
+
+  function saveLocalInboxMessages(msgs) {
+    try {
+      localStorage.setItem(LOCAL_INBOX_KEY, JSON.stringify(msgs || []));
+    } catch(e) {}
+  }
+
+  let inboxMessages = getLocalInboxMessages();
 
   function closeInbox() {
     const drawer = document.getElementById('admin-inbox-drawer');
@@ -1708,34 +1759,26 @@
 
     if (refreshBtn) {
       refreshBtn.addEventListener('click', async () => {
-        refreshBtn.innerHTML = '<i class="fa-solid fa-rotate fa-spin"></i>';
+        refreshBtn.innerHTML = '<i class="fa-solid fa-rotate fa-spin"></i> Actualisation...';
         await fetchInboxMessages();
         renderInboxMessages();
+        updateInboxBadge();
         setTimeout(() => {
           refreshBtn.innerHTML = '<i class="fa-solid fa-rotate"></i> Actualiser';
         }, 500);
       });
     }
 
-    // Chargement initial des messages
-    fetchInboxMessages().then(() => updateInboxBadge());
-  }
+    // Chargement et affichage immédiat sans attendre le réseau
+    inboxMessages = getLocalInboxMessages();
+    updateInboxBadge();
+    renderInboxMessages();
 
-  const LOCAL_INBOX_KEY = 'sarah_admin_inbox_messages_v1';
-
-  function getLocalInboxMessages() {
-    try {
-      const raw = localStorage.getItem(LOCAL_INBOX_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch(e) {
-      return [];
-    }
-  }
-
-  function saveLocalInboxMessages(msgs) {
-    try {
-      localStorage.setItem(LOCAL_INBOX_KEY, JSON.stringify(msgs || []));
-    } catch(e) {}
+    // Actualisation silencieuse en arrière-plan
+    fetchInboxMessages().then(() => {
+      updateInboxBadge();
+      renderInboxMessages();
+    });
   }
 
   async function fetchInboxMessages() {
@@ -1755,11 +1798,9 @@
 
     // Fusion intelligente : conservation absolue de tous les messages
     const mergedMap = new Map();
-    // 1. Ajouter d'abord les messages locaux existants
     localMsgs.forEach(m => {
       if (m && m.id) mergedMap.set(m.id, m);
     });
-    // 2. Fusionner avec les messages reçus du serveur
     serverMsgs.forEach(m => {
       if (m && m.id) mergedMap.set(m.id, m);
     });
@@ -1770,8 +1811,7 @@
     inboxMessages = merged;
     saveLocalInboxMessages(merged);
 
-    // Si le serveur a moins de messages que notre stockage local (ex: après un redéploiement Render / Git),
-    // on renvoie automatiquement les messages sauvegardés au serveur pour les restaurer !
+    // Restauration automatique sur le serveur si besoin
     if (serverOk && localMsgs.length > serverMsgs.length) {
       try {
         await fetch('/api/messages/sync', {
@@ -1800,13 +1840,78 @@
   function openInboxDrawer() {
     const drawer = document.getElementById('admin-inbox-drawer');
     const backdrop = document.getElementById('admin-drawer-backdrop');
+    if (drawer) drawer.classList.add('active');
+    if (backdrop) backdrop.classList.add('active');
+    lockScroll();
+
+    // Rendu immédiat des messages existants
+    renderInboxMessages();
+    updateInboxBadge();
+
+    // Rafraîchissement silencieux
     fetchInboxMessages().then(() => {
       renderInboxMessages();
       updateInboxBadge();
     });
-    if (drawer) drawer.classList.add('active');
-    if (backdrop) backdrop.classList.add('active');
-    lockScroll();
+  }
+
+  function convertTiffBase64ToJpeg(tiffBase64) {
+    if (typeof UTIF === 'undefined' || !tiffBase64 || !tiffBase64.startsWith('data:image/tif')) return tiffBase64;
+    try {
+      const base64Data = tiffBase64.split(',')[1];
+      const binaryStr = atob(base64Data);
+      const len = binaryStr.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) bytes[i] = binaryStr.charCodeAt(i);
+      const ifds = UTIF.decode(bytes.buffer);
+      if (ifds && ifds.length > 0) {
+        UTIF.decodeImage(bytes.buffer, ifds[0]);
+        const rgba = UTIF.toRGBA8(ifds[0]);
+        const w = ifds[0].width;
+        const h = ifds[0].height;
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        const imgData = ctx.createImageData(w, h);
+        imgData.data.set(rgba);
+        ctx.putImageData(imgData, 0, 0);
+        return canvas.toDataURL('image/jpeg', 0.85);
+      }
+    } catch(err) {
+      console.warn('Erreur conversion TIFF en JPEG', err);
+    }
+    return tiffBase64;
+  }
+
+  function openAdminPhotoModal(src, author) {
+    const modal = document.getElementById('admin-photo-viewer-modal');
+    const img = document.getElementById('admin-photo-viewer-img');
+    const cap = document.getElementById('admin-photo-viewer-caption');
+    const closeBtn = document.getElementById('admin-photo-viewer-close');
+    if (!modal || !img) return;
+
+    img.src = src;
+    if (cap) cap.textContent = `Photo transmise par : ${author || 'Client'}`;
+    modal.style.display = 'flex';
+
+    function closeModal() {
+      modal.style.display = 'none';
+      img.src = '';
+      window.removeEventListener('keydown', onKey);
+    }
+
+    function onKey(e) {
+      if (e.key === 'Escape') closeModal();
+    }
+
+    if (closeBtn) closeBtn.onclick = closeModal;
+    modal.onclick = (e) => {
+      if (e.target === modal || e.target === closeBtn || e.target.closest('#admin-photo-viewer-close')) {
+        closeModal();
+      }
+    };
+    window.addEventListener('keydown', onKey);
   }
 
   function renderInboxMessages() {
@@ -1831,7 +1936,11 @@
         day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
       }) : '';
 
-      const photoSrc = m.photoData || m.photoUrl;
+      let photoSrc = m.photoData || m.photoUrl;
+      if (photoSrc && (photoSrc.startsWith('data:image/tif') || photoSrc.startsWith('data:image/x-tif'))) {
+        photoSrc = convertTiffBase64ToJpeg(photoSrc);
+        m.photoData = photoSrc;
+      }
 
       return `
         <div class="inbox-msg-card" style="background: #FAF8F5; border: 1px solid var(--border-card); border-radius: 12px; padding: 1.1rem; margin-bottom: 1rem; box-shadow: var(--shadow-sm);">
@@ -1860,10 +1969,12 @@
               <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.4rem;">
                 <i class="fa-solid fa-camera"></i> Photo du mur reçue :
               </div>
-              <a href="${escapeHtml(photoSrc)}" target="_blank" rel="noopener" style="display: block; text-align: center;">
-                <img src="${escapeHtml(photoSrc)}" alt="Photo du mur" style="max-height: 200px; width: auto; max-width: 100%; border-radius: 6px; object-fit: contain; box-shadow: var(--shadow-sm);">
-                <span style="display: block; font-size: 0.75rem; color: var(--accent-terra); margin-top: 0.3rem;"><i class="fa-solid fa-up-right-from-square"></i> Cliquer pour agrandir la photo</span>
-              </a>
+              <div class="inbox-photo-zoom-trigger" data-photo-src="${escapeHtml(photoSrc)}" data-author="${escapeHtml(m.nom || 'Client')}" style="cursor: zoom-in; display: block; text-align: center;">
+                <img src="${escapeHtml(photoSrc)}" alt="Photo du mur" style="max-height: 200px; width: auto; max-width: 100%; border-radius: 6px; object-fit: contain; box-shadow: var(--shadow-sm); pointer-events: none;">
+                <span style="display: block; font-size: 0.78rem; font-weight: 600; color: var(--accent-terra); margin-top: 0.35rem; pointer-events: none;">
+                  <i class="fa-solid fa-magnifying-glass-plus"></i> Cliquer pour agrandir la photo
+                </span>
+              </div>
             </div>
           ` : ''}
 
@@ -1875,6 +1986,14 @@
         </div>
       `;
     }).join('');
+
+    container.querySelectorAll('.inbox-photo-zoom-trigger').forEach(trigger => {
+      trigger.onclick = () => {
+        const src = trigger.getAttribute('data-photo-src');
+        const author = trigger.getAttribute('data-author');
+        openAdminPhotoModal(src, author);
+      };
+    });
 
     container.querySelectorAll('.btn-del-msg').forEach(btn => {
       btn.addEventListener('click', async () => {
