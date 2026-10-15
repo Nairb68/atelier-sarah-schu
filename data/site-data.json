@@ -184,6 +184,11 @@
       "id": "graphisme",
       "label": "Identité & Édition",
       "shortLabel": "Identité & Édition"
+    },
+    {
+      "id": "divers",
+      "label": "Autres créations",
+      "shortLabel": "Autres"
     }
   ],
   "projects": [

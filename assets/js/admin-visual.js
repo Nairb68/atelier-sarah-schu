@@ -1267,6 +1267,7 @@
     if (catSelect) {
       catSelect.innerHTML = cats.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`).join('');
     }
+    renderCategoryManageList();
 
     drawerGallery = [];
 
@@ -1333,6 +1334,113 @@
     closeInbox();
   }
 
+  function renderCategoryManageList() {
+    const container = document.getElementById('drawer-cat-manage-list');
+    if (!container) return;
+
+    const cats = siteData.categories && siteData.categories.length > 0 ? siteData.categories : getCategoriesList();
+    
+    if (cats.length === 0) {
+      container.innerHTML = '<div style="font-size: 0.72rem; color: var(--text-muted); text-align: center; padding: 0.4rem;">Aucune catégorie</div>';
+      return;
+    }
+
+    container.innerHTML = cats.map(c => {
+      const count = (siteData.projects || []).filter(p => p.category === c.id).length;
+      return `
+        <div style="display: flex; align-items: center; justify-content: space-between; background: #fff; padding: 5px 8px; border-radius: 6px; border: 1px solid var(--border-card); font-size: 0.78rem;">
+          <span style="font-weight: 600; color: var(--text-main); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px;" title="${escapeHtml(c.label)}">
+            ${escapeHtml(c.label)}
+          </span>
+          <div style="display: flex; align-items: center; gap: 0.45rem;">
+            <span style="font-size: 0.7rem; color: var(--text-muted);">${count} œuvre${count > 1 ? 's' : ''}</span>
+            <button type="button" class="btn-del-cat-item" data-cat-id="${escapeHtml(c.id)}" style="background: none; border: none; color: #dc2626; cursor: pointer; padding: 2px 4px; border-radius: 4px;" title="Supprimer la catégorie « ${escapeHtml(c.label)} »">
+              <i class="fa-solid fa-trash-can" style="pointer-events: none;"></i>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    container.querySelectorAll('.btn-del-cat-item').forEach(btn => {
+      btn.onclick = (e) => {
+        e.stopPropagation();
+        const catId = btn.getAttribute('data-cat-id');
+        deleteCategory(catId);
+      };
+    });
+  }
+
+  function deleteCategory(catId) {
+    if (!siteData.categories) siteData.categories = [];
+    const cat = siteData.categories.find(c => c.id === catId);
+    if (!cat) return;
+
+    if (siteData.categories.length <= 1) {
+      alert("Impossible de supprimer la dernière catégorie du site.");
+      return;
+    }
+
+    const affectedProjects = (siteData.projects || []).filter(p => p.category === catId);
+    const count = affectedProjects.length;
+
+    let confirmMsg = `Confirmez-vous la suppression de la catégorie « ${cat.label} » ?`;
+    if (count > 0) {
+      confirmMsg += `\n\n${count} création(s) sont actuellement classée(s) dans cette catégorie. Elles seront automatiquement reclassées dans la catégorie « Autres créations » afin de préserver l'ensemble de votre portfolio.`;
+    }
+
+    if (!confirm(confirmMsg)) return;
+
+    // 1. Assurer l'existence de la catégorie de repli 'divers'
+    let fallbackCat = siteData.categories.find(c => c.id === 'divers');
+    if (!fallbackCat) {
+      fallbackCat = {
+        id: 'divers',
+        label: 'Autres créations',
+        shortLabel: 'Autres'
+      };
+      siteData.categories.push(fallbackCat);
+    }
+
+    // 2. Si la catégorie supprimée était 'divers' elle-même, prendre la 1ère autre disponible
+    if (catId === 'divers') {
+      const alt = siteData.categories.find(c => c.id !== 'divers');
+      fallbackCat = alt || { id: 'fresques', label: 'Particuliers & Résidentiel', shortLabel: 'Particuliers' };
+    }
+
+    // 3. Reclasser toutes les créations affectées
+    affectedProjects.forEach(p => {
+      p.category = fallbackCat.id;
+      p.categoryLabel = fallbackCat.label;
+    });
+
+    // 4. Supprimer la catégorie de siteData.categories
+    siteData.categories = siteData.categories.filter(c => c.id !== catId);
+
+    // 5. Mettre à jour le sélecteur du drawer
+    const catSelect = document.getElementById('drawer-cat-input');
+    if (catSelect) {
+      const cats = getCategoriesList();
+      catSelect.innerHTML = cats.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.label)}</option>`).join('');
+      catSelect.value = fallbackCat.id;
+    }
+
+    // 6. Rafraîchir la liste de gestion
+    renderCategoryManageList();
+
+    // 7. Si le filtre actif de la page était la catégorie supprimée, basculer sur 'all'
+    if (activeFilter === catId) {
+      activeFilter = 'all';
+    }
+
+    // 8. Rendu et persistance
+    renderCategoryFilters();
+    renderVisualPortfolio();
+    markDirty();
+
+    showToast(`Catégorie « ${cat.label} » supprimée. ${count > 0 ? count + ' création(s) déplacée(s) dans « ' + fallbackCat.label + ' ».' : ''}`, 'info');
+  }
+
   function initDrawerListeners() {
     const closeBtn = document.getElementById('drawer-close-btn');
     const cancelBtn = document.getElementById('drawer-cancel-btn');
@@ -1340,8 +1448,9 @@
     const saveBtn = document.getElementById('drawer-save-btn');
     const addPhotoBtn = document.getElementById('drawer-add-photo-btn');
 
-    // Gestion de la création d'une nouvelle catégorie par l'artiste
+    // Gestion de la création et suppression de catégories par l'artiste
     const newCatBtn = document.getElementById('drawer-new-cat-btn');
+    const delCatBtn = document.getElementById('drawer-delete-cat-btn');
     const newCatBox = document.getElementById('drawer-new-cat-box');
     const newCatInput = document.getElementById('drawer-new-cat-name');
     const newCatConfirm = document.getElementById('drawer-add-cat-confirm');
@@ -1351,9 +1460,22 @@
       newCatBtn.addEventListener('click', () => {
         const isHidden = newCatBox.style.display === 'none';
         newCatBox.style.display = isHidden ? 'block' : 'none';
-        if (isHidden && newCatInput) {
-          newCatInput.value = '';
-          newCatInput.focus();
+        if (isHidden) {
+          renderCategoryManageList();
+          if (newCatInput) {
+            newCatInput.value = '';
+            newCatInput.focus();
+          }
+        }
+      });
+    }
+
+    if (delCatBtn) {
+      delCatBtn.addEventListener('click', () => {
+        const catSelect = document.getElementById('drawer-cat-input');
+        const selectedCat = catSelect ? catSelect.value : null;
+        if (selectedCat) {
+          deleteCategory(selectedCat);
         }
       });
     }
@@ -1397,11 +1519,13 @@
         catSelect.value = slug;
       }
 
+      // Mettre à jour la liste de gestion
+      renderCategoryManageList();
+
       // Mettre à jour immédiatement les filtres du site (Hero & Catalogue)
       renderCategoryFilters();
 
-      // Fermer le formulaire d'ajout
-      newCatBox.style.display = 'none';
+      // Réinitialiser la saisie
       newCatInput.value = '';
       markDirty();
       showToast(`Nouvelle catégorie « ${rawName} » créée et intégrée au site !`, 'success');

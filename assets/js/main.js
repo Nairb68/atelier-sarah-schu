@@ -14,15 +14,15 @@
   document.addEventListener('DOMContentLoaded', initApp);
 
   async function initApp() {
-    await loadSiteData();
-    initNavigation();
-    renderSite();
-    initPortfolioFilters();
-    initLightboxListeners();
-    initFaqAccordion();
-    initQuoteForm();
-    initHeaderScroll();
-    initScrollSpy();
+    try { await loadSiteData(); } catch (err) { console.warn('Init loadSiteData:', err); }
+    try { initNavigation(); } catch (err) { console.warn('Init navigation:', err); }
+    try { renderSite(); } catch (err) { console.warn('Init renderSite:', err); }
+    try { initPortfolioFilters(); } catch (err) { console.warn('Init filters:', err); }
+    try { initLightboxListeners(); } catch (err) { console.warn('Init lightbox:', err); }
+    try { initFaqAccordion(); } catch (err) { console.warn('Init faq:', err); }
+    try { initQuoteForm(); } catch (err) { console.warn('Init quoteForm:', err); }
+    try { initHeaderScroll(); } catch (err) { console.warn('Init headerScroll:', err); }
+    try { initScrollSpy(); } catch (err) { console.warn('Init scrollSpy:', err); }
 
     // Écoute des mises à jour directes en provenance de l'espace administration (multi-onglets)
     window.addEventListener('storage', (e) => {
@@ -323,6 +323,13 @@
         applyFilter(cat, true);
       };
     });
+  }
+
+  /**
+   * Filtres synchronisés du catalogue (initialisation)
+   */
+  function initPortfolioFilters() {
+    renderCategoryFilters();
   }
 
   /**
@@ -1003,12 +1010,41 @@
     const submitBtn = form?.querySelector('button[type="submit"]');
 
     if (uploadZone && fileInput) {
-      uploadZone.addEventListener('click', () => fileInput.click());
+      uploadZone.addEventListener('click', (e) => {
+        if (e.target !== fileInput && uploadZone.tagName.toLowerCase() !== 'label') {
+          fileInput.click();
+        }
+      });
       
       fileInput.addEventListener('change', () => {
         if (fileInput.files && fileInput.files[0]) {
           const file = fileInput.files[0];
-          uploadLabel.innerHTML = `<i class="fa-solid fa-circle-check" style="color: var(--accent-terra); margin-bottom: 0.3rem; display: block; font-size: 1.2rem;"></i> Photo jointe : <strong>${escapeHtml(file.name)}</strong>`;
+          if (uploadLabel) {
+            uploadLabel.innerHTML = `<i class="fa-solid fa-circle-check" style="color: var(--accent-terra); margin-bottom: 0.3rem; display: block; font-size: 1.2rem;"></i> Photo sélectionnée : <strong>${escapeHtml(file.name)}</strong>`;
+          }
+        }
+      });
+
+      // Glisser-déposer
+      ['dragenter', 'dragover'].forEach(evt => {
+        uploadZone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          uploadZone.classList.add('dragover');
+        });
+      });
+      ['dragleave', 'drop'].forEach(evt => {
+        uploadZone.addEventListener(evt, (e) => {
+          e.preventDefault();
+          uploadZone.classList.remove('dragover');
+        });
+      });
+      uploadZone.addEventListener('drop', (e) => {
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+          fileInput.files = e.dataTransfer.files;
+          const file = fileInput.files[0];
+          if (uploadLabel) {
+            uploadLabel.innerHTML = `<i class="fa-solid fa-circle-check" style="color: var(--accent-terra); margin-bottom: 0.3rem; display: block; font-size: 1.2rem;"></i> Photo sélectionnée : <strong>${escapeHtml(file.name)}</strong>`;
+          }
         }
       });
     }

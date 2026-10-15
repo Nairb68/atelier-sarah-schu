@@ -121,16 +121,33 @@
           <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-main); display: block; margin-bottom: 0.35rem;">Catégorie *</label>
           <div style="display: flex; gap: 0.4rem;">
             <select id="drawer-cat-input" class="form-select" style="flex: 1;"></select>
-            <button id="drawer-new-cat-btn" type="button" class="btn-admin-bar" style="padding: 0 0.7rem; font-size: 0.78rem; white-space: nowrap; background: #fff; border: 1px solid var(--border-card);" title="Créer une nouvelle catégorie personnalisée">
-              <i class="fa-solid fa-plus"></i> Nouvelle
+            <button id="drawer-new-cat-btn" type="button" class="btn-admin-bar" style="padding: 0 0.65rem; font-size: 0.78rem; white-space: nowrap; background: #fff; border: 1px solid var(--border-card);" title="Gérer ou créer une nouvelle catégorie">
+              <i class="fa-solid fa-folder-plus"></i> Gérer
+            </button>
+            <button id="drawer-delete-cat-btn" type="button" class="btn-admin-bar" style="padding: 0 0.65rem; font-size: 0.78rem; white-space: nowrap; background: #fff; border: 1px solid var(--border-card); color: #dc2626;" title="Supprimer la catégorie sélectionnée">
+              <i class="fa-solid fa-trash-can"></i>
             </button>
           </div>
-          <div id="drawer-new-cat-box" style="display: none; margin-top: 0.5rem; background: #FAF8F5; padding: 0.6rem; border-radius: 8px; border: 1px solid var(--border-card);">
-            <label style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 0.3rem;">Nom de la nouvelle catégorie</label>
-            <div style="display: flex; gap: 0.4rem;">
+          <div id="drawer-new-cat-box" style="display: none; margin-top: 0.6rem; background: #FAF8F5; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-card);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+              <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-main);"><i class="fa-solid fa-folder-tree"></i> Gestion des Catégories</span>
+              <button type="button" id="drawer-add-cat-cancel" style="background: none; border: none; font-size: 1.1rem; cursor: pointer; color: var(--text-muted); line-height: 1;">&times;</button>
+            </div>
+            
+            <label style="font-size: 0.74rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.3rem;">Ajouter une catégorie</label>
+            <div style="display: flex; gap: 0.4rem; margin-bottom: 0.75rem;">
               <input type="text" id="drawer-new-cat-name" class="form-input" placeholder="Ex: Dorure &amp; Feuilles d'or" style="font-size: 0.82rem; padding: 6px 8px;">
-              <button type="button" id="drawer-add-cat-confirm" class="btn-admin-bar btn-admin-save" style="padding: 4px 10px; font-size: 0.78rem;">Créer</button>
-              <button type="button" id="drawer-add-cat-cancel" class="btn-admin-bar" style="padding: 4px 8px; font-size: 0.78rem; background: #eee;">&times;</button>
+              <button type="button" id="drawer-add-cat-confirm" class="btn-admin-bar btn-admin-save" style="padding: 4px 10px; font-size: 0.78rem; white-space: nowrap;">Ajouter</button>
+            </div>
+
+            <div style="border-top: 1px solid var(--border-card); padding-top: 0.5rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <span style="font-size: 0.74rem; font-weight: 600; color: var(--text-muted);">Catégories actives</span>
+                <span style="font-size: 0.68rem; color: var(--text-faint);">Clic sur poubelle pour supprimer</span>
+              </div>
+              <div id="drawer-cat-manage-list" style="display: flex; flex-direction: column; gap: 0.35rem; max-height: 150px; overflow-y: auto;">
+                <!-- Rempli dynamiquement -->
+              </div>
             </div>
           </div>
         </div>
