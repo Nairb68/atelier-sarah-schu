@@ -892,37 +892,74 @@
           submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Envoi en cours...';
         }
 
-        // 1. Enregistrement simultané de sauvegarde sur le serveur / espace admin
+        // 1. Si une photo du mur est jointe, upload direct vers le serveur
+        let photoUrl = '';
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+          try {
+            const file = fileInput.files[0];
+            const base64 = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(reader.result);
+              reader.onerror = reject;
+              reader.readAsDataURL(file);
+            });
+            const upResp = await fetch('/api/upload', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ image: base64, filename: file.name })
+            });
+            if (upResp.ok) {
+              const upData = await upResp.json();
+              if (upData.url) photoUrl = upData.url;
+            }
+          } catch (err) {
+            console.warn('Erreur téléversement photo du mur', err);
+          }
+        }
+
+        // 2. Enregistrement simultané de sauvegarde sur le serveur / espace admin
         try {
           fetch('/api/contact', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nom, email, tel, typeProjet, dimensions, message })
+            body: JSON.stringify({ nom, email, tel, typeProjet, dimensions, message, photoUrl })
           }).catch(() => {});
         } catch (err) {}
 
-        // 2. Envoi direct par e-mail via Web3Forms (Boîte Gmail de Sarah)
-        const customAction = form.getAttribute('action');
+        // 3. Envoi par e-mail via Web3Forms (format JSON standard, 100% accepté en gratuit)
+        const customAction = form.getAttribute('action') || 'https://api.web3forms.com/submit';
         let sent = false;
 
-        if (customAction && customAction.startsWith('http')) {
-          try {
-            const formData = new FormData(form);
-            const resp = await fetch(customAction, {
-              method: 'POST',
-              body: formData,
-              headers: { 'Accept': 'application/json' }
-            });
-            if (resp.ok) {
-              const resData = await resp.json();
-              if (resData.success) sent = true;
-            }
-          } catch (err) {
-            console.warn('Erreur envoi Web3Forms', err);
+        try {
+          const fullPhotoUrl = photoUrl ? `${window.location.origin}/${photoUrl}` : 'Aucune photo jointe';
+          const web3Payload = {
+            access_key: 'fe10a643-944e-4a1d-9d04-9b384cff82f1',
+            subject: `Nouvelle demande de projet — ${nom} (${typeProjet})`,
+            from_name: 'Atelier Sarah Schu (Site Web)',
+            nom_client: nom,
+            email_client: email,
+            telephone: tel || 'Non renseigné',
+            type_de_projet: typeProjet,
+            dimensions_et_lieu: dimensions || 'Non renseigné',
+            message: message,
+            photo_du_mur: fullPhotoUrl
+          };
+
+          const resp = await fetch(customAction, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify(web3Payload)
+          });
+
+          if (resp.ok) {
+            const resData = await resp.json();
+            if (resData.success) sent = true;
           }
-        } else {
-          // Serveur local autonome
-          sent = true;
+        } catch (err) {
+          console.warn('Erreur envoi Web3Forms', err);
         }
 
         if (sent) {

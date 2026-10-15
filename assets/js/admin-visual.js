@@ -1383,6 +1383,18 @@
             ${escapeHtml(m.message || '')}
           </div>
 
+          ${m.photoUrl ? `
+            <div style="margin-bottom: 0.8rem; background: #FFFFFF; padding: 0.6rem; border-radius: 8px; border: 1px dashed var(--border-card);">
+              <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.4rem;">
+                <i class="fa-solid fa-camera"></i> Photo du mur reçue :
+              </div>
+              <a href="${escapeHtml(m.photoUrl)}" target="_blank" rel="noopener" style="display: block; text-align: center;">
+                <img src="${escapeHtml(m.photoUrl)}" alt="Photo du mur" style="max-height: 180px; width: auto; max-width: 100%; border-radius: 6px; object-fit: contain; box-shadow: var(--shadow-sm);">
+                <span style="display: block; font-size: 0.75rem; color: var(--accent-terra); margin-top: 0.3rem;"><i class="fa-solid fa-up-right-from-square"></i> Cliquer pour agrandir la photo</span>
+              </a>
+            </div>
+          ` : ''}
+
           <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
             <button class="btn-admin-bar btn-admin-danger btn-del-msg" data-id="${m.id}" type="button" style="padding: 4px 10px; font-size: 0.75rem;">
               <i class="fa-solid fa-trash"></i> Supprimer
