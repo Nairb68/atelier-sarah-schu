@@ -347,12 +347,25 @@
   /**
    * Témoignages & Retours d'expérience (Slider fluide sur une seule ligne)
    */
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  /**
+   * Témoignages & Retours d'expérience (Slider fluide universel Mobile & Desktop)
+   */
   function renderTestimonials() {
     const track = document.getElementById('testimonials-grid-container');
     const dotsContainer = document.getElementById('testimonials-dots-container');
     const prevBtn = document.getElementById('testimonials-prev-btn');
     const nextBtn = document.getElementById('testimonials-next-btn');
-    const viewport = document.getElementById('testimonials-viewport') || track.parentElement;
+    const viewport = document.getElementById('testimonials-viewport') || track?.parentElement;
     if (!track || !siteData.temoignages || siteData.temoignages.length === 0) return;
 
     const items = siteData.temoignages;
@@ -368,11 +381,11 @@
     ];
 
     track.innerHTML = clonedItems.map((t, idx) => `
-      <div class="testimonial-card ${idx === 2 ? 'active' : ''}" data-index="${idx}" data-real-idx="${t._realIdx}">
-        <div class="testimonial-quote">« ${t.quote} »</div>
+      <div class="testimonial-card ${idx === 2 ? 'active' : ''}" data-index="${idx}" data-real-idx="${t._realIdx}" style="cursor: pointer;">
+        <div class="testimonial-quote">« ${escapeHtml(t.quote)} »</div>
         <div>
-          <div class="testimonial-author">${t.author}</div>
-          <div class="testimonial-context">${t.role} &bull; ${t.location}</div>
+          <div class="testimonial-author">${escapeHtml(t.author)}</div>
+          <div class="testimonial-context">${escapeHtml(t.role)} &bull; ${escapeHtml(t.location)}</div>
         </div>
       </div>
     `).join('');
@@ -386,6 +399,7 @@
 
     let currentIndex = 2; // Démarre sur le premier avis réel (index 2)
     let isAnimating = false;
+    let animSafetyTimer = null;
 
     function getCards() {
       return track.querySelectorAll('.testimonial-card');
@@ -404,21 +418,30 @@
       }
     }
 
-    function setPosition(index, animate = true) {
+    function calculateOffset(index) {
       const cards = getCards();
-      if (!viewport || !cards[index]) return;
+      if (!viewport || !cards[index]) return 0;
       const card = cards[index];
       const viewportWidth = viewport.offsetWidth;
       const cardWidth = card.offsetWidth;
       const cardLeft = card.offsetLeft;
+      return (viewportWidth - cardWidth) / 2 - cardLeft;
+    }
 
-      // Centrage mathématique parfait de la carte active dans le viewport
-      const offset = (viewportWidth - cardWidth) / 2 - cardLeft;
+    function setPosition(index, animate = true) {
+      const offset = calculateOffset(index);
 
       if (animate) {
         track.style.transition = 'transform 0.42s cubic-bezier(0.22, 1, 0.36, 1)';
+        isAnimating = true;
+        clearTimeout(animSafetyTimer);
+        animSafetyTimer = setTimeout(() => {
+          isAnimating = false;
+        }, 460);
       } else {
         track.style.transition = 'none';
+        isAnimating = false;
+        clearTimeout(animSafetyTimer);
       }
 
       track.style.transform = `translate3d(${offset}px, 0, 0)`;
@@ -427,14 +450,17 @@
 
     function goToSlide(index, animate = true) {
       if (isAnimating && animate) return;
-      if (animate) isAnimating = true;
       currentIndex = index;
       setPosition(currentIndex, animate);
     }
 
-    // Boucle infinie en circuit fermé : saut imperceptible aux extrémités
-    track.addEventListener('transitionend', () => {
+    // Gestion du saut imperceptible aux extrémités (boucle infinie)
+    track.addEventListener('transitionend', (e) => {
+      // Ignorer les transitions déclenchées par les enfants (cartes, opacité, box-shadow)
+      if (e.target !== track || e.propertyName !== 'transform') return;
       isAnimating = false;
+      clearTimeout(animSafetyTimer);
+
       if (currentIndex >= N + 2) {
         currentIndex = 2;
         setPosition(currentIndex, false);
@@ -452,66 +478,86 @@
       goToSlide(currentIndex - 1, true);
     }
 
-    if (prevBtn) prevBtn.onclick = () => prevSlide();
-    if (nextBtn) nextBtn.onclick = () => nextSlide();
+    if (prevBtn) prevBtn.onclick = (e) => { e.preventDefault(); prevSlide(); };
+    if (nextBtn) nextBtn.onclick = (e) => { e.preventDefault(); nextSlide(); };
 
+    // Clic sur les indicateurs de points
     if (dotsContainer) {
       dotsContainer.querySelectorAll('.testimonials-dot').forEach(dot => {
-        dot.addEventListener('click', () => {
+        dot.addEventListener('click', (e) => {
+          e.preventDefault();
           const targetRealIdx = parseInt(dot.getAttribute('data-idx'), 10);
           goToSlide(targetRealIdx + 2, true);
         });
       });
     }
 
-    // Gestion du glissement tactile (Swipe mobile fluide)
-    let touchStartX = 0;
-    let touchStartY = 0;
+    // Clic direct sur une carte visible pour la centrer
+    getCards().forEach((card, idx) => {
+      card.addEventListener('click', () => {
+        if (!isDragging && idx !== currentIndex) {
+          goToSlide(idx, true);
+        }
+      });
+    });
+
+    // Support complet du glissement souris (desktop) et tactile (mobile) via PointerEvents
+    let startX = 0;
     let startTranslateX = 0;
     let isDragging = false;
+    let hasMoved = false;
 
-    function getTrackOffset() {
+    function getTrackCurrentX() {
       const transform = window.getComputedStyle(track).transform;
       if (transform && transform !== 'none') {
         const matrix = new DOMMatrix(transform);
         return matrix.m41;
       }
-      return 0;
+      return calculateOffset(currentIndex);
     }
 
-    viewport.addEventListener('touchstart', (e) => {
-      if (isAnimating) return;
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-      startTranslateX = getTrackOffset();
+    viewport.style.touchAction = 'pan-y';
+
+    viewport.addEventListener('pointerdown', (e) => {
+      if (e.button !== undefined && e.button !== 0) return;
       isDragging = true;
+      hasMoved = false;
+      startX = e.clientX;
+      startTranslateX = getTrackCurrentX();
       track.style.transition = 'none';
-    }, { passive: true });
+      clearTimeout(animSafetyTimer);
+      isAnimating = false;
+      try { viewport.setPointerCapture(e.pointerId); } catch(err) {}
+    });
 
-    viewport.addEventListener('touchmove', (e) => {
+    viewport.addEventListener('pointermove', (e) => {
       if (!isDragging) return;
-      const currentX = e.touches[0].clientX;
-      const currentY = e.touches[0].clientY;
-      const diffX = currentX - touchStartX;
-      const diffY = currentY - touchStartY;
-
-      if (Math.abs(diffX) > Math.abs(diffY)) {
-        track.style.transform = `translate3d(${startTranslateX + diffX}px, 0, 0)`;
+      const diffX = e.clientX - startX;
+      if (Math.abs(diffX) > 6) {
+        hasMoved = true;
       }
-    }, { passive: true });
+      track.style.transform = `translate3d(${startTranslateX + diffX}px, 0, 0)`;
+    });
 
-    viewport.addEventListener('touchend', (e) => {
+    function endDrag(e) {
       if (!isDragging) return;
       isDragging = false;
-      const diffX = e.changedTouches[0].clientX - touchStartX;
-      if (diffX < -40) {
+      try { viewport.releasePointerCapture(e.pointerId); } catch(err) {}
+
+      if (!hasMoved) return;
+
+      const diffX = e.clientX - startX;
+      if (diffX < -45) {
         nextSlide();
-      } else if (diffX > 40) {
+      } else if (diffX > 45) {
         prevSlide();
       } else {
-        goToSlide(currentIndex, true);
+        setPosition(currentIndex, true);
       }
-    }, { passive: true });
+    }
+
+    viewport.addEventListener('pointerup', endDrag);
+    viewport.addEventListener('pointercancel', endDrag);
 
     // Initialisation du centrage au chargement et au redimensionnement
     setTimeout(() => {
@@ -853,15 +899,14 @@
 
   /**
    * Compresse et redimensionne une image côté client (max 1600px, JPEG 82%)
-   * Transforme instantanément une photo de smartphone de 10 Mo en un fichier net de ~150 Ko
+   * Produit simultanément :
+   * - Un Blob JPEG léger (~150-250 Ko) pour pièce jointe e-mail réelle (Web3Forms attachment)
+   * - Une dataUrl Base64 pour affichage immédiat et persistance admin
    */
-  function compressImageFile(file, maxWidth = 1600, quality = 0.82) {
+  function compressImageFileToBlobAndDataUrl(file, maxWidth = 1600, quality = 0.82) {
     return new Promise((resolve) => {
       if (!file || !file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => resolve(null);
-        reader.readAsDataURL(file);
+        resolve({ blob: file, dataUrl: null });
         return;
       }
 
@@ -888,12 +933,15 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
 
-          resolve(canvas.toDataURL('image/jpeg', quality));
+          const dataUrl = canvas.toDataURL('image/jpeg', quality);
+          canvas.toBlob((blob) => {
+            resolve({ blob: blob || file, dataUrl });
+          }, 'image/jpeg', quality);
         };
-        img.onerror = () => resolve(e.target.result);
+        img.onerror = () => resolve({ blob: file, dataUrl: e.target.result });
         img.src = e.target.result;
       };
-      reader.onerror = () => resolve(null);
+      reader.onerror = () => resolve({ blob: file, dataUrl: null });
       reader.readAsDataURL(file);
     });
   }
@@ -914,7 +962,7 @@
       fileInput.addEventListener('change', () => {
         if (fileInput.files && fileInput.files[0]) {
           const file = fileInput.files[0];
-          uploadLabel.innerHTML = `<i class="fa-solid fa-circle-check" style="color: var(--accent-terra); margin-bottom: 0.3rem; display: block; font-size: 1.2rem;"></i> Photo jointe : <strong>${file.name}</strong>`;
+          uploadLabel.innerHTML = `<i class="fa-solid fa-circle-check" style="color: var(--accent-terra); margin-bottom: 0.3rem; display: block; font-size: 1.2rem;"></i> Photo jointe : <strong>${escapeHtml(file.name)}</strong>`;
         }
       });
     }
@@ -940,64 +988,60 @@
           submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Envoi en cours...';
         }
 
-        // 1. Si une photo du mur est jointe, compression automatique en ~150 Ko et upload
-        let photoUrl = '';
+        // 1. Compression optimisée de la photo si présente (~150 Ko)
+        let photoResult = null;
         if (fileInput && fileInput.files && fileInput.files[0]) {
           try {
-            const file = fileInput.files[0];
-            const base64 = await compressImageFile(file, 1600, 0.82);
-            if (base64) {
-              const cleanFileName = (file.name ? file.name.replace(/\.[^/.]+$/, "") : "mur") + ".jpg";
-              const upResp = await fetch('/api/upload', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ image: base64, filename: cleanFileName })
-              });
-              if (upResp.ok) {
-                const upData = await upResp.json();
-                if (upData.url) photoUrl = upData.url;
-              }
-            }
+            photoResult = await compressImageFileToBlobAndDataUrl(fileInput.files[0], 1600, 0.82);
           } catch (err) {
-            console.warn('Erreur téléversement photo du mur', err);
+            console.warn('Erreur préparation photo du mur', err);
           }
         }
 
-        // 2. Enregistrement simultané de sauvegarde sur le serveur / espace admin
+        // 2. Enregistrement direct sur le serveur / espace admin (avec photo embarquée)
         try {
           fetch('/api/contact', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nom, email, tel, typeProjet, dimensions, message, photoUrl })
+            body: JSON.stringify({
+              nom,
+              email,
+              tel,
+              typeProjet,
+              dimensions,
+              message,
+              photoData: photoResult?.dataUrl || null
+            })
           }).catch(() => {});
         } catch (err) {}
 
-        // 3. Envoi par e-mail via Web3Forms (format JSON standard, 100% accepté en gratuit)
+        // 3. Envoi par e-mail via Web3Forms avec véritable pièce jointe multipart/form-data
         const customAction = form.getAttribute('action') || 'https://api.web3forms.com/submit';
         let sent = false;
 
         try {
-          const fullPhotoUrl = photoUrl ? `${window.location.origin}/${photoUrl}` : 'Aucune photo jointe';
-          const web3Payload = {
-            access_key: 'fe10a643-944e-4a1d-9d04-9b384cff82f1',
-            subject: `Nouvelle demande de projet — ${nom} (${typeProjet})`,
-            from_name: 'Atelier Sarah Schu (Site Web)',
-            nom_client: nom,
-            email_client: email,
-            telephone: tel || 'Non renseigné',
-            type_de_projet: typeProjet,
-            dimensions_et_lieu: dimensions || 'Non renseigné',
-            message: message,
-            photo_du_mur: fullPhotoUrl
-          };
+          const formData = new FormData();
+          formData.append('access_key', 'fe10a643-944e-4a1d-9d04-9b384cff82f1');
+          formData.append('subject', `Nouvelle demande de projet — ${nom} (${typeProjet})`);
+          formData.append('from_name', 'Atelier Sarah Schu (Site Web)');
+          formData.append('Nom du contact', nom);
+          formData.append('Email', email);
+          formData.append('Téléphone', tel || 'Non renseigné');
+          formData.append('Type de projet', typeProjet);
+          formData.append('Dimensions & Lieu', dimensions || 'Non renseigné');
+          formData.append('Message / Description', message);
+
+          // Si une photo a été choisie, elle est attachée directement au mail reçu
+          if (photoResult && photoResult.blob) {
+            const origName = fileInput.files[0].name || "photo_du_mur";
+            const cleanName = origName.replace(/\.[^/.]+$/, "") + ".jpg";
+            formData.append('attachment', photoResult.blob, cleanName);
+          }
 
           const resp = await fetch(customAction, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Accept': 'application/json'
-            },
-            body: JSON.stringify(web3Payload)
+            body: formData
+            // Laisser le navigateur calculer automatiquement le boundary multipart/form-data
           });
 
           if (resp.ok) {
@@ -1005,7 +1049,7 @@
             if (resData.success) sent = true;
           }
         } catch (err) {
-          console.warn('Erreur envoi Web3Forms', err);
+          console.warn('Erreur transmission Web3Forms', err);
         }
 
         if (sent) {

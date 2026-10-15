@@ -249,9 +249,8 @@
       `).join('');
     }
 
-    // Témoignages (Slider fluide sur une seule ligne)
+    // Témoignages (Slider fluide universel Mobile & Desktop)
     const testContainer = document.getElementById('testimonials-grid-container');
-    // Témoignages
     const dotsContainer = document.getElementById('testimonials-dots-container');
     const prevBtn = document.getElementById('testimonials-prev-btn');
     const nextBtn = document.getElementById('testimonials-next-btn');
@@ -270,7 +269,7 @@
       ];
 
       testContainer.innerHTML = clonedItems.map((t, idx) => `
-        <div class="testimonial-card ${idx === 2 ? 'active' : ''}" data-index="${idx}" data-test-idx="${t._realIdx}">
+        <div class="testimonial-card ${idx === 2 ? 'active' : ''}" data-index="${idx}" data-test-idx="${t._realIdx}" style="cursor: pointer;">
           <div class="testimonial-quote" contenteditable="true" data-field="quote">« ${t.quote} »</div>
           <div>
             <div class="testimonial-author" contenteditable="true" data-field="author">${t.author}</div>
@@ -287,6 +286,7 @@
 
       let currentIndex = 2;
       let isAnimating = false;
+      let animSafetyTimer = null;
 
       function getCards() {
         return testContainer.querySelectorAll('.testimonial-card');
@@ -305,20 +305,30 @@
         }
       }
 
-      function setPosition(index, animate = true) {
+      function calculateOffset(index) {
         const cards = getCards();
-        if (!viewport || !cards[index]) return;
+        if (!viewport || !cards[index]) return 0;
         const card = cards[index];
         const viewportWidth = viewport.offsetWidth;
         const cardWidth = card.offsetWidth;
         const cardLeft = card.offsetLeft;
+        return (viewportWidth - cardWidth) / 2 - cardLeft;
+      }
 
-        const offset = (viewportWidth - cardWidth) / 2 - cardLeft;
+      function setPosition(index, animate = true) {
+        const offset = calculateOffset(index);
 
         if (animate) {
           testContainer.style.transition = 'transform 0.42s cubic-bezier(0.22, 1, 0.36, 1)';
+          isAnimating = true;
+          clearTimeout(animSafetyTimer);
+          animSafetyTimer = setTimeout(() => {
+            isAnimating = false;
+          }, 460);
         } else {
           testContainer.style.transition = 'none';
+          isAnimating = false;
+          clearTimeout(animSafetyTimer);
         }
 
         testContainer.style.transform = `translate3d(${offset}px, 0, 0)`;
@@ -327,13 +337,15 @@
 
       function goToSlide(index, animate = true) {
         if (isAnimating && animate) return;
-        if (animate) isAnimating = true;
         currentIndex = index;
         setPosition(currentIndex, animate);
       }
 
-      testContainer.addEventListener('transitionend', () => {
+      testContainer.addEventListener('transitionend', (e) => {
+        if (e.target !== testContainer || e.propertyName !== 'transform') return;
         isAnimating = false;
+        clearTimeout(animSafetyTimer);
+
         if (currentIndex >= N + 2) {
           currentIndex = 2;
           setPosition(currentIndex, false);
@@ -343,17 +355,87 @@
         }
       });
 
-      if (prevBtn) prevBtn.onclick = () => goToSlide(currentIndex - 1, true);
-      if (nextBtn) nextBtn.onclick = () => goToSlide(currentIndex + 1, true);
+      if (prevBtn) prevBtn.onclick = (e) => { e.preventDefault(); goToSlide(currentIndex - 1, true); };
+      if (nextBtn) nextBtn.onclick = (e) => { e.preventDefault(); goToSlide(currentIndex + 1, true); };
 
       if (dotsContainer) {
         dotsContainer.querySelectorAll('.testimonials-dot').forEach(dot => {
-          dot.addEventListener('click', () => {
+          dot.addEventListener('click', (e) => {
+            e.preventDefault();
             const targetRealIdx = parseInt(dot.getAttribute('data-idx'), 10);
             goToSlide(targetRealIdx + 2, true);
           });
         });
       }
+
+      // Clic direct sur une carte visible pour la centrer
+      getCards().forEach((card, idx) => {
+        card.addEventListener('click', (e) => {
+          if (e.target.isContentEditable) return;
+          if (!isDragging && idx !== currentIndex) {
+            goToSlide(idx, true);
+          }
+        });
+      });
+
+      // Pointer drag pour Desktop & Mobile
+      let startX = 0;
+      let startTranslateX = 0;
+      let isDragging = false;
+      let hasMoved = false;
+
+      function getTrackCurrentX() {
+        const transform = window.getComputedStyle(testContainer).transform;
+        if (transform && transform !== 'none') {
+          const matrix = new DOMMatrix(transform);
+          return matrix.m41;
+        }
+        return calculateOffset(currentIndex);
+      }
+
+      viewport.style.touchAction = 'pan-y';
+
+      viewport.addEventListener('pointerdown', (e) => {
+        if (e.target.isContentEditable) return;
+        if (e.button !== undefined && e.button !== 0) return;
+        isDragging = true;
+        hasMoved = false;
+        startX = e.clientX;
+        startTranslateX = getTrackCurrentX();
+        testContainer.style.transition = 'none';
+        clearTimeout(animSafetyTimer);
+        isAnimating = false;
+        try { viewport.setPointerCapture(e.pointerId); } catch(err) {}
+      });
+
+      viewport.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        const diffX = e.clientX - startX;
+        if (Math.abs(diffX) > 6) {
+          hasMoved = true;
+        }
+        testContainer.style.transform = `translate3d(${startTranslateX + diffX}px, 0, 0)`;
+      });
+
+      function endDrag(e) {
+        if (!isDragging) return;
+        isDragging = false;
+        try { viewport.releasePointerCapture(e.pointerId); } catch(err) {}
+
+        if (!hasMoved) return;
+
+        const diffX = e.clientX - startX;
+        if (diffX < -45) {
+          goToSlide(currentIndex + 1, true);
+        } else if (diffX > 45) {
+          goToSlide(currentIndex - 1, true);
+        } else {
+          setPosition(currentIndex, true);
+        }
+      }
+
+      viewport.addEventListener('pointerup', endDrag);
+      viewport.addEventListener('pointercancel', endDrag);
 
       setTimeout(() => {
         setPosition(currentIndex, false);
@@ -1372,15 +1454,69 @@
     fetchInboxMessages().then(() => updateInboxBadge());
   }
 
+  const LOCAL_INBOX_KEY = 'sarah_admin_inbox_messages_v1';
+
+  function getLocalInboxMessages() {
+    try {
+      const raw = localStorage.getItem(LOCAL_INBOX_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch(e) {
+      return [];
+    }
+  }
+
+  function saveLocalInboxMessages(msgs) {
+    try {
+      localStorage.setItem(LOCAL_INBOX_KEY, JSON.stringify(msgs || []));
+    } catch(e) {}
+  }
+
   async function fetchInboxMessages() {
+    const localMsgs = getLocalInboxMessages();
+    let serverMsgs = [];
+    let serverOk = false;
+
     try {
       const resp = await fetch('/api/messages?v=' + Date.now());
       if (resp.ok) {
-        inboxMessages = await resp.json();
+        serverMsgs = await resp.json();
+        serverOk = true;
       }
     } catch (e) {
-      console.warn('Lecture des messages impossible', e);
+      console.warn('Lecture des messages serveur impossible', e);
     }
+
+    // Fusion intelligente : conservation absolue de tous les messages
+    const mergedMap = new Map();
+    // 1. Ajouter d'abord les messages locaux existants
+    localMsgs.forEach(m => {
+      if (m && m.id) mergedMap.set(m.id, m);
+    });
+    // 2. Fusionner avec les messages reçus du serveur
+    serverMsgs.forEach(m => {
+      if (m && m.id) mergedMap.set(m.id, m);
+    });
+
+    const merged = Array.from(mergedMap.values());
+    merged.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+    inboxMessages = merged;
+    saveLocalInboxMessages(merged);
+
+    // Si le serveur a moins de messages que notre stockage local (ex: après un redéploiement Render / Git),
+    // on renvoie automatiquement les messages sauvegardés au serveur pour les restaurer !
+    if (serverOk && localMsgs.length > serverMsgs.length) {
+      try {
+        await fetch('/api/messages/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: merged })
+        });
+        console.log('Demandes de projets synchronisées et restaurées sur le serveur.');
+      } catch(e) {}
+    }
+
+    return inboxMessages;
   }
 
   function updateInboxBadge() {
@@ -1416,7 +1552,7 @@
           <i class="fa-solid fa-inbox" style="font-size: 2.5rem; color: #D6D3D1; margin-bottom: 0.8rem; display: block;"></i>
           <p style="font-size: 0.95rem; font-weight: 600;">Aucune demande de projet pour le moment.</p>
           <p style="font-size: 0.8rem; color: var(--text-faint); margin-top: 0.4rem; line-height: 1.5;">
-            Dès qu'un visiteur remplit le formulaire sur le site, sa demande apparaîtra ici et vous recevrez un e-mail avec ses coordonnées et sa photo.
+            Dès qu'un visiteur remplit le formulaire sur le site, sa demande apparaîtra ici avec ses coordonnées et sa photo, et vous recevrez également un e-mail avec la photo jointe.
           </p>
         </div>
       `;
@@ -1427,6 +1563,8 @@
       const dateFormatted = m.date ? new Date(m.date).toLocaleDateString('fr-FR', {
         day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
       }) : '';
+
+      const photoSrc = m.photoData || m.photoUrl;
 
       return `
         <div class="inbox-msg-card" style="background: #FAF8F5; border: 1px solid var(--border-card); border-radius: 12px; padding: 1.1rem; margin-bottom: 1rem; box-shadow: var(--shadow-sm);">
@@ -1450,13 +1588,13 @@
             ${escapeHtml(m.message || '')}
           </div>
 
-          ${m.photoUrl ? `
+          ${photoSrc ? `
             <div style="margin-bottom: 0.8rem; background: #FFFFFF; padding: 0.6rem; border-radius: 8px; border: 1px dashed var(--border-card);">
               <div style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.4rem;">
                 <i class="fa-solid fa-camera"></i> Photo du mur reçue :
               </div>
-              <a href="${escapeHtml(m.photoUrl)}" target="_blank" rel="noopener" style="display: block; text-align: center;">
-                <img src="${escapeHtml(m.photoUrl)}" alt="Photo du mur" style="max-height: 180px; width: auto; max-width: 100%; border-radius: 6px; object-fit: contain; box-shadow: var(--shadow-sm);">
+              <a href="${escapeHtml(photoSrc)}" target="_blank" rel="noopener" style="display: block; text-align: center;">
+                <img src="${escapeHtml(photoSrc)}" alt="Photo du mur" style="max-height: 200px; width: auto; max-width: 100%; border-radius: 6px; object-fit: contain; box-shadow: var(--shadow-sm);">
                 <span style="display: block; font-size: 0.75rem; color: var(--accent-terra); margin-top: 0.3rem;"><i class="fa-solid fa-up-right-from-square"></i> Cliquer pour agrandir la photo</span>
               </a>
             </div>
@@ -1481,13 +1619,13 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ id })
           });
-          inboxMessages = inboxMessages.filter(x => x.id !== id);
-          renderInboxMessages();
-          updateInboxBadge();
-          showToast('Demande supprimée', 'info');
-        } catch(e) {
-          alert('Erreur suppression');
-        }
+        } catch(e) {}
+
+        inboxMessages = inboxMessages.filter(x => x.id !== id);
+        saveLocalInboxMessages(inboxMessages);
+        renderInboxMessages();
+        updateInboxBadge();
+        showToast('Demande supprimée', 'info');
       });
     });
   }

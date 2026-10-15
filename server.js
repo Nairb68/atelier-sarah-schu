@@ -193,6 +193,44 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // --- API : Synchronisation des messages (restauration persistante après redéploiement) ---
+  if (pathname === '/api/messages/sync' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const data = JSON.parse(body);
+        const incoming = Array.isArray(data) ? data : (data.messages || []);
+        const MESSAGES_FILE = path.join(ROOT, 'data', 'messages.json');
+        let current = [];
+        if (fs.existsSync(MESSAGES_FILE)) {
+          try {
+            current = JSON.parse(fs.readFileSync(MESSAGES_FILE, 'utf-8'));
+          } catch(e) {}
+        }
+        const existingIds = new Set(current.map(m => m.id));
+        let added = 0;
+        incoming.forEach(m => {
+          if (m && m.id && !existingIds.has(m.id)) {
+            current.push(m);
+            existingIds.add(m.id);
+            added++;
+          }
+        });
+        current.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+        fs.writeFileSync(MESSAGES_FILE, JSON.stringify(current, null, 2), 'utf-8');
+        console.log(`🔄 Synchronisation messages terminée : +${added} restaurés (${current.length} au total)`);
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true, count: current.length, added }));
+      } catch (err) {
+        console.error('Erreur sync messages:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: err.message }));
+      }
+    });
+    return;
+  }
+
   // --- Fichiers statiques ---
   if (pathname === '/' || pathname === '') {
     pathname = '/index.html';
