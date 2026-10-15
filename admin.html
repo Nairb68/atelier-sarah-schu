@@ -49,32 +49,49 @@
   <aside class="visual-admin-bar" id="visual-admin-bar">
     <div class="admin-bar-left">
       <div class="admin-bar-brand">
-        <img src="assets/images/logo-emblem.png" alt="Emblème" style="height: 22px; width: auto; vertical-align: middle; margin-right: 6px;">
-        <span>Atelier Sarah Schu</span>
+        <img src="assets/images/logo-emblem.png" alt="Emblème" class="admin-bar-logo" style="height: 22px; width: auto; vertical-align: middle;">
+        <span class="admin-bar-brand-name">Atelier Sarah Schu</span>
       </div>
       <span class="admin-bar-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> Mode Vue Réelle</span>
       <div class="admin-bar-status">
         <span class="admin-status-dot"></span>
-        <span id="admin-status-text">Synchronisé en direct</span>
+        <span id="admin-status-text">Synchronisé</span>
       </div>
     </div>
     
     <div class="admin-bar-actions">
-      <button id="admin-bar-inbox-btn" class="btn-admin-bar" type="button" style="background: #292524; color: #FAF8F5;" title="Voir les demandes de devis reçues">
-        <i class="fa-solid fa-inbox"></i> Demandes <span id="admin-inbox-badge" style="display: none; background: var(--accent-terra); color: white; border-radius: 999px; padding: 1px 7px; font-size: 0.72rem; margin-left: 4px; font-weight: 700;">0</span>
+      <!-- Demandes reçues -->
+      <button id="admin-bar-inbox-btn" class="btn-admin-bar btn-admin-inbox" type="button" title="Demandes de devis reçues">
+        <i class="fa-solid fa-inbox"></i>
+        <span class="btn-text">Demandes</span>
+        <span id="admin-inbox-badge" class="inbox-count-pill" style="display: none;">0</span>
       </button>
-      <button id="admin-bar-add-btn" class="btn-admin-bar btn-admin-add" type="button">
-        <i class="fa-solid fa-plus"></i> Ajouter une création
+
+      <!-- Ajouter une création -->
+      <button id="admin-bar-add-btn" class="btn-admin-bar btn-admin-add" type="button" title="Ajouter une création au portfolio">
+        <i class="fa-solid fa-plus"></i>
+        <span class="btn-text">Ajouter</span>
       </button>
-      <button id="admin-bar-export-btn" class="btn-admin-bar btn-admin-export" type="button" title="Télécharger le fichier site-data.json à jour">
-        <i class="fa-solid fa-download"></i> Exporter JSON
+
+      <!-- Sauvegarder & Publier (Action Principale) -->
+      <button id="admin-bar-save-btn" class="btn-admin-bar btn-admin-save" type="button" title="Sauvegarder et publier en direct">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        <span class="btn-text">Sauvegarder</span>
       </button>
-      <button id="admin-bar-preview-btn" class="btn-admin-bar btn-admin-preview" type="button">
-        <i class="fa-solid fa-eye"></i> Aperçu visiteur
+
+      <!-- Aperçu visiteur -->
+      <button id="admin-bar-preview-btn" class="btn-admin-bar btn-admin-preview" type="button" title="Aperçu visiteur (masquer les repères d'édition)">
+        <i class="fa-solid fa-eye"></i>
+        <span class="btn-text">Aperçu</span>
       </button>
-      <button id="admin-bar-save-btn" class="btn-admin-bar btn-admin-save" type="button">
-        <i class="fa-solid fa-cloud-arrow-up"></i> Sauvegarder &amp; Publier
+
+      <!-- Exporter JSON -->
+      <button id="admin-bar-export-btn" class="btn-admin-bar btn-admin-export" type="button" title="Télécharger le fichier de sauvegarde site-data.json">
+        <i class="fa-solid fa-download"></i>
+        <span class="btn-text">JSON</span>
       </button>
+
+      <!-- Quitter le mode édition -->
       <button id="admin-bar-exit-btn" class="btn-admin-bar btn-admin-exit" type="button" title="Quitter le mode édition">
         <i class="fa-solid fa-arrow-right-from-bracket"></i>
       </button>
@@ -501,45 +518,53 @@
     <section id="contact" class="section">
       <div class="container">
         
-        <div class="contact-box">
-          <div class="section-header" style="text-align: center; margin-bottom: 2rem;">
+        <div class="contact-box" style="overflow: visible;">
+          <div class="section-header" style="text-align: center; margin-bottom: 2.2rem;">
             <div class="section-eyebrow">COORDONNÉES DE L'ATELIER</div>
             <h2 class="section-title">Vos informations de <span class="italic-serif">contact</span></h2>
-            <p class="section-desc" style="margin: 0 auto;">
+            <p class="section-desc" style="margin: 0 auto; max-width: 620px;">
               Cliquez directement ci-dessous pour modifier vos numéros, adresses ou courriels.
             </p>
           </div>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
-            <div class="contact-item" style="background: #FAF8F5; padding: 1.5rem; border-radius: 12px;">
+          <div class="admin-contacts-grid">
+            <div class="contact-item">
               <div class="contact-item-icon"><i class="fa-solid fa-phone"></i></div>
-              <div>
+              <div class="contact-item-content">
                 <div class="contact-item-lbl">Téléphone</div>
                 <div id="contact-phone-text" class="contact-item-val" contenteditable="true">06 75 45 04 97</div>
               </div>
             </div>
 
-            <div class="contact-item" style="background: #FAF8F5; padding: 1.5rem; border-radius: 12px;">
+            <div class="contact-item">
               <div class="contact-item-icon"><i class="fa-solid fa-envelope"></i></div>
-              <div>
+              <div class="contact-item-content">
                 <div class="contact-item-lbl">E-mail</div>
                 <div id="contact-email-text" class="contact-item-val" contenteditable="true">sarah.schu16@gmail.com</div>
               </div>
             </div>
 
-            <div class="contact-item" style="background: #FAF8F5; padding: 1.5rem; border-radius: 12px;">
+            <div class="contact-item">
               <div class="contact-item-icon"><i class="fa-solid fa-location-dot"></i></div>
-              <div>
+              <div class="contact-item-content">
                 <div class="contact-item-lbl">Localisation</div>
                 <div id="contact-location-text" class="contact-item-val" contenteditable="true">Zimmerbach / Colmar / Munster (Alsace)</div>
               </div>
             </div>
 
-            <div class="contact-item" style="background: #FAF8F5; padding: 1.5rem; border-radius: 12px;">
+            <div class="contact-item">
               <div class="contact-item-icon"><i class="fa-brands fa-instagram"></i></div>
-              <div>
+              <div class="contact-item-content">
                 <div class="contact-item-lbl">Instagram officiel</div>
                 <div id="contact-instagram-text" class="contact-item-val" contenteditable="true">@sarahschu.art</div>
+              </div>
+            </div>
+
+            <div class="contact-item">
+              <div class="contact-item-icon"><i class="fa-brands fa-facebook"></i></div>
+              <div class="contact-item-content">
+                <div class="contact-item-lbl">Facebook officiel</div>
+                <div id="contact-facebook-text" class="contact-item-val" contenteditable="true">Sarah Schu Art</div>
               </div>
             </div>
           </div>
@@ -630,7 +655,13 @@
     </div>
   </div>
 
+  <!-- Bouton Sauvegarde Flottant (Vue Mobile & Tablettes) -->
+  <button id="admin-floating-save-btn" class="admin-floating-save-btn" type="button" title="Sauvegarder et publier en direct">
+    <i class="fa-solid fa-cloud-arrow-up"></i>
+    <span>Sauvegarder</span>
+  </button>
+
   <!-- Scripts du Moteur Visuel In Situ -->
-  <script src="assets/js/admin-visual.js?v=7"></script>
+  <script src="assets/js/admin-visual.js?v=8"></script>
 </body>
 </html>

@@ -449,13 +449,16 @@ body.preview-active .artwork-order-badge {
   right: -520px;
   width: 100%;
   max-width: 500px;
-  height: 100vh;
+  height: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
   background: #ffffff;
   z-index: 12001;
   box-shadow: -10px 0 40px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
   transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overscroll-behavior: contain;
 }
 
 .admin-drawer.active {
@@ -469,6 +472,7 @@ body.preview-active .artwork-order-badge {
   align-items: center;
   justify-content: space-between;
   background: #FAF8F5;
+  flex-shrink: 0;
 }
 
 .admin-drawer-title {
@@ -493,6 +497,8 @@ body.preview-active .artwork-order-badge {
 .admin-drawer-body {
   padding: 1.8rem;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -505,6 +511,7 @@ body.preview-active .artwork-order-badge {
   background: #FAF8F5;
   display: flex;
   gap: 0.8rem;
+  flex-shrink: 0;
 }
 
 /* Toast de notification */
@@ -621,50 +628,217 @@ body.preview-active .artwork-order-badge {
 }
 
 /* ==========================================================================
+   GRILLE DES COORDONNÉES EN MODE ADMIN (FLUIDE & SANS DÉBORDEMENT)
+   ========================================================================== */
+body.admin-mode .contact-box {
+  overflow: visible;
+}
+
+.admin-contacts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 1.25rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.admin-contacts-grid .contact-item {
+  background: #FAF8F5;
+  padding: 1.25rem 1.15rem;
+  border-radius: 14px;
+  border: 1px solid var(--border-light);
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+
+.admin-contacts-grid .contact-item:focus-within {
+  border-color: var(--accent-terra);
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(175, 82, 57, 0.12);
+}
+
+.admin-contacts-grid .contact-item-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: var(--accent-terra);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.admin-contacts-grid .contact-item-content {
+  min-width: 0;
+  flex: 1;
+}
+
+.admin-contacts-grid .contact-item-lbl {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.admin-contacts-grid .contact-item-val {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  outline: none;
+  border-radius: 4px;
+  padding: 2px 4px;
+  margin-left: -4px;
+  transition: background-color var(--transition-fast);
+}
+
+.admin-contacts-grid .contact-item-val:focus {
+  background: rgba(175, 82, 57, 0.08);
+}
+
+/* ==========================================================================
+   BOUTON SAUVEGARDE FLOTTANT (VUE MOBILE & TABLETTES)
+   ========================================================================== */
+.admin-floating-save-btn {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 9999;
+  background: var(--accent-terra);
+  color: #ffffff;
+  border: none;
+  border-radius: 9999px;
+  padding: 0.75rem 1.4rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  box-shadow: 0 6px 25px rgba(175, 82, 57, 0.45);
+  cursor: pointer;
+  align-items: center;
+  gap: 0.6rem;
+  transition: all 0.25s ease;
+}
+
+.admin-floating-save-btn:hover {
+  background: var(--accent-terra-hover);
+  transform: translateY(-2px);
+}
+
+.admin-floating-save-btn.dirty {
+  animation: pulse-fab 1.8s infinite;
+  background: #E86542;
+}
+
+@keyframes pulse-fab {
+  0% { transform: scale(1); box-shadow: 0 6px 25px rgba(232, 101, 66, 0.45); }
+  50% { transform: scale(1.05); box-shadow: 0 10px 30px rgba(232, 101, 66, 0.7); }
+  100% { transform: scale(1); box-shadow: 0 6px 25px rgba(232, 101, 66, 0.45); }
+}
+
+@media (max-width: 768px) {
+  .admin-floating-save-btn {
+    display: inline-flex;
+  }
+}
+
+/* ==========================================================================
    ADAPTATION MOBILE & TABLETTE DE L'ÉDITEUR
    ========================================================================== */
-@media (max-width: 860px) {
+@media (max-width: 992px) {
+  .admin-bar-badge,
+  .admin-bar-status {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
   .visual-admin-bar {
     height: auto;
-    min-height: 54px;
-    padding: 0.5rem 1rem;
-    gap: 0.6rem;
+    min-height: 52px;
+    padding: 0.35rem 0.8rem;
+    gap: 0.5rem;
   }
   body.admin-mode {
-    padding-top: 64px;
+    padding-top: 56px;
   }
-  .admin-bar-badge {
-    display: none;
-  }
-  .admin-bar-status {
-    display: none;
+  .admin-bar-brand-name {
+    display: none !important;
   }
   .btn-admin-bar {
-    padding: 0.45rem 0.8rem;
-    font-size: 0.8rem;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.78rem;
+  }
+  .btn-admin-export .btn-text,
+  .btn-admin-preview .btn-text {
+    display: none !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-contacts-grid {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
   }
 }
 
 @media (max-width: 580px) {
   .visual-admin-bar {
-    padding: 0.4rem 0.8rem;
+    padding: 0.35rem 0.5rem;
+    gap: 0.35rem;
+    max-width: 100vw;
   }
-  .admin-bar-brand span {
-    display: none;
+  .admin-bar-left {
+    gap: 0.4rem;
   }
-  .btn-admin-preview span,
-  .btn-admin-add span,
-  .btn-admin-save span {
+  .admin-bar-actions {
+    gap: 0.35rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    max-width: calc(100vw - 42px);
+  }
+  .admin-bar-actions::-webkit-scrollbar {
     display: none;
   }
   .btn-admin-bar {
-    padding: 0.5rem 0.7rem;
-    font-size: 0.92rem;
+    padding: 0.45rem 0.55rem;
+    font-size: 0.78rem;
+    min-height: 36px;
+  }
+  /* Sur mobile, icônes compactes sur les boutons secondaires pour tenir dans l'écran */
+  .btn-admin-inbox .btn-text,
+  .btn-admin-add .btn-text {
+    display: none !important;
+  }
+  .btn-admin-save .btn-text {
+    display: inline-block !important;
   }
   .admin-drawer {
-    width: 100%;
-    max-width: 100%;
-    right: -100%;
+    width: 100% !important;
+    max-width: 100% !important;
+    right: -100% !important;
+  }
+  .admin-drawer.active {
+    right: 0 !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .btn-admin-save .btn-text {
+    display: none !important;
+  }
+  .btn-admin-bar {
+    padding: 0.4rem 0.5rem;
   }
 }
 

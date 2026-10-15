@@ -106,6 +106,7 @@
    */
   function initVisualEditorUI() {
     const saveBtn = document.getElementById('admin-bar-save-btn');
+    const floatSaveBtn = document.getElementById('admin-floating-save-btn');
     const exportBtn = document.getElementById('admin-bar-export-btn');
     const previewBtn = document.getElementById('admin-bar-preview-btn');
     const addProjectBtn = document.getElementById('admin-bar-add-btn');
@@ -113,6 +114,10 @@
 
     if (saveBtn) {
       saveBtn.addEventListener('click', () => saveAllChanges());
+    }
+
+    if (floatSaveBtn) {
+      floatSaveBtn.addEventListener('click', () => saveAllChanges());
     }
 
     if (exportBtn) {
@@ -123,8 +128,8 @@
       previewBtn.addEventListener('click', () => {
         const isPreview = document.body.classList.toggle('preview-active');
         previewBtn.innerHTML = isPreview
-          ? '<i class="fa-solid fa-pen-to-square"></i> Reprendre l\'édition'
-          : '<i class="fa-solid fa-eye"></i> Aperçu visiteur';
+          ? '<i class="fa-solid fa-pen-to-square"></i> <span class="btn-text">Éditer</span>'
+          : '<i class="fa-solid fa-eye"></i> <span class="btn-text">Aperçu</span>';
         showToast(isPreview ? 'Mode aperçu propre activé (sans repères)' : 'Mode édition directe réactivé', 'info');
       });
     }
@@ -140,6 +145,14 @@
         window.location.href = 'index.html';
       });
     }
+
+    // Raccourci Échap pour refermer n'importe quel tiroir ou modale
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeAllDrawers();
+        closeLightbox();
+      }
+    });
 
     initDrawerListeners();
     initInboxHandlers();
@@ -379,6 +392,7 @@
     setText('#contact-email-text', a.email);
     setText('#contact-location-text', a.location);
     setText('#contact-instagram-text', a.instagramHandle || (a.instagram ? '@' + a.instagram.replace(/\/+$/, '').split('/').pop() : '@sarahschu.art'));
+    setText('#contact-facebook-text', a.facebook ? (a.facebook.includes('profile.php') ? 'Sarah Schu Art' : a.facebook.replace(/\/+$/, '').split('/').pop()) : 'Sarah Schu Art');
 
     // Rendu du Catalogue des Œuvres
     renderVisualPortfolio();
@@ -925,7 +939,8 @@
       '#contact-phone-text',
       '#contact-email-text',
       '#contact-location-text',
-      '#contact-instagram-text'
+      '#contact-instagram-text',
+      '#contact-facebook-text'
     ];
 
     editables.forEach(sel => {
@@ -1158,10 +1173,15 @@
   function closeProjectDrawer() {
     const drawer = document.getElementById('admin-drawer');
     const backdrop = document.getElementById('admin-drawer-backdrop');
-    drawer.classList.remove('active');
-    backdrop.classList.remove('active');
+    if (drawer) drawer.classList.remove('active');
+    if (backdrop) backdrop.classList.remove('active');
     unlockScroll();
     activeDrawerProjectId = null;
+  }
+
+  function closeAllDrawers() {
+    closeProjectDrawer();
+    closeInbox();
   }
 
   function initDrawerListeners() {
@@ -1173,7 +1193,7 @@
 
     if (closeBtn) closeBtn.addEventListener('click', closeProjectDrawer);
     if (cancelBtn) cancelBtn.addEventListener('click', closeProjectDrawer);
-    if (backdrop) backdrop.addEventListener('click', closeProjectDrawer);
+    if (backdrop) backdrop.addEventListener('click', closeAllDrawers);
 
     if (addPhotoBtn) {
       addPhotoBtn.addEventListener('click', () => {
@@ -1316,10 +1336,16 @@
      ========================================================================== */
   let inboxMessages = [];
 
-  function initInboxHandlers() {
-    const inboxBtn = document.getElementById('admin-bar-inbox-btn');
+  function closeInbox() {
     const drawer = document.getElementById('admin-inbox-drawer');
     const backdrop = document.getElementById('admin-drawer-backdrop');
+    if (drawer) drawer.classList.remove('active');
+    if (backdrop) backdrop.classList.remove('active');
+    unlockScroll();
+  }
+
+  function initInboxHandlers() {
+    const inboxBtn = document.getElementById('admin-bar-inbox-btn');
     const closeBtn = document.getElementById('inbox-close-btn');
     const closeBtnBottom = document.getElementById('inbox-close-btn-bottom');
     const refreshBtn = document.getElementById('inbox-refresh-btn');
@@ -1327,11 +1353,6 @@
     if (inboxBtn) {
       inboxBtn.addEventListener('click', openInboxDrawer);
     }
-
-    const closeInbox = () => {
-      if (drawer) drawer.classList.remove('active');
-      if (backdrop) backdrop.classList.remove('active');
-    };
 
     if (closeBtn) closeBtn.addEventListener('click', closeInbox);
     if (closeBtnBottom) closeBtnBottom.addEventListener('click', closeInbox);
@@ -1382,6 +1403,7 @@
     });
     if (drawer) drawer.classList.add('active');
     if (backdrop) backdrop.classList.add('active');
+    lockScroll();
   }
 
   function renderInboxMessages() {
@@ -1484,7 +1506,7 @@
 
     const saveBtn = document.getElementById('admin-bar-save-btn');
     if (saveBtn) {
-      saveBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Publication...';
+      saveBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> <span class="btn-text">Publication...</span>';
       saveBtn.disabled = true;
     }
 
@@ -1504,10 +1526,10 @@
 
     setTimeout(() => {
       if (saveBtn) {
-        saveBtn.innerHTML = '<i class="fa-solid fa-check"></i> Publié en direct !';
+        saveBtn.innerHTML = '<i class="fa-solid fa-check"></i> <span class="btn-text">Publié !</span>';
         saveBtn.disabled = false;
         setTimeout(() => {
-          saveBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Sauvegarder &amp; Publier';
+          saveBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> <span class="btn-text">Sauvegarder</span>';
         }, 2200);
       }
       isDirty = false;
@@ -1535,6 +1557,10 @@
     if (igVal) {
       a.instagramHandle = igVal.startsWith('@') ? igVal : '@' + igVal.replace(/^https?:\/\/(www\.)?instagram\.com\//, '').replace(/\/$/, '');
       a.instagram = igVal.startsWith('http') ? igVal : `https://www.instagram.com/${igVal.replace('@', '')}`;
+    }
+    const fbVal = getText('#contact-facebook-text');
+    if (fbVal) {
+      a.facebook = fbVal.startsWith('http') ? fbVal : (fbVal.includes('profile.php') ? fbVal : `https://www.facebook.com/${fbVal.replace('@', '')}`);
     }
 
     // Chiffres Clés
@@ -1660,13 +1686,16 @@
   function updateStatusBadge() {
     const dot = document.querySelector('.admin-status-dot');
     const text = document.getElementById('admin-status-text');
+    const floatSaveBtn = document.getElementById('admin-floating-save-btn');
     if (dot && text) {
       if (isDirty) {
         dot.classList.add('dirty');
-        text.textContent = 'Modifications non enregistrées';
+        text.textContent = 'Non enregistré';
+        if (floatSaveBtn) floatSaveBtn.classList.add('dirty');
       } else {
         dot.classList.remove('dirty');
-        text.textContent = 'Synchronisé en direct';
+        text.textContent = 'Synchronisé';
+        if (floatSaveBtn) floatSaveBtn.classList.remove('dirty');
       }
     }
   }
