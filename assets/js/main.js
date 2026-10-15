@@ -793,6 +793,8 @@
   function closeLightbox() {
     const modal = document.getElementById('lightbox-modal');
     if (modal) modal.classList.remove('active');
+    const sheet = document.getElementById('theater-details-sheet');
+    if (sheet) sheet.classList.remove('active');
     unlockScroll();
     currentLightboxProject = null;
   }
@@ -836,13 +838,22 @@
       nextBtn.style.display = showArrows ? 'flex' : 'none';
     }
 
-    // Métadonnées
-    updateElementText('#lightbox-category', (p.categoryLabel || p.category || 'FRESQUE').toUpperCase());
+    // Métadonnées principales
+    const catLabel = (p.categoryLabel || p.category || 'FRESQUE').toUpperCase();
+    updateElementText('#lightbox-category', catLabel);
     updateElementText('#lightbox-title', p.title);
     updateElementText('#lightbox-location', p.location || 'Alsace');
     updateElementText('#lightbox-year', p.year || '2026');
     updateElementText('#lightbox-technique', p.technique || 'Peinture acrylique in situ');
     updateElementText('#lightbox-desc', p.description);
+
+    // Synchronisation de la fiche mobile détaillée (texte intégral sans coupure)
+    updateElementText('#sheet-category', catLabel);
+    updateElementText('#sheet-title', p.title);
+    updateElementText('#sheet-location', p.location || 'Alsace');
+    updateElementText('#sheet-year', p.year || '2026');
+    updateElementText('#sheet-tech', p.technique || 'Peinture acrylique in situ');
+    updateElementText('#sheet-desc', p.description || 'Création unique peinte in situ.');
 
     // Vignettes miniatures
     const carouselContainer = document.getElementById('lightbox-carousel');
@@ -939,6 +950,52 @@
     if (ctaLink) {
       ctaLink.addEventListener('click', (e) => {
         e.preventDefault();
+        closeLightbox();
+        const contactSection = document.getElementById('contact');
+        if (contactSection) {
+          setTimeout(() => {
+            contactSection.scrollIntoView({ behavior: 'smooth' });
+          }, 10);
+        }
+      });
+    }
+
+    // Gestion de la fiche coulissante mobile "Détails & Histoire"
+    const sheet = document.getElementById('theater-details-sheet');
+    const sheetCloseBtn = document.getElementById('theater-sheet-close');
+    const sheetBackdrop = document.getElementById('theater-sheet-backdrop');
+    const infoBtn = document.getElementById('lightbox-info-btn');
+    const mobileDetailsBtn = document.getElementById('lightbox-mobile-details-btn');
+    const sheetCtaLink = document.getElementById('sheet-cta-link');
+
+    const openSheet = () => {
+      if (sheet) sheet.classList.add('active');
+    };
+    const closeSheet = () => {
+      if (sheet) sheet.classList.remove('active');
+    };
+
+    if (infoBtn) infoBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openSheet();
+    });
+    if (mobileDetailsBtn) mobileDetailsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openSheet();
+    });
+    if (sheetCloseBtn) sheetCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeSheet();
+    });
+    if (sheetBackdrop) sheetBackdrop.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeSheet();
+    });
+
+    if (sheetCtaLink) {
+      sheetCtaLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeSheet();
         closeLightbox();
         const contactSection = document.getElementById('contact');
         if (contactSection) {

@@ -28,7 +28,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <!-- Feuille de Style -->
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=11">
 
   <!-- Schema.org Microdata & Local SEO -->
   <script type="application/ld+json">
@@ -670,6 +670,9 @@
 
         <div class="theater-actions">
           <span id="lightbox-counter-badge" class="theater-badge">1 / 1</span>
+          <button id="lightbox-info-btn" class="theater-info-btn" type="button" aria-label="Voir l'histoire et les détails de l'œuvre" title="Histoire & Détails">
+            <i class="fa-solid fa-circle-info"></i> <span class="theater-info-btn-text">Détails</span>
+          </button>
           <button id="lightbox-close-btn" class="theater-close-btn" aria-label="Fermer la visionneuse">
             <i class="fa-solid fa-xmark"></i>
           </button>
@@ -706,11 +709,49 @@
         </div>
 
         <div class="theater-cta-wrap">
+          <button id="lightbox-mobile-details-btn" class="btn-theater-mobile-details" type="button">
+            <i class="fa-solid fa-circle-info"></i> Histoire &amp; Devis
+          </button>
           <a href="#contact" id="lightbox-cta-link" class="btn-theater-cta">
             <i class="fa-solid fa-feather-pointed"></i> Demander une création similaire
           </a>
         </div>
       </footer>
+
+      <!-- Volet Coulissant Mobile : Fiche Détail Complète de l'Œuvre -->
+      <div id="theater-details-sheet" class="theater-details-sheet" aria-hidden="true">
+        <div class="theater-sheet-backdrop" id="theater-sheet-backdrop"></div>
+        <div class="theater-sheet-content">
+          <div class="theater-sheet-handle-bar">
+            <div class="theater-sheet-handle"></div>
+          </div>
+          <div class="theater-sheet-header">
+            <div>
+              <span id="sheet-category" class="theater-cat-pill" style="margin-bottom: 0.35rem; display: inline-block;">FRESQUE</span>
+              <h3 id="sheet-title" class="theater-sheet-title">Titre de la fresque</h3>
+              <div class="theater-sheet-meta">
+                <span id="sheet-location"><i class="fa-solid fa-location-dot"></i> Alsace</span> &bull; 
+                <span id="sheet-year"><i class="fa-regular fa-calendar"></i> 2026</span> &bull; 
+                <span id="sheet-tech"><i class="fa-solid fa-paint-brush"></i> Acrylique</span>
+              </div>
+            </div>
+            <button id="theater-sheet-close" class="theater-sheet-close-btn" type="button" aria-label="Fermer les détails">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+          <div class="theater-sheet-body">
+            <h4 style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-terra); margin-bottom: 0.5rem; font-weight: 700;">
+              L'histoire &amp; les coulisses du projet
+            </h4>
+            <div id="sheet-desc" class="theater-sheet-text"></div>
+          </div>
+          <div class="theater-sheet-footer">
+            <a href="#contact" id="sheet-cta-link" class="btn-theater-cta" style="width: 100%; justify-content: center;">
+              <i class="fa-solid fa-feather-pointed"></i> Demander une création similaire
+            </a>
+          </div>
+        </div>
+      </div>
 
     </div>
   </div>
@@ -718,6 +759,6 @@
   <!-- Décodeur d'images universel (support TIFF, etc.) -->
   <script src="assets/js/utif.min.js"></script>
   <!-- Scripts -->
-  <script src="assets/js/main.js?v=8"></script>
+  <script src="assets/js/main.js?v=11"></script>
 </body>
 </html>

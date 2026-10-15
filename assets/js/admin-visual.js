@@ -958,6 +958,8 @@
   function closeLightbox() {
     const modal = document.getElementById('lightbox-modal');
     if (modal) modal.classList.remove('active');
+    const sheet = document.getElementById('theater-details-sheet');
+    if (sheet) sheet.classList.remove('active');
     unlockScroll();
     currentLightboxProject = null;
   }
@@ -997,12 +999,22 @@
       nextBtn.style.display = showArrows ? 'flex' : 'none';
     }
 
-    setText('#lightbox-category', (p.categoryLabel || p.category || 'FRESQUE').toUpperCase());
+    // Métadonnées principales
+    const catLabel = (p.categoryLabel || p.category || 'FRESQUE').toUpperCase();
+    setText('#lightbox-category', catLabel);
     setText('#lightbox-title', p.title);
     setText('#lightbox-location', p.location || 'Alsace');
     setText('#lightbox-year', p.year || '2026');
     setText('#lightbox-technique', p.technique || 'Peinture acrylique in situ');
     setText('#lightbox-desc', p.description);
+
+    // Synchronisation de la fiche mobile détaillée (texte intégral sans coupure)
+    setText('#sheet-category', catLabel);
+    setText('#sheet-title', p.title);
+    setText('#sheet-location', p.location || 'Alsace');
+    setText('#sheet-year', p.year || '2026');
+    setText('#sheet-tech', p.technique || 'Peinture acrylique in situ');
+    setText('#sheet-desc', p.description || 'Création unique peinte in situ.');
 
     const carouselContainer = document.getElementById('lightbox-carousel');
     if (carouselContainer) {
@@ -1094,6 +1106,43 @@
 
     const adminCloseBtn = document.getElementById('lightbox-admin-close-btn');
     if (adminCloseBtn) adminCloseBtn.addEventListener('click', closeLightbox);
+
+    // Gestion de la fiche coulissante mobile "Détails & Histoire"
+    const sheet = document.getElementById('theater-details-sheet');
+    const sheetCloseBtn = document.getElementById('theater-sheet-close');
+    const sheetBackdrop = document.getElementById('theater-sheet-backdrop');
+    const sheetAdminClose = document.getElementById('sheet-admin-close-btn');
+    const infoBtn = document.getElementById('lightbox-info-btn');
+    const mobileDetailsBtn = document.getElementById('lightbox-mobile-details-btn');
+
+    const openSheet = () => {
+      if (sheet) sheet.classList.add('active');
+    };
+    const closeSheet = () => {
+      if (sheet) sheet.classList.remove('active');
+    };
+
+    if (infoBtn) infoBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openSheet();
+    });
+    if (mobileDetailsBtn) mobileDetailsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openSheet();
+    });
+    if (sheetCloseBtn) sheetCloseBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeSheet();
+    });
+    if (sheetBackdrop) sheetBackdrop.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeSheet();
+    });
+    if (sheetAdminClose) sheetAdminClose.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeSheet();
+      closeLightbox();
+    });
   }
 
   /**
