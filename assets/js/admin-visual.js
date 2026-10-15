@@ -1002,6 +1002,52 @@
   }
 
   /**
+   * Compresse une image avant upload admin (max 2000px, JPEG 85%)
+   */
+  function compressImageFile(file, maxWidth = 2000, quality = 0.85) {
+    return new Promise((resolve) => {
+      if (!file || !file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxWidth || height > maxWidth) {
+            if (width > height) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            } else {
+              width = Math.round((width * maxWidth) / height);
+              height = maxWidth;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = () => resolve(e.target.result);
+        img.src = e.target.result;
+      };
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /**
    * Sélecteur de fichier et upload (serveur Node ou local)
    */
   function triggerImageUpload(callback) {
@@ -1019,32 +1065,31 @@
       if (!input.files || !input.files[0]) return;
       const file = input.files[0];
 
-      // Conversion en base64 pour envoi serveur ou aperçu immédiat
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        const base64Data = e.target.result;
+      // Compression automatique à la volée avant upload
+      const base64Data = await compressImageFile(file, 2000, 0.85);
+      if (!base64Data) return;
 
-        // Tentative d'upload sur le serveur Node /api/upload
-        try {
-          const resp = await fetch('/api/upload', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: base64Data, filename: file.name })
-          });
-          if (resp.ok) {
-            const data = await resp.json();
-            if (data.success && data.url) {
-              callback(data.url);
-              return;
-            }
+      const cleanFileName = (file.name ? file.name.replace(/\.[^/.]+$/, "") : "photo") + ".jpg";
+
+      // Tentative d'upload sur le serveur Node /api/upload
+      try {
+        const resp = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: base64Data, filename: cleanFileName })
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.success && data.url) {
+            callback(data.url);
+            return;
           }
-        } catch (err) {
-          // Si mode hors ligne ou statique, on utilise directement la data-URI
         }
+      } catch (err) {
+        // Si mode hors ligne ou statique, on utilise directement la data-URI
+      }
 
-        callback(base64Data);
-      };
-      reader.readAsDataURL(file);
+      callback(base64Data);
       input.value = '';
     };
 

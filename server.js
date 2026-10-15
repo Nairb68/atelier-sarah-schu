@@ -147,7 +147,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // --- API : Suppression d'une demande de projet ---
+  // --- API : Suppression d'une demande de projet & nettoyage de la photo associée ---
   if (pathname === '/api/messages/delete' && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => { body += chunk; });
@@ -161,6 +161,24 @@ const server = http.createServer((req, res) => {
             messages = JSON.parse(fs.readFileSync(MESSAGES_FILE, 'utf-8'));
           } catch(e) {}
         }
+
+        // Nettoyage de la photo du mur associée sur le disque
+        const target = messages.find(m => m.id === id);
+        if (target && target.photoUrl) {
+          const relPath = target.photoUrl.replace(/^\/+/, '');
+          if (relPath.startsWith('assets/images/upload_')) {
+            const fullPath = path.join(ROOT, relPath);
+            if (fs.existsSync(fullPath)) {
+              try {
+                fs.unlinkSync(fullPath);
+                console.log(`🗑️ Fichier photo supprimé du disque : ${relPath}`);
+              } catch (e) {
+                console.warn('Erreur suppression photo:', e.message);
+              }
+            }
+          }
+        }
+
         messages = messages.filter(m => m.id !== id);
         fs.writeFileSync(MESSAGES_FILE, JSON.stringify(messages, null, 2), 'utf-8');
         res.writeHead(200, { 'Content-Type': 'application/json' });

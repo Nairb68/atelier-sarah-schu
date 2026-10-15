@@ -851,6 +851,53 @@
   }
 
   /**
+   * Compresse et redimensionne une image côté client (max 1600px, JPEG 82%)
+   * Transforme instantanément une photo de smartphone de 10 Mo en un fichier net de ~150 Ko
+   */
+  function compressImageFile(file, maxWidth = 1600, quality = 0.82) {
+    return new Promise((resolve) => {
+      if (!file || !file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(file);
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          let width = img.width;
+          let height = img.height;
+
+          if (width > maxWidth || height > maxWidth) {
+            if (width > height) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            } else {
+              width = Math.round((width * maxWidth) / height);
+              height = maxWidth;
+            }
+          }
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          resolve(canvas.toDataURL('image/jpeg', quality));
+        };
+        img.onerror = () => resolve(e.target.result);
+        img.src = e.target.result;
+      };
+      reader.onerror = () => resolve(null);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  /**
    * Formulaire de Devis & Brief Projet
    */
   function initQuoteForm() {
@@ -892,25 +939,23 @@
           submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Envoi en cours...';
         }
 
-        // 1. Si une photo du mur est jointe, upload direct vers le serveur
+        // 1. Si une photo du mur est jointe, compression automatique en ~150 Ko et upload
         let photoUrl = '';
         if (fileInput && fileInput.files && fileInput.files[0]) {
           try {
             const file = fileInput.files[0];
-            const base64 = await new Promise((resolve, reject) => {
-              const reader = new FileReader();
-              reader.onload = () => resolve(reader.result);
-              reader.onerror = reject;
-              reader.readAsDataURL(file);
-            });
-            const upResp = await fetch('/api/upload', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ image: base64, filename: file.name })
-            });
-            if (upResp.ok) {
-              const upData = await upResp.json();
-              if (upData.url) photoUrl = upData.url;
+            const base64 = await compressImageFile(file, 1600, 0.82);
+            if (base64) {
+              const cleanFileName = (file.name ? file.name.replace(/\.[^/.]+$/, "") : "mur") + ".jpg";
+              const upResp = await fetch('/api/upload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: base64, filename: cleanFileName })
+              });
+              if (upResp.ok) {
+                const upData = await upResp.json();
+                if (upData.url) photoUrl = upData.url;
+              }
             }
           } catch (err) {
             console.warn('Erreur téléversement photo du mur', err);
