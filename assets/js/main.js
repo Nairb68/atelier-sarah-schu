@@ -68,10 +68,9 @@
     const localProjectsCount = localData?.projects?.length || 0;
     const serverProjectsCount = serverData?.projects?.length || 0;
 
-    // Arbitrage intelligent : si le stockage local est plus riche en créations ou plus récent, on le priorise
-    if (localData && (!serverData || localProjectsCount > serverProjectsCount || localTime >= serverTime)) {
+    // Arbitrage intelligent : le serveur fait foi sauf si le serveur a moins de projets (perte éphémère)
+    if (localData && serverData && localProjectsCount > serverProjectsCount) {
       siteData = localData;
-      // Secours discret : synchronise le serveur si celui-ci a redémarré avec un état antérieur
       try {
         fetch('/api/rescue', {
           method: 'POST',

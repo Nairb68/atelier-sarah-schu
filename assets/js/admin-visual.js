@@ -50,11 +50,10 @@
 
     let hasRescuedLocal = false;
 
-    // Arbitrage intelligent : si le stockage local est plus riche en créations ou plus récent, on le priorise absolument
-    if (localData && (!serverData || localProjectsCount > serverProjectsCount || localTime >= serverTime)) {
+    // Le sauvetage de secours ne se déclenche QUE si le serveur a perdu des créations (ex: container réinitialisé)
+    if (localData && serverData && localProjectsCount > serverProjectsCount) {
       siteData = localData;
       hasRescuedLocal = true;
-      // Secours immédiat : transmission automatique au serveur
       try {
         fetch('/api/rescue', {
           method: 'POST',
@@ -67,6 +66,7 @@
         }).catch(err => console.warn('Échec envoi rescue:', err));
       } catch (e) {}
     } else if (serverData) {
+      // Le serveur fait foi : on adopte la version du serveur et met à jour le cache local
       siteData = serverData;
       localStorage.setItem('sarah_site_data', JSON.stringify(serverData));
     } else if (localData) {
