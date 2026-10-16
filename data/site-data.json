@@ -14,7 +14,7 @@
     "email": "sarah.schu16@gmail.com",
     "instagram": "https://www.instagram.com/sarahschu.art",
     "instagramHandle": "@sarahschu.art",
-    "facebook": "https://www.facebook.com/profile.php?id=100017365335884",
+    "facebook": "https://www.facebook.com/Sarah Schu Art",
     "profilePhoto": "assets/images/profile_fb.jpg",
     "artistInActionPhoto": "assets/images/post1_DeMNkRqDLyA_01.jpg",
     "adminPasswordHash": "sarah2024",
@@ -159,38 +159,6 @@
       "description": "Application d'un vernis de protection mat ou satiné pour garantir une longévité maximale et un nettoyage facile de votre œuvre unique."
     }
   ],
-  "categories": [
-    {
-      "id": "fresques",
-      "label": "Particuliers & Résidentiel",
-      "shortLabel": "Particuliers"
-    },
-    {
-      "id": "collectivites",
-      "label": "Professionnels & Santé",
-      "shortLabel": "Professionnels"
-    },
-    {
-      "id": "peintures",
-      "label": "Trompe-l'œil & Peintures",
-      "shortLabel": "Trompe-l'œil"
-    },
-    {
-      "id": "illustrations",
-      "label": "Aquarelle & Illustrations",
-      "shortLabel": "Aquarelle & Illustrations"
-    },
-    {
-      "id": "graphisme",
-      "label": "Identité & Édition",
-      "shortLabel": "Identité & Édition"
-    },
-    {
-      "id": "divers",
-      "label": "Autres créations",
-      "shortLabel": "Autres"
-    }
-  ],
   "projects": [
     {
       "id": "proj-chambre-montagne-wintzenheim",
@@ -292,8 +260,7 @@
       "description": "Création d'un trompe-l'œil réaliste en fausse fenêtre sur le bardage d'un garage chez un particulier. Hommage pictural d'inspiration classique mettant en scène une couturière dans son atelier avec son chat.",
       "mainImage": "assets/images/couturiere_breitenbach_crop.jpg",
       "gallery": [
-        "assets/images/couturiere_breitenbach_crop.jpg",
-        "assets/images/post5_DbvmLZBDKnI_08.jpg"
+        "assets/images/couturiere_breitenbach_crop.jpg"
       ],
       "featured": false
     },
@@ -323,8 +290,7 @@
       "description": "Habillage mural graphique illustrant le processus de brassage artisanal de la bière (empâtage, filtration, ébullition, fermentation, mise en bouteille) entourant la verrière d'atelier.",
       "mainImage": "assets/images/brasserie_ks_crop.jpg",
       "gallery": [
-        "assets/images/brasserie_ks_crop.jpg",
-        "assets/images/post5_DbvmLZBDKnI_10.jpg"
+        "assets/images/brasserie_ks_crop.jpg"
       ],
       "featured": false
     },
@@ -339,8 +305,7 @@
       "description": "Création murale alliant batterie, guitares, saxophone, violon et clavier pour une chambre d'enfant. Réalisée à l'acrylique fine avec composition dynamique.",
       "mainImage": "assets/images/instruments_griesbach_crop.jpg",
       "gallery": [
-        "assets/images/instruments_griesbach_crop.jpg",
-        "assets/images/post5_DbvmLZBDKnI_10.jpg"
+        "assets/images/instruments_griesbach_crop.jpg"
       ],
       "featured": false
     },
@@ -355,8 +320,7 @@
       "description": "Portraits à l'acrylique de vaches vosgiennes peints directement sur les garde-corps vitrés d'une terrasse et balcon d'un chalet alsacien.",
       "mainImage": "assets/images/vaches_breitenbach_crop.jpg",
       "gallery": [
-        "assets/images/vaches_breitenbach_crop.jpg",
-        "assets/images/post5_DbvmLZBDKnI_10.jpg"
+        "assets/images/vaches_breitenbach_crop.jpg"
       ],
       "featured": false
     },
@@ -544,5 +508,37 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-15T13:12:00.000Z"
+  "lastUpdated": "2026-10-16T07:44:36.428Z",
+  "categories": [
+    {
+      "id": "fresques",
+      "label": "Particuliers & Résidentiel",
+      "shortLabel": "Particuliers & Résidentiel"
+    },
+    {
+      "id": "collectivites",
+      "label": "Professionnels & Santé",
+      "shortLabel": "Professionnels & Santé"
+    },
+    {
+      "id": "peintures",
+      "label": "Trompe-l'œil & Peintures",
+      "shortLabel": "Trompe-l'œil & Peintures"
+    },
+    {
+      "id": "illustrations",
+      "label": "Aquarelle & Illustrations",
+      "shortLabel": "Aquarelle & Illustrations"
+    },
+    {
+      "id": "graphisme",
+      "label": "Identité & Édition",
+      "shortLabel": "Identité & Édition"
+    },
+    {
+      "id": "divers",
+      "label": "Divers",
+      "shortLabel": "Divers"
+    }
+  ]
 }
