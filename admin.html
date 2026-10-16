@@ -85,10 +85,10 @@
         <span class="btn-text">Aperçu</span>
       </button>
 
-      <!-- Sauvegardes & Sécurité -->
-      <button id="admin-bar-backup-btn" class="btn-admin-bar btn-admin-export" type="button" title="Sauvegardes et sécurité des données">
-        <i class="fa-solid fa-floppy-disk"></i>
-        <span class="btn-text">Sauvegardes</span>
+      <!-- Copie de secours & Sécurité -->
+      <button id="admin-bar-backup-btn" class="btn-admin-bar btn-admin-export" type="button" title="Télécharger ou restaurer une copie de secours">
+        <i class="fa-solid fa-shield-halved"></i>
+        <span class="btn-text">Copie de secours</span>
       </button>
 
       <!-- Quitter le mode édition -->
@@ -106,22 +106,22 @@
       </button>
 
       <h3 style="font-family: var(--font-serif); font-size: 1.35rem; color: var(--text-main); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
-        <i class="fa-solid fa-shield-halved" style="color: var(--accent-terra);"></i> Centre de Sauvegarde & Sécurité
+        <i class="fa-solid fa-shield-halved" style="color: var(--accent-terra);"></i> Copie de secours & Sécurité
       </h3>
       <p style="font-size: 0.86rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.2rem;">
-        Téléchargez ou restaurez l'intégralité de vos textes, créations et coordonnées à tout moment pour une sécurité absolue.
+        Téléchargez ou restaurez une copie de secours de vos textes, créations et coordonnées à tout moment.
       </p>
 
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
-        <h4 style="font-size: 0.88rem; font-weight: 700; color: #1e293b; margin-bottom: 0.3rem;">1. Télécharger ma sauvegarde actuelle</h4>
+        <h4 style="font-size: 0.88rem; font-weight: 700; color: #1e293b; margin-bottom: 0.3rem;">1. Télécharger ma copie de secours</h4>
         <p style="font-size: 0.78rem; color: #64748b; margin-bottom: 0.6rem;">Génère un fichier <code>site-data.json</code> contenant toutes vos créations et textes enregistrés dans votre navigateur.</p>
         <button id="btn-backup-download" type="button" class="btn-admin-bar btn-admin-save" style="width: 100%; justify-content: center;">
-          <i class="fa-solid fa-download"></i> Télécharger ma sauvegarde (site-data.json)
+          <i class="fa-solid fa-download"></i> Télécharger ma copie de secours (site-data.json)
         </button>
       </div>
 
       <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem; margin-bottom: 1rem;">
-        <h4 style="font-size: 0.88rem; font-weight: 700; color: #1e293b; margin-bottom: 0.3rem;">2. Restaurer une sauvegarde existante</h4>
+        <h4 style="font-size: 0.88rem; font-weight: 700; color: #1e293b; margin-bottom: 0.3rem;">2. Restaurer une copie de secours</h4>
         <p style="font-size: 0.78rem; color: #64748b; margin-bottom: 0.6rem;">Importe un fichier <code>site-data.json</code> pour restaurer instantanément vos projets et publications.</p>
         <input type="file" id="backup-file-input" accept=".json, application/json" style="display: none;">
         <button id="btn-backup-upload" type="button" class="btn-admin-bar btn-admin-preview" style="width: 100%; justify-content: center; background: #fff; border: 1.5px solid var(--border-card); color: var(--text-main);">

@@ -79,7 +79,7 @@
       ensureCategoriesInitialized();
       if (hasRescuedLocal && localProjectsCount > serverProjectsCount) {
         setTimeout(() => {
-          showToast(`✨ Vos travaux ont été récupérés (${localProjectsCount} créations). Cliquez sur « Sauvegardes » pour télécharger votre fichier de sécurité.`, 'success');
+          showToast(`✨ Vos travaux ont été récupérés (${localProjectsCount} créations). Cliquez sur « Copie de secours » pour télécharger votre fichier de sécurité.`, 'success');
         }, 1200);
       }
     }
@@ -172,7 +172,7 @@
                 <i class="fa-solid fa-triangle-exclamation"></i> Hébergement Render éphémère (Sauvegarde Locale Active)
               </div>
               <div style="color: #475569; font-size: 0.74rem;">
-                Vos créations et photos sont sécurisées dans votre navigateur. Cliquez sur <strong>« Télécharger ma sauvegarde »</strong> ci-dessus pour en garder une copie sur votre ordinateur.
+                Vos créations et photos sont sécurisées dans votre navigateur. Cliquez sur <strong>« Télécharger ma copie de secours »</strong> ci-dessus pour en garder une copie sur votre ordinateur.
               </div>
             `;
             githubStatusBox.style.background = '#fffbeb';
@@ -229,11 +229,11 @@
           const text = await file.text();
           const json = JSON.parse(text);
           if (!json || !json.projects || !Array.isArray(json.projects)) {
-            alert('Le fichier sélectionné n\'est pas un fichier de sauvegarde valide pour ce site.');
+            alert('Le fichier sélectionné n\'est pas un fichier de copie de secours valide pour ce site.');
             return;
           }
 
-          if (confirm(`Restaurer cette sauvegarde (${json.projects.length} créations trouvées) ? Cela appliquera ces projets à votre catalogue.`)) {
+          if (confirm(`Restaurer cette copie de secours (${json.projects.length} créations trouvées) ? Cela appliquera ces projets à votre catalogue.`)) {
             siteData = json;
             siteData.lastUpdated = new Date().toISOString();
             localStorage.setItem('sarah_site_data', JSON.stringify(siteData));
@@ -248,7 +248,7 @@
 
             renderAllSiteSections();
             if (backupModal) backupModal.style.display = 'none';
-            showToast(`Sauvegarde restaurée avec succès ! (${json.projects.length} créations)`, 'success');
+            showToast(`Copie de secours restaurée avec succès ! (${json.projects.length} créations)`, 'success');
           }
         } catch (err) {
           alert('Erreur lors de la lecture du fichier : ' + err.message);
