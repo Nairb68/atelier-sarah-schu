@@ -161,6 +161,21 @@
   ],
   "projects": [
     {
+      "id": "proj-1792163778532",
+      "title": "test",
+      "category": "fresques",
+      "categoryLabel": "Particuliers & Résidentiel",
+      "location": "Alsace",
+      "year": "2026",
+      "technique": "Acrylique in situ",
+      "description": "test",
+      "mainImage": "assets/images/upload_1792163774527.jpg",
+      "gallery": [
+        "assets/images/upload_1792163774527.jpg"
+      ],
+      "featured": true
+    },
+    {
       "id": "proj-chambre-montagne-wintzenheim",
       "title": "Chambre d'adulte : Invitation au voyage alpin",
       "category": "fresques",
@@ -508,7 +523,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-16T07:44:36.428Z",
+  "lastUpdated": "2026-10-16T15:16:24.202Z",
   "categories": [
     {
       "id": "fresques",
