@@ -2201,7 +2201,7 @@
     saveLocalInboxMessages(merged);
 
     // Restauration automatique sur le serveur si besoin
-    if (serverOk && localMsgs.length > serverMsgs.length) {
+    if (serverOk && merged.length > serverMsgs.length) {
       try {
         await fetch('/api/messages/sync', {
           method: 'POST',

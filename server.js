@@ -273,8 +273,13 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
         msg.date = new Date().toISOString();
         msg.read = false;
         messages.unshift(msg);
-        fs.writeFileSync(MESSAGES_FILE, JSON.stringify(messages, null, 2), 'utf-8');
+        const jsonStr = JSON.stringify(messages, null, 2);
+        fs.writeFileSync(MESSAGES_FILE, jsonStr, 'utf-8');
         console.log(`📩 Nouvelle demande de projet reçue de : ${msg.nom} (${msg.email})`);
+
+        if (getGitHubToken()) {
+          commitToGitHub('data/messages.json', jsonStr, `Nouvelle demande de projet : ${msg.nom}`);
+        }
 
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true, message: 'Demande enregistrée avec succès' }));
@@ -337,7 +342,13 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
         }
 
         messages = messages.filter(m => m.id !== id);
-        fs.writeFileSync(MESSAGES_FILE, JSON.stringify(messages, null, 2), 'utf-8');
+        const jsonStr = JSON.stringify(messages, null, 2);
+        fs.writeFileSync(MESSAGES_FILE, jsonStr, 'utf-8');
+
+        if (getGitHubToken()) {
+          commitToGitHub('data/messages.json', jsonStr, `Suppression demande de devis : ${id}`);
+        }
+
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true }));
       } catch (err) {
@@ -373,8 +384,13 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
           }
         });
         current.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-        fs.writeFileSync(MESSAGES_FILE, JSON.stringify(current, null, 2), 'utf-8');
+        const jsonStr = JSON.stringify(current, null, 2);
+        fs.writeFileSync(MESSAGES_FILE, jsonStr, 'utf-8');
         console.log(`🔄 Synchronisation messages terminée : +${added} restaurés (${current.length} au total)`);
+
+        if (getGitHubToken() && added > 0) {
+          commitToGitHub('data/messages.json', jsonStr, `Synchronisation demandes de devis (${current.length} messages)`);
+        }
         res.writeHead(200, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ success: true, count: current.length, added }));
       } catch (err) {
