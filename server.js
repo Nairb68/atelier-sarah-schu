@@ -43,12 +43,16 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+function getGitHubToken() {
+  return process.env.GITHUB_TOKEN || process.env.GH_TOKEN || process.env.GIT_TOKEN || process.env.TOKEN || null;
+}
+
 /**
  * Auto-Commit vers GitHub (pour rendre les données 100% permanentes sur Render)
- * Utilise la variable d'environnement GITHUB_TOKEN configurée sur Render.
+ * Utilise la variable d'environnement GITHUB_TOKEN (ou GH_TOKEN, GIT_TOKEN) configurée sur Render.
  */
 async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
-  const token = process.env.GITHUB_TOKEN;
+  const token = getGitHubToken();
   if (!token) return { success: false, reason: 'GITHUB_TOKEN_NOT_SET' };
 
   const owner = process.env.GITHUB_OWNER || 'Nairb68';
@@ -117,7 +121,7 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
         try { fs.writeFileSync(RESCUE_FILE, jsonStr, 'utf-8'); } catch(e) {}
 
         let githubCommitted = false;
-        if (process.env.GITHUB_TOKEN) {
+        if (getGitHubToken()) {
           const ghRes = await commitToGitHub('data/site-data.json', jsonStr, 'Auto-save catalogue par Sarah Schu');
           githubCommitted = ghRes.success;
         }
@@ -127,7 +131,7 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
           success: true, 
           message: 'Sauvegardé avec succès', 
           committedToGithub: githubCommitted,
-          hasGithubToken: !!process.env.GITHUB_TOKEN 
+          hasGithubToken: !!getGitHubToken() 
         }));
       } catch (err) {
         console.error('Erreur écriture JSON:', err);
@@ -157,7 +161,7 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
         console.log(`🚨 Données de secours reçues de l'artiste ! (${(incomingData.projects || []).length} projets)`);
 
         let githubCommitted = false;
-        if (process.env.GITHUB_TOKEN) {
+        if (getGitHubToken()) {
           const ghRes = await commitToGitHub('data/site-data.json', jsonStr, 'Récupération auto: données de secours artiste');
           githubCommitted = ghRes.success;
         }
@@ -167,7 +171,7 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
           success: true, 
           message: 'Données de secours enregistrées avec succès', 
           committedToGithub: githubCommitted,
-          hasGithubToken: !!process.env.GITHUB_TOKEN
+          hasGithubToken: !!getGitHubToken()
         }));
       } catch (err) {
         console.error('Erreur rescue:', err);
@@ -199,7 +203,7 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       success: true,
-      hasGithubToken: !!process.env.GITHUB_TOKEN,
+      hasGithubToken: !!getGitHubToken(),
       uptime: process.uptime(),
       date: new Date().toISOString()
     }));
@@ -229,7 +233,7 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
         console.log(`✅ Image enregistrée localement : ${cleanName}`);
 
         let githubCommitted = false;
-        if (process.env.GITHUB_TOKEN) {
+        if (getGitHubToken()) {
           const ghRes = await commitToGitHub(`assets/images/${cleanName}`, buffer, `Upload photo catalogue: ${cleanName}`);
           githubCommitted = ghRes.success;
         }
@@ -240,7 +244,7 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
           url: `assets/images/${cleanName}`,
           filename: cleanName,
           committedToGithub: githubCommitted,
-          hasGithubToken: !!process.env.GITHUB_TOKEN 
+          hasGithubToken: !!getGitHubToken() 
         }));
       } catch (err) {
         console.error('Erreur upload image:', err);
