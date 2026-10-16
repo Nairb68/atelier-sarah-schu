@@ -43,26 +43,45 @@
       }
     }
 
-    if (localData && serverData) {
-      const localTime = localData.lastUpdated ? new Date(localData.lastUpdated).getTime() : 0;
-      const serverTime = serverData.lastUpdated ? new Date(serverData.lastUpdated).getTime() : 0;
-      if (localTime >= serverTime) {
-        siteData = localData;
-      } else {
-        siteData = serverData;
-        localStorage.setItem('sarah_site_data', JSON.stringify(serverData));
-      }
-    } else if (localData) {
+    const localTime = localData?.lastUpdated ? new Date(localData.lastUpdated).getTime() : 0;
+    const serverTime = serverData?.lastUpdated ? new Date(serverData.lastUpdated).getTime() : 0;
+    const localProjectsCount = localData?.projects?.length || 0;
+    const serverProjectsCount = serverData?.projects?.length || 0;
+
+    let hasRescuedLocal = false;
+
+    // Arbitrage intelligent : si le stockage local est plus riche en créations ou plus récent, on le priorise absolument
+    if (localData && (!serverData || localProjectsCount > serverProjectsCount || localTime >= serverTime)) {
       siteData = localData;
+      hasRescuedLocal = true;
+      // Secours immédiat : transmission automatique au serveur
+      try {
+        fetch('/api/rescue', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(localData)
+        }).then(r => r.json()).then(res => {
+          if (res.success) {
+            console.log('✅ Données locales synchronisées sur le serveur avec succès');
+          }
+        }).catch(err => console.warn('Échec envoi rescue:', err));
+      } catch (e) {}
     } else if (serverData) {
       siteData = serverData;
       localStorage.setItem('sarah_site_data', JSON.stringify(serverData));
+    } else if (localData) {
+      siteData = localData;
     }
 
     if (!siteData) {
       alert('Impossible de charger les données du site.');
     } else {
       ensureCategoriesInitialized();
+      if (hasRescuedLocal && localProjectsCount > serverProjectsCount) {
+        setTimeout(() => {
+          showToast(`✨ Vos travaux ont été récupérés (${localProjectsCount} créations). Cliquez sur « Sauvegardes » pour télécharger votre fichier de sécurité.`, 'success');
+        }, 1200);
+      }
     }
   }
 
@@ -110,6 +129,7 @@
     const saveBtn = document.getElementById('admin-bar-save-btn');
     const floatSaveBtn = document.getElementById('admin-floating-save-btn');
     const exportBtn = document.getElementById('admin-bar-export-btn');
+    const backupBtn = document.getElementById('admin-bar-backup-btn') || exportBtn;
     const previewBtn = document.getElementById('admin-bar-preview-btn');
     const addProjectBtn = document.getElementById('admin-bar-add-btn');
     const exitBtn = document.getElementById('admin-bar-exit-btn');
@@ -122,8 +142,120 @@
       floatSaveBtn.addEventListener('click', () => saveAllChanges());
     }
 
-    if (exportBtn) {
-      exportBtn.addEventListener('click', () => exportSiteDataJSON());
+    // Modal de Sauvegarde & Sécurité
+    const backupModal = document.getElementById('admin-backup-modal');
+    const backupCloseBtn = document.getElementById('admin-backup-close-btn');
+    const btnDownload = document.getElementById('btn-backup-download');
+    const btnUpload = document.getElementById('btn-backup-upload');
+    const backupFileInput = document.getElementById('backup-file-input');
+    const githubStatusBox = document.getElementById('github-status-box');
+
+    function checkPersistenceStatus() {
+      if (!githubStatusBox) return;
+      fetch('/api/status')
+        .then(r => r.json())
+        .then(status => {
+          if (status.hasGithubToken) {
+            githubStatusBox.innerHTML = `
+              <div style="color: #16a34a; font-weight: 600; display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.2rem;">
+                <i class="fa-solid fa-cloud-check"></i> Persistance Cloud GitHub Active
+              </div>
+              <div style="color: #475569; font-size: 0.74rem;">
+                Vos sauvegardes et photos sont synchronisées directement sur GitHub. Aucune perte possible au redémarrage de Render.
+              </div>
+            `;
+            githubStatusBox.style.background = '#f0fdf4';
+            githubStatusBox.style.borderColor = '#bbf7d0';
+          } else {
+            githubStatusBox.innerHTML = `
+              <div style="color: #d97706; font-weight: 600; display: flex; align-items: center; gap: 0.4rem; margin-bottom: 0.2rem;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Hébergement Render éphémère (Sauvegarde Locale Active)
+              </div>
+              <div style="color: #475569; font-size: 0.74rem;">
+                Vos créations et photos sont sécurisées dans votre navigateur. Cliquez sur <strong>« Télécharger ma sauvegarde »</strong> ci-dessus pour en garder une copie sur votre ordinateur.
+              </div>
+            `;
+            githubStatusBox.style.background = '#fffbeb';
+            githubStatusBox.style.borderColor = '#fde68a';
+          }
+        })
+        .catch(() => {
+          if (githubStatusBox) {
+            githubStatusBox.innerHTML = `
+              <div style="color: #64748b; font-size: 0.74rem;">
+                Mode autonome. Cliquez sur Télécharger pour sauvegarder vos modifications.
+              </div>
+            `;
+          }
+        });
+    }
+
+    if (backupBtn) {
+      backupBtn.addEventListener('click', () => {
+        if (backupModal) {
+          backupModal.style.display = 'flex';
+          checkPersistenceStatus();
+        } else {
+          exportSiteDataJSON();
+        }
+      });
+    }
+
+    if (backupCloseBtn && backupModal) {
+      backupCloseBtn.addEventListener('click', () => {
+        backupModal.style.display = 'none';
+      });
+      backupModal.addEventListener('click', (e) => {
+        if (e.target === backupModal) backupModal.style.display = 'none';
+      });
+    }
+
+    if (btnDownload) {
+      btnDownload.addEventListener('click', () => {
+        exportSiteDataJSON();
+      });
+    }
+
+    if (btnUpload && backupFileInput) {
+      btnUpload.addEventListener('click', () => {
+        backupFileInput.click();
+      });
+
+      backupFileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+          const text = await file.text();
+          const json = JSON.parse(text);
+          if (!json || !json.projects || !Array.isArray(json.projects)) {
+            alert('Le fichier sélectionné n\'est pas un fichier de sauvegarde valide pour ce site.');
+            return;
+          }
+
+          if (confirm(`Restaurer cette sauvegarde (${json.projects.length} créations trouvées) ? Cela appliquera ces projets à votre catalogue.`)) {
+            siteData = json;
+            siteData.lastUpdated = new Date().toISOString();
+            localStorage.setItem('sarah_site_data', JSON.stringify(siteData));
+
+            try {
+              await fetch('/api/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(siteData)
+              });
+            } catch(e) {}
+
+            renderAllSiteSections();
+            if (backupModal) backupModal.style.display = 'none';
+            showToast(`Sauvegarde restaurée avec succès ! (${json.projects.length} créations)`, 'success');
+          }
+        } catch (err) {
+          alert('Erreur lors de la lecture du fichier : ' + err.message);
+        } finally {
+          backupFileInput.value = '';
+        }
+      });
     }
 
     if (previewBtn) {
@@ -673,7 +805,7 @@
             </div>
 
             <div class="artwork-frame">
-              <img src="${p.mainImage}" alt="${p.title}" loading="lazy">
+              <img src="${p.mainImage}" alt="${p.title}" loading="lazy" onerror="this.onerror=null; this.src='assets/images/hero-art.jpg'; const o=this.parentElement.querySelector('.photo-change-overlay'); if(o){ o.style.opacity='1'; o.innerHTML='<i class=\\'fa-solid fa-cloud-arrow-up\\'></i> Photo à réimporter'; }">
               ${photosCount > 1 ? `
                 <span class="artwork-photo-badge">
                   <i class="fa-solid fa-images"></i> ${photosCount} photos
@@ -972,6 +1104,7 @@
     const activeImgSrc = gallery[currentLightboxImageIndex] || p.mainImage;
     const mainImgEl = document.getElementById('lightbox-img');
     if (mainImgEl) {
+      mainImgEl.onerror = () => { mainImgEl.src = 'assets/images/hero-art.jpg'; };
       mainImgEl.src = activeImgSrc;
       mainImgEl.alt = `${p.title} - vue ${currentLightboxImageIndex + 1}`;
     }
@@ -1332,7 +1465,8 @@
    */
   async function uploadSingleFile(file) {
     if (!file) return null;
-    const base64Data = await compressImageFile(file, 2000, 0.85);
+    // Compression optimale (1600px, 82% JPEG) : qualité d'art préservée et volume réduit
+    const base64Data = await compressImageFile(file, 1600, 0.82);
     if (!base64Data) return null;
 
     const cleanFileName = (file.name ? file.name.replace(/\.[^/.]+$/, "") : "photo") + ".jpg";
@@ -1345,12 +1479,22 @@
       });
       if (resp.ok) {
         const data = await resp.json();
+        // 1. Si commité avec succès sur GitHub, l'URL assets/images/... est permanente
+        if (data.success && data.committedToGithub && data.url) {
+          return data.url;
+        }
+        // 2. Si le serveur tourne sur disque éphémère (sans GITHUB_TOKEN), on utilise le Base64
+        // afin que la photo reste gravée dans siteData et ne disparaisse JAMAIS lors d'un redémarrage !
+        if (data.success && !data.committedToGithub) {
+          console.info('Sécurité Render : image intégrée en Base64 permanente dans les données');
+          return base64Data;
+        }
         if (data.success && data.url) {
           return data.url;
         }
       }
     } catch (err) {
-      console.warn('Mode hors-ligne ou upload serveur indisponible, utilisation directe dataURL:', err);
+      console.warn('Mode autonome ou upload serveur indisponible, utilisation directe dataURL:', err);
     }
 
     return base64Data;
@@ -1875,6 +2019,8 @@
         closeProjectDrawer();
         renderCategoryFilters();
         renderVisualPortfolio();
+        siteData.lastUpdated = new Date().toISOString();
+        localStorage.setItem('sarah_site_data', JSON.stringify(siteData));
         markDirty();
         showToast(`Création « ${title} » enregistrée dans votre catalogue !`, 'success');
       });
@@ -1907,7 +2053,7 @@
       <div style="display: flex; gap: 0.6rem; overflow-x: auto; padding: 0.5rem 0; align-items: center;">
         ${drawerGallery.map((src, idx) => `
           <div style="position: relative; width: 78px; height: 78px; flex-shrink: 0; border-radius: 8px; overflow: hidden; border: 2px solid ${idx === 0 ? 'var(--accent-terra)' : 'var(--border-card)'}; box-shadow: 0 2px 6px rgba(0,0,0,0.06); background: #fff;" title="${idx === 0 ? 'Photo de couverture principale' : 'Photo secondaire (cliquez pour définir en principale)'}">
-            <img src="${src}" alt="vue ${idx + 1}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" class="drawer-thumb-img" data-idx="${idx}">
+            <img src="${src}" alt="vue ${idx + 1}" style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;" class="drawer-thumb-img" data-idx="${idx}" onerror="this.onerror=null; this.src='assets/images/hero-art.jpg';">
             <button class="drawer-rm-photo" data-idx="${idx}" type="button" style="position: absolute; top: 3px; right: 3px; width: 22px; height: 22px; border-radius: 50%; background: rgba(220,38,38,0.92); color: #fff; border: none; font-size: 0.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2;" title="Supprimer cette photo">
               <i class="fa-solid fa-xmark"></i>
             </button>

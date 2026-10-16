@@ -63,21 +63,27 @@
       }
     }
 
-    // Arbitrage par horodatage (lastUpdated)
-    if (localData && serverData) {
-      const localTime = localData.lastUpdated ? new Date(localData.lastUpdated).getTime() : 0;
-      const serverTime = serverData.lastUpdated ? new Date(serverData.lastUpdated).getTime() : 0;
-      if (localTime >= serverTime) {
-        siteData = localData;
-      } else {
-        siteData = serverData;
-        localStorage.setItem('sarah_site_data', JSON.stringify(serverData));
-      }
-    } else if (localData) {
+    const localTime = localData?.lastUpdated ? new Date(localData.lastUpdated).getTime() : 0;
+    const serverTime = serverData?.lastUpdated ? new Date(serverData.lastUpdated).getTime() : 0;
+    const localProjectsCount = localData?.projects?.length || 0;
+    const serverProjectsCount = serverData?.projects?.length || 0;
+
+    // Arbitrage intelligent : si le stockage local est plus riche en créations ou plus récent, on le priorise
+    if (localData && (!serverData || localProjectsCount > serverProjectsCount || localTime >= serverTime)) {
       siteData = localData;
+      // Secours discret : synchronise le serveur si celui-ci a redémarré avec un état antérieur
+      try {
+        fetch('/api/rescue', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(localData)
+        }).catch(() => {});
+      } catch (e) {}
     } else if (serverData) {
       siteData = serverData;
       localStorage.setItem('sarah_site_data', JSON.stringify(serverData));
+    } else if (localData) {
+      siteData = localData;
     }
 
     if (!siteData) {
@@ -185,7 +191,7 @@
       return `
         <article class="artwork-card" data-project-id="${p.id}">
           <div class="artwork-frame">
-            <img src="${p.mainImage}" alt="${p.title}" loading="lazy">
+            <img src="${p.mainImage}" alt="${p.title}" loading="lazy" onerror="this.onerror=null; this.src='assets/images/hero-art.jpg';">
             ${photosCount > 1 ? `
               <span class="artwork-photo-badge">
                 <i class="fa-solid fa-images"></i> ${photosCount} photos
@@ -808,6 +814,7 @@
     const activeImgSrc = gallery[currentLightboxImageIndex] || p.mainImage;
     const mainImgEl = document.getElementById('lightbox-img');
     if (mainImgEl) {
+      mainImgEl.onerror = () => { mainImgEl.src = 'assets/images/hero-art.jpg'; };
       mainImgEl.src = activeImgSrc;
       mainImgEl.alt = `${p.title} - vue ${currentLightboxImageIndex + 1}`;
     }
