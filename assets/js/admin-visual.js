@@ -1321,7 +1321,7 @@
     if (archWindow && !archWindow.querySelector('.photo-change-overlay')) {
       const btn = document.createElement('div');
       btn.className = 'photo-change-overlay';
-      btn.innerHTML = '<i class="fa-solid fa-camera"></i> Changer cette fresque';
+      btn.innerHTML = '<i class="fa-solid fa-camera"></i> Changer la photo de l\'arche';
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         triggerImageUpload(async (newUrl) => {
@@ -1332,7 +1332,7 @@
           localStorage.setItem('sarah_site_data', JSON.stringify(siteData));
           markDirty();
           await saveAllChanges();
-          showToast('Fresque de l\'arche mise à jour et publiée !', 'success');
+          showToast('Photo de l\'arche mise à jour et publiée !', 'success');
         });
       });
       archWindow.appendChild(btn);

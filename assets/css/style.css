@@ -531,12 +531,12 @@ button {
 
 .arch-card {
   background: var(--bg-card);
-  border-radius: 200px 200px 24px 24px;
+  border-radius: 220px 220px 24px 24px;
   overflow: hidden;
   box-shadow: var(--shadow-arch);
   border: 1px solid var(--border-card);
   width: 100%;
-  max-width: 480px;
+  max-width: 440px;
   transition: box-shadow var(--transition-smooth);
 }
 
@@ -547,7 +547,7 @@ button {
 .arch-window {
   position: relative;
   width: 100%;
-  aspect-ratio: 4/3.3;
+  aspect-ratio: 4/4.8;
   overflow: hidden;
   background: #EAE5DE;
   transform: translateZ(0);
@@ -2466,8 +2466,7 @@ button {
   }
 
   .arch-window {
-    aspect-ratio: 4/4.2;
-    border-radius: 148px 148px 0 0;
+    aspect-ratio: 4/4.8;
   }
 
   .arch-footer {
