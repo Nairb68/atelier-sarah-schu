@@ -2178,7 +2178,6 @@
   }
 
   async function fetchInboxMessages() {
-    const localMsgs = getLocalInboxMessages();
     let serverMsgs = [];
     let serverOk = false;
 
@@ -2192,31 +2191,13 @@
       console.warn('Lecture des messages serveur impossible', e);
     }
 
-    // Fusion intelligente : conservation absolue de tous les messages
-    const mergedMap = new Map();
-    localMsgs.forEach(m => {
-      if (m && m.id) mergedMap.set(m.id, m);
-    });
-    serverMsgs.forEach(m => {
-      if (m && m.id) mergedMap.set(m.id, m);
-    });
-
-    const merged = Array.from(mergedMap.values());
-    merged.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-
-    inboxMessages = merged;
-    saveLocalInboxMessages(merged);
-
-    // Restauration automatique sur le serveur si besoin
-    if (serverOk && merged.length > serverMsgs.length) {
-      try {
-        await fetch('/api/messages/sync', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: merged })
-        });
-        console.log('Demandes de projets synchronisées et restaurées sur le serveur.');
-      } catch(e) {}
+    if (serverOk) {
+      // Le serveur et GitHub sont la source de vérité absolue
+      inboxMessages = serverMsgs;
+      saveLocalInboxMessages(serverMsgs);
+    } else {
+      // Mode hors-ligne uniquement : repli sur le cache local
+      inboxMessages = getLocalInboxMessages();
     }
 
     return inboxMessages;
