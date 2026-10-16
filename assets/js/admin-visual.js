@@ -1324,11 +1324,15 @@
       btn.innerHTML = '<i class="fa-solid fa-camera"></i> Changer cette fresque';
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        triggerImageUpload((newUrl) => {
-          document.getElementById('hero-main-img').src = newUrl;
+        triggerImageUpload(async (newUrl) => {
+          const heroImg = document.getElementById('hero-main-img');
+          if (heroImg) heroImg.src = newUrl;
           siteData.artist.heroImage = newUrl;
+          siteData.lastUpdated = new Date().toISOString();
+          localStorage.setItem('sarah_site_data', JSON.stringify(siteData));
           markDirty();
-          showToast('Fresque de l\'arche mise à jour !', 'success');
+          await saveAllChanges();
+          showToast('Fresque de l\'arche mise à jour et publiée !', 'success');
         });
       });
       archWindow.appendChild(btn);
@@ -1337,12 +1341,15 @@
     // 2. Portrait de l'artiste
     const artistFrame = document.querySelector('.artist-arch-frame');
     const updateArtistPhoto = () => {
-      triggerImageUpload((newUrl) => {
+      triggerImageUpload(async (newUrl) => {
         const img = document.getElementById('about-photo');
         if (img) img.src = newUrl;
         siteData.artist.profilePhoto = newUrl;
+        siteData.lastUpdated = new Date().toISOString();
+        localStorage.setItem('sarah_site_data', JSON.stringify(siteData));
         markDirty();
-        showToast('Portrait d\'artiste mis à jour !', 'success');
+        await saveAllChanges();
+        showToast('Portrait d\'artiste mis à jour et publié !', 'success');
       });
     };
 
@@ -2462,6 +2469,15 @@
     a.quote = getText('#hero-title') || a.quote;
     a.heroBio = getText('#hero-desc-text') || a.heroBio;
     a.bioFull = getText('#about-bio-text') || a.bioFull;
+
+    const heroImgEl = document.getElementById('hero-main-img');
+    if (heroImgEl && heroImgEl.getAttribute('src')) {
+      a.heroImage = heroImgEl.getAttribute('src');
+    }
+    const aboutPhotoEl = document.getElementById('about-photo');
+    if (aboutPhotoEl && aboutPhotoEl.getAttribute('src')) {
+      a.profilePhoto = aboutPhotoEl.getAttribute('src');
+    }
     a.phone = getText('#contact-phone-text') || a.phone;
     a.phoneClean = a.phone.replace(/\s+/g, '');
     a.email = getText('#contact-email-text') || a.email;
