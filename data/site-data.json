@@ -377,6 +377,23 @@
         "assets/images/upload_1792404929664.jpg"
       ],
       "featured": true
+    },
+    {
+      "id": "proj-1792405327726",
+      "title": "Atelier ou cours particuliers d’argile et dessin",
+      "category": "fresques",
+      "categoryLabel": "Particuliers & Résidentiel",
+      "location": "Alsace",
+      "year": "2026",
+      "technique": "Argile autodurcissante",
+      "description": "Je vous accompagne dans la création de votre œuvre originale que ce soit pour de l’argile, de l’aquarelle ou du dessin académique. Je propose des cours particuliers ou des ateliers pour enfants et adultes.",
+      "mainImage": "assets/images/upload_1792405099434.jpg",
+      "gallery": [
+        "assets/images/upload_1792405099434.jpg",
+        "assets/images/upload_1792405197708.jpg",
+        "assets/images/upload_1792405201236.jpg"
+      ],
+      "featured": true
     }
   ],
   "temoignages": [
@@ -427,7 +444,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-19T10:16:11.607Z",
+  "lastUpdated": "2026-10-19T10:22:16.763Z",
   "categories": [
     {
       "id": "fresques",
