@@ -287,21 +287,6 @@
       "featured": true
     },
     {
-      "id": "proj-couturiere-breitenbach",
-      "title": "Trompe-l'œil 'La Couturière à la Perle'",
-      "category": "peintures",
-      "categoryLabel": "Trompe-l'œil & Peintures",
-      "location": "Breitenbach (Alsace)",
-      "year": "2024",
-      "technique": "Acrylique extérieure sur façade",
-      "description": "Création d'un trompe-l'œil réaliste en fausse fenêtre sur le bardage d'un garage chez un particulier. Hommage pictural d'inspiration classique mettant en scène une couturière dans son atelier avec son chat.",
-      "mainImage": "assets/images/couturiere_breitenbach_crop.jpg",
-      "gallery": [
-        "assets/images/couturiere_breitenbach_crop.jpg"
-      ],
-      "featured": false
-    },
-    {
       "id": "proj-brasserie-ks-colmar",
       "title": "Fresque didactique & Décoration chez Brasserie KS",
       "category": "collectivites",
@@ -328,6 +313,21 @@
       "mainImage": "assets/images/instruments_griesbach_crop.jpg",
       "gallery": [
         "assets/images/instruments_griesbach_crop.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "proj-couturiere-breitenbach",
+      "title": "Trompe-l'œil 'La Couturière à la Perle'",
+      "category": "peintures",
+      "categoryLabel": "Trompe-l'œil & Peintures",
+      "location": "Breitenbach (Alsace)",
+      "year": "2024",
+      "technique": "Acrylique extérieure sur façade",
+      "description": "Création d'un trompe-l'œil réaliste en fausse fenêtre sur le bardage d'un garage chez un particulier. Hommage pictural d'inspiration classique mettant en scène une couturière dans son atelier avec son chat.",
+      "mainImage": "assets/images/couturiere_breitenbach_crop.jpg",
+      "gallery": [
+        "assets/images/couturiere_breitenbach_crop.jpg"
       ],
       "featured": false
     },
@@ -427,7 +427,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-19T10:15:44.887Z",
+  "lastUpdated": "2026-10-19T10:16:11.607Z",
   "categories": [
     {
       "id": "fresques",
