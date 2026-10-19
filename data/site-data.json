@@ -161,21 +161,6 @@
   ],
   "projects": [
     {
-      "id": "proj-1792163778532",
-      "title": "test",
-      "category": "fresques",
-      "categoryLabel": "Particuliers & Résidentiel",
-      "location": "Alsace",
-      "year": "2026",
-      "technique": "Acrylique in situ",
-      "description": "test",
-      "mainImage": "assets/images/upload_1792163774527.jpg",
-      "gallery": [
-        "assets/images/upload_1792163774527.jpg"
-      ],
-      "featured": true
-    },
-    {
       "id": "proj-chambre-montagne-wintzenheim",
       "title": "Chambre d'adulte : Invitation au voyage alpin",
       "category": "fresques",
@@ -214,18 +199,19 @@
     },
     {
       "id": "proj-trompe-loeil-foret",
-      "title": "Trompe-l'œil Porte & Cimes Forestières",
+      "title": "Trompe-l'œil forêt sur Porte",
       "category": "peintures",
       "categoryLabel": "Trompe-l'œil & Peintures",
       "location": "Secteur Colmar / Munster",
       "year": "2026",
-      "technique": "Acrylique sur bois préparé",
-      "description": "Et si votre porte devenait une fenêtre ouverte sur la nature ? Trompe-l'œil réalisé entièrement à la main sur une porte intérieure, représentant un sentier sous les sapins qui s'ouvre vers les sommets bleutés. L'effet de perspective fait disparaître la menuiserie pour ouvrir l'espace.",
-      "mainImage": "assets/images/post1_DeMNkRqDLyA_03.jpg",
+      "technique": "Acrylique sur tapisserie",
+      "description": "Et si votre porte devenait une fenêtre ouverte sur la nature ? Trompe-l'œil réalisé entièrement à la main sur une porte intérieure, représentant un sentier sous les sapins qui s'ouvre vers les montagnes avec un cadre « effet bois ». L'effet de perspective fait disparaître la tapisserie  pour ouvrir l'espace.",
+      "mainImage": "assets/images/post1_DeMNkRqDLyA_01.jpg",
       "gallery": [
-        "assets/images/post1_DeMNkRqDLyA_03.jpg",
         "assets/images/post1_DeMNkRqDLyA_01.jpg",
-        "assets/images/post1_DeMNkRqDLyA_02.jpg"
+        "assets/images/post1_DeMNkRqDLyA_02.jpg",
+        "assets/images/upload_1792404127347.jpg",
+        "assets/images/upload_1792404130856.jpg"
       ],
       "featured": true
     },
@@ -525,7 +511,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-16T20:19:00.523Z",
+  "lastUpdated": "2026-10-19T10:04:47.819Z",
   "categories": [
     {
       "id": "fresques",
