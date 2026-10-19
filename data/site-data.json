@@ -161,6 +161,41 @@
   ],
   "projects": [
     {
+      "id": "proj-ehpad-vallee-munster",
+      "title": "Fresque paysagère apaisante en EHPAD",
+      "category": "collectivites",
+      "categoryLabel": "Professionnels & Santé",
+      "location": "Vallée de Munster",
+      "year": "2025",
+      "technique": "Peinture acrylique murale",
+      "description": "Création d'un paysage de montagne et au bout d'un couloir d'EHPAD pour offrir aux résidents un horizon doux et une invitation quotidienne à l'évasion, aux souvenirs et à la sérénité.",
+      "mainImage": "assets/images/upload_1792404576929.jpg",
+      "gallery": [
+        "assets/images/upload_1792404576929.jpg",
+        "assets/images/upload_1792404580812.jpg",
+        "assets/images/upload_1792404584092.jpg"
+      ],
+      "featured": true
+    },
+    {
+      "id": "proj-trompe-loeil-foret",
+      "title": "Trompe-l'œil forêt sur Porte",
+      "category": "peintures",
+      "categoryLabel": "Trompe-l'œil & Peintures",
+      "location": "Secteur Colmar / Munster",
+      "year": "2026",
+      "technique": "Acrylique sur tapisserie",
+      "description": "Et si votre porte devenait une fenêtre ouverte sur la nature ? Trompe-l'œil réalisé entièrement à la main sur une porte intérieure, représentant un sentier sous les sapins qui s'ouvre vers les montagnes avec un cadre « effet bois ». L'effet de perspective fait disparaître la tapisserie  pour ouvrir l'espace.",
+      "mainImage": "assets/images/post1_DeMNkRqDLyA_01.jpg",
+      "gallery": [
+        "assets/images/post1_DeMNkRqDLyA_01.jpg",
+        "assets/images/post1_DeMNkRqDLyA_02.jpg",
+        "assets/images/upload_1792404127347.jpg",
+        "assets/images/upload_1792404130856.jpg"
+      ],
+      "featured": true
+    },
+    {
       "id": "proj-chambre-montagne-wintzenheim",
       "title": "Chambre d'adulte : Invitation au voyage alpin",
       "category": "fresques",
@@ -198,24 +233,6 @@
       "featured": true
     },
     {
-      "id": "proj-trompe-loeil-foret",
-      "title": "Trompe-l'œil forêt sur Porte",
-      "category": "peintures",
-      "categoryLabel": "Trompe-l'œil & Peintures",
-      "location": "Secteur Colmar / Munster",
-      "year": "2026",
-      "technique": "Acrylique sur tapisserie",
-      "description": "Et si votre porte devenait une fenêtre ouverte sur la nature ? Trompe-l'œil réalisé entièrement à la main sur une porte intérieure, représentant un sentier sous les sapins qui s'ouvre vers les montagnes avec un cadre « effet bois ». L'effet de perspective fait disparaître la tapisserie  pour ouvrir l'espace.",
-      "mainImage": "assets/images/post1_DeMNkRqDLyA_01.jpg",
-      "gallery": [
-        "assets/images/post1_DeMNkRqDLyA_01.jpg",
-        "assets/images/post1_DeMNkRqDLyA_02.jpg",
-        "assets/images/upload_1792404127347.jpg",
-        "assets/images/upload_1792404130856.jpg"
-      ],
-      "featured": true
-    },
-    {
       "id": "proj-foyer-munster",
       "title": "Fresque participative au Foyer Caroline Bestelda",
       "category": "collectivites",
@@ -248,23 +265,6 @@
         "assets/images/upload_1792167313823.jpg",
         "assets/images/upload_1792167316379.jpg",
         "assets/images/upload_1792167318874.jpg"
-      ],
-      "featured": true
-    },
-    {
-      "id": "proj-ehpad-vallee-munster",
-      "title": "Fresque paysagère apaisante en EHPAD",
-      "category": "collectivites",
-      "categoryLabel": "Professionnels & Santé",
-      "location": "Vallée de Munster",
-      "year": "2025",
-      "technique": "Peinture acrylique murale",
-      "description": "Création d'un paysage de montagne et au bout d'un couloir d'EHPAD pour offrir aux résidents un horizon doux et une invitation quotidienne à l'évasion, aux souvenirs et à la sérénité.",
-      "mainImage": "assets/images/upload_1792404576929.jpg",
-      "gallery": [
-        "assets/images/upload_1792404576929.jpg",
-        "assets/images/upload_1792404580812.jpg",
-        "assets/images/upload_1792404584092.jpg"
       ],
       "featured": true
     },
@@ -512,7 +512,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-19T10:10:26.924Z",
+  "lastUpdated": "2026-10-19T10:10:55.513Z",
   "categories": [
     {
       "id": "fresques",
