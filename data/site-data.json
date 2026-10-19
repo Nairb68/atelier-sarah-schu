@@ -351,10 +351,13 @@
       "location": "Édition jeunesse",
       "year": "2026",
       "technique": "Illustration numérique & mise en page éditoriale",
-      "description": "Direction artistique, colorimétrie et ensemble des planches illustrées pour la publication du livre 'Les aventures de Giada' de Laurence Jolly.",
-      "mainImage": "assets/images/post5_DbvmLZBDKnI_05.jpg",
+      "description": "Direction artistique, colorimétrie et ensemble des planches illustrées pour la publication du livre 'Les aventures de Giada' de Laurence Jolly. \n(Livre pas encore édité à ce jour)",
+      "mainImage": "assets/images/upload_1792404828229.jpg",
       "gallery": [
-        "assets/images/post5_DbvmLZBDKnI_05.jpg"
+        "assets/images/upload_1792404828229.jpg",
+        "assets/images/upload_1792404725535.jpg",
+        "assets/images/upload_1792404728095.jpg",
+        "assets/images/upload_1792404731581.jpg"
       ],
       "featured": true
     },
@@ -512,7 +515,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-19T10:10:55.513Z",
+  "lastUpdated": "2026-10-19T10:13:58.941Z",
   "categories": [
     {
       "id": "fresques",
