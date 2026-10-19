@@ -251,6 +251,24 @@
       "featured": true
     },
     {
+      "id": "proj-livre-giada",
+      "title": "Création Éditoriale : Album Illustré Jeunesse",
+      "category": "illustrations",
+      "categoryLabel": "Aquarelle & Illustrations",
+      "location": "Édition jeunesse",
+      "year": "2026",
+      "technique": "Illustration numérique & mise en page éditoriale",
+      "description": "Direction artistique, colorimétrie et ensemble des planches illustrées pour la publication du livre 'Les aventures de Giada' de Laurence Jolly. \n(Livre pas encore édité à ce jour)",
+      "mainImage": "assets/images/upload_1792404828229.jpg",
+      "gallery": [
+        "assets/images/upload_1792404828229.jpg",
+        "assets/images/upload_1792404725535.jpg",
+        "assets/images/upload_1792404728095.jpg",
+        "assets/images/upload_1792404731581.jpg"
+      ],
+      "featured": true
+    },
+    {
       "id": "proj-parcharmonie-lyon",
       "title": "Fresque monumentale 'La Nature Pop du Parcharmonie'",
       "category": "fresques",
@@ -342,24 +360,6 @@
         "assets/images/post4_DclYtKysI_P_01.jpg"
       ],
       "featured": false
-    },
-    {
-      "id": "proj-livre-giada",
-      "title": "Création Éditoriale : Album Illustré Jeunesse",
-      "category": "illustrations",
-      "categoryLabel": "Aquarelle & Illustrations",
-      "location": "Édition jeunesse",
-      "year": "2026",
-      "technique": "Illustration numérique & mise en page éditoriale",
-      "description": "Direction artistique, colorimétrie et ensemble des planches illustrées pour la publication du livre 'Les aventures de Giada' de Laurence Jolly. \n(Livre pas encore édité à ce jour)",
-      "mainImage": "assets/images/upload_1792404828229.jpg",
-      "gallery": [
-        "assets/images/upload_1792404828229.jpg",
-        "assets/images/upload_1792404725535.jpg",
-        "assets/images/upload_1792404728095.jpg",
-        "assets/images/upload_1792404731581.jpg"
-      ],
-      "featured": true
     },
     {
       "id": "proj-logo-hcvm",
@@ -515,7 +515,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-19T10:13:58.941Z",
+  "lastUpdated": "2026-10-19T10:14:22.804Z",
   "categories": [
     {
       "id": "fresques",
