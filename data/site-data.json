@@ -375,96 +375,6 @@
         "assets/images/post5_DbvmLZBDKnI_06.jpg"
       ],
       "featured": true
-    },
-    {
-      "id": "proj-flyers-noel-colmar",
-      "title": "Supports Print 'Colmar la Magie de Noël'",
-      "category": "graphisme",
-      "categoryLabel": "Identité & Édition",
-      "location": "Colmar",
-      "year": "2024",
-      "technique": "Print & Mise en page",
-      "description": "Conception de dépliants et supports de communication pour les 6 marchés de Noël de Colmar, travaillant la hiérarchie de l'information et l'esthétique festive alsacienne.",
-      "mainImage": "assets/images/post5_DbvmLZBDKnI_07.jpg",
-      "gallery": [
-        "assets/images/post5_DbvmLZBDKnI_07.jpg"
-      ],
-      "featured": false
-    },
-    {
-      "id": "proj-bande-dessinee",
-      "title": "Projets de Bandes Dessinées & Storyboard",
-      "category": "illustrations",
-      "categoryLabel": "Aquarelle & Illustrations",
-      "location": "École Émile Cohl / Projets personnels",
-      "year": "2025",
-      "technique": "Encre de Chine, aquarelle & colorisation numérique",
-      "description": "Planches de bandes dessinées explorant divers registres : narration historique en noir et blanc, théâtre classique à l'aquarelle et comédie moderne colorée ('It's a Match!').",
-      "mainImage": "assets/images/post5_DbvmLZBDKnI_11.jpg",
-      "gallery": [
-        "assets/images/post5_DbvmLZBDKnI_11.jpg"
-      ],
-      "featured": false
-    },
-    {
-      "id": "proj-illustrations-numeriques",
-      "title": "Panoramas Numériques & Paysages",
-      "category": "illustrations",
-      "categoryLabel": "Aquarelle & Illustrations",
-      "location": "Créations personnelles",
-      "year": "2025",
-      "technique": "Suite Adobe, Procreate & tablette graphique",
-      "description": "Études de lumière et d'architecture : perspective maritime de Venise et crêtes baignées de lumière dorée au coucher du soleil.",
-      "mainImage": "assets/images/post5_DbvmLZBDKnI_12.jpg",
-      "gallery": [
-        "assets/images/post5_DbvmLZBDKnI_12.jpg"
-      ],
-      "featured": false
-    },
-    {
-      "id": "proj-parc-isometrique",
-      "title": "Le Parc d'Attraction Isométrique",
-      "category": "illustrations",
-      "categoryLabel": "Aquarelle & Illustrations",
-      "location": "Projet de groupe créatif",
-      "year": "2024",
-      "technique": "Perspective isométrique & dessin à la ligne",
-      "description": "Conception d'un immense parc d'attraction en perspective isométrique où chaque manège s'inspire d'un instrument de musique (flûte, orgue, violoncelle, cuivres).",
-      "mainImage": "assets/images/post5_DbvmLZBDKnI_13.jpg",
-      "gallery": [
-        "assets/images/post5_DbvmLZBDKnI_13.jpg"
-      ],
-      "featured": false
-    },
-    {
-      "id": "proj-latelier-dartiste",
-      "title": "Peinture d'ambiance 'L'Atelier d'Artiste'",
-      "category": "peintures",
-      "categoryLabel": "Trompe-l'œil & Peintures",
-      "location": "Atelier",
-      "year": "2025",
-      "technique": "Aquarelle, lavis & techniques mixtes",
-      "description": "Scène intimiste d'un atelier sous verrière baigné de lumière naturelle, bibliothèque, chevalet et poêle en fonte. Recherche d'ambiance chaleureuse.",
-      "mainImage": "assets/images/post5_DbvmLZBDKnI_14.jpg",
-      "gallery": [
-        "assets/images/post5_DbvmLZBDKnI_14.jpg"
-      ],
-      "featured": false
-    },
-    {
-      "id": "proj-modele-vivant-etudes",
-      "title": "Études de Modèle Vivant & Natures Mortes",
-      "category": "peintures",
-      "categoryLabel": "Trompe-l'œil & Peintures",
-      "location": "Atelier Émile Cohl",
-      "year": "2024",
-      "technique": "Fusain, pastels secs & acrylique",
-      "description": "Travail d'observation académique : modèle vivant au fusain sur grand format, nature morte au pastel sec et étude de couple à l'acrylique.",
-      "mainImage": "assets/images/post5_DbvmLZBDKnI_15.jpg",
-      "gallery": [
-        "assets/images/post5_DbvmLZBDKnI_15.jpg"
-      ],
-      "featured": false
     }
   ],
   "temoignages": [
@@ -515,7 +425,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-19T10:14:22.804Z",
+  "lastUpdated": "2026-10-19T10:14:53.677Z",
   "categories": [
     {
       "id": "fresques",
