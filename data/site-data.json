@@ -216,25 +216,6 @@
       "featured": true
     },
     {
-      "id": "proj-foyer-munster",
-      "title": "Fresque participative au Foyer Caroline Bestelda",
-      "category": "collectivites",
-      "categoryLabel": "Professionnels & Santé",
-      "location": "Munster (Haut-Rhin)",
-      "year": "2026",
-      "technique": "Fresque collaborative acrylique",
-      "description": "Projet artistique et solidaire mené avec les résidents et l'animatrice Périne. Sarah a conçu et peint la composition principale (l'Arbre des 4 Saisons), puis les résidents ont participé activement au pochoir (feuilles, motifs floraux). Un moment de convivialité créative qui a illuminé les espaces de vie du foyer.",
-      "mainImage": "assets/images/post3_DcwC2nIDP7o_01.jpg",
-      "gallery": [
-        "assets/images/post3_DcwC2nIDP7o_01.jpg",
-        "assets/images/post3_DcwC2nIDP7o_02.jpg",
-        "assets/images/post3_DcwC2nIDP7o_03.jpg",
-        "assets/images/post3_DcwC2nIDP7o_04.jpg",
-        "assets/images/post3_DcwC2nIDP7o_05.jpg"
-      ],
-      "featured": true
-    },
-    {
       "id": "proj-parcharmonie-lyon",
       "title": "Fresque monumentale 'La Nature Pop du Parcharmonie'",
       "category": "fresques",
@@ -249,6 +230,24 @@
         "assets/images/upload_1792167313823.jpg",
         "assets/images/upload_1792167316379.jpg",
         "assets/images/upload_1792167318874.jpg"
+      ],
+      "featured": true
+    },
+    {
+      "id": "proj-foyer-munster",
+      "title": "Fresque participative au Foyer Caroline Bestelda",
+      "category": "collectivites",
+      "categoryLabel": "Professionnels & Santé",
+      "location": "Munster (Haut-Rhin)",
+      "year": "2026",
+      "technique": "Fresque collaborative acrylique",
+      "description": "Projet artistique et solidaire mené avec les résidents de l’Ehpad au foyer Caroline de Munster avec son et animatrice Périne. Sarah a conçu et peint la composition principale (l'Arbre des 4 Saisons), puis les résidents ont participé activement au pochoir (feuilles, motifs floraux). Un moment de convivialité créative qui a illuminé les espaces de vie du foyer.",
+      "mainImage": "assets/images/upload_1792404415816.jpg",
+      "gallery": [
+        "assets/images/upload_1792404415816.jpg",
+        "assets/images/post3_DcwC2nIDP7o_02.jpg",
+        "assets/images/upload_1792404412098.jpg",
+        "assets/images/upload_1792404418277.jpg"
       ],
       "featured": true
     },
@@ -511,7 +510,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-19T10:04:47.819Z",
+  "lastUpdated": "2026-10-19T10:08:27.984Z",
   "categories": [
     {
       "id": "fresques",
