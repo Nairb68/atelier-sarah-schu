@@ -287,21 +287,6 @@
       "featured": true
     },
     {
-      "id": "proj-brasserie-ks-colmar",
-      "title": "Fresque didactique & Décoration chez Brasserie KS",
-      "category": "collectivites",
-      "categoryLabel": "Professionnels & Santé",
-      "location": "Colmar",
-      "year": "2022",
-      "technique": "Fresque murale monochrome & signalétique",
-      "description": "Habillage mural graphique illustrant le processus de brassage artisanal de la bière (empâtage, filtration, ébullition, fermentation, mise en bouteille) entourant la verrière d'atelier.",
-      "mainImage": "assets/images/brasserie_ks_crop.jpg",
-      "gallery": [
-        "assets/images/brasserie_ks_crop.jpg"
-      ],
-      "featured": false
-    },
-    {
       "id": "proj-chambre-enfant-musique",
       "title": "Fresque Murale 'Les Instruments de Musique'",
       "category": "fresques",
@@ -330,6 +315,21 @@
         "assets/images/upload_1792505369894.jpg",
         "assets/images/upload_1792505373605.jpg",
         "assets/images/upload_1792505376040.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "proj-brasserie-ks-colmar",
+      "title": "Fresque didactique & Décoration chez Brasserie KS",
+      "category": "collectivites",
+      "categoryLabel": "Professionnels & Santé",
+      "location": "Colmar",
+      "year": "2022",
+      "technique": "Fresque murale monochrome & signalétique",
+      "description": "Habillage mural graphique illustrant le processus de brassage artisanal de la bière (empâtage, filtration, ébullition, fermentation, mise en bouteille) entourant la verrière d'atelier.",
+      "mainImage": "assets/images/brasserie_ks_crop.jpg",
+      "gallery": [
+        "assets/images/brasserie_ks_crop.jpg"
       ],
       "featured": false
     },
@@ -445,7 +445,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-20T14:12:13.457Z",
+  "lastUpdated": "2026-10-20T14:12:34.879Z",
   "categories": [
     {
       "id": "fresques",
