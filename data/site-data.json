@@ -329,11 +329,11 @@
       "year": "2026",
       "technique": "Acrylique in situ",
       "description": "Peinture d’une voiture réaliste et personnalisée dans une chambre d’enfant avec effet de vitesse ! \nFait à l’acrylique sur tapisserie.",
-      "mainImage": "assets/images/upload_1792506498663.jpg",
+      "mainImage": "assets/images/upload_1792506504505.jpg",
       "gallery": [
+        "assets/images/upload_1792506504505.jpg",
         "assets/images/upload_1792506498663.jpg",
-        "assets/images/upload_1792506501908.jpg",
-        "assets/images/upload_1792506504505.jpg"
+        "assets/images/upload_1792506501908.jpg"
       ],
       "featured": true
     },
@@ -503,7 +503,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-20T15:13:22.115Z",
+  "lastUpdated": "2026-10-20T15:16:56.235Z",
   "categories": [
     {
       "id": "fresques",
