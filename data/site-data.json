@@ -319,22 +319,6 @@
       "featured": false
     },
     {
-      "id": "proj-brasserie-ks-colmar",
-      "title": "Fresque didactique & Décoration chez Brasserie KS",
-      "category": "collectivites",
-      "categoryLabel": "Professionnels & Santé",
-      "location": "Colmar",
-      "year": "2022",
-      "technique": "Fresque murale monochrome & signalétique",
-      "description": "Habillage mural graphique illustrant le processus de brassage artisanal de la bière (empâtage, filtration, ébullition, fermentation, mise en bouteille) entourant la verrière d'atelier.",
-      "mainImage": "assets/images/upload_1792505723576.jpg",
-      "gallery": [
-        "assets/images/upload_1792505723576.jpg",
-        "assets/images/upload_1792505770637.jpg"
-      ],
-      "featured": false
-    },
-    {
       "id": "proj-couturiere-breitenbach",
       "title": "Trompe-l'œil 'La Couturière à la Perle'",
       "category": "peintures",
@@ -343,9 +327,13 @@
       "year": "2024",
       "technique": "Acrylique extérieure sur façade",
       "description": "Création d'un trompe-l'œil réaliste en fausse fenêtre sur le bardage d'un garage chez un particulier. Hommage pictural d'inspiration classique mettant en scène une couturière dans son atelier avec son chat.",
-      "mainImage": "assets/images/couturiere_breitenbach_crop.jpg",
+      "mainImage": "assets/images/upload_1792505855257.jpg",
       "gallery": [
-        "assets/images/couturiere_breitenbach_crop.jpg"
+        "assets/images/upload_1792505855257.jpg",
+        "assets/images/upload_1792505857908.jpg",
+        "assets/images/upload_1792505860104.jpg",
+        "assets/images/upload_1792505862125.jpg",
+        "assets/images/upload_1792505864134.jpg"
       ],
       "featured": false
     },
@@ -358,9 +346,29 @@
       "year": "2023",
       "technique": "Peinture acrylique sur verre extérieur",
       "description": "Portraits à l'acrylique de vaches vosgiennes peints directement sur les garde-corps vitrés d'une terrasse et balcon d'un chalet alsacien.",
-      "mainImage": "assets/images/vaches_breitenbach_crop.jpg",
+      "mainImage": "assets/images/upload_1792505954547.jpg",
       "gallery": [
-        "assets/images/vaches_breitenbach_crop.jpg"
+        "assets/images/upload_1792505954547.jpg",
+        "assets/images/upload_1792505944810.jpg",
+        "assets/images/upload_1792505941326.jpg",
+        "assets/images/upload_1792505947967.jpg",
+        "assets/images/upload_1792505951996.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "proj-brasserie-ks-colmar",
+      "title": "Fresque didactique & Décoration chez Brasserie KS",
+      "category": "collectivites",
+      "categoryLabel": "Professionnels & Santé",
+      "location": "Colmar",
+      "year": "2022",
+      "technique": "Fresque murale monochrome & signalétique",
+      "description": "Habillage mural graphique illustrant le processus de brassage artisanal de la bière (empâtage, filtration, ébullition, fermentation, mise en bouteille) entourant la verrière d'atelier.",
+      "mainImage": "assets/images/upload_1792505723576.jpg",
+      "gallery": [
+        "assets/images/upload_1792505723576.jpg",
+        "assets/images/upload_1792505770637.jpg"
       ],
       "featured": false
     },
@@ -445,7 +453,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-20T14:16:30.103Z",
+  "lastUpdated": "2026-10-20T14:19:45.262Z",
   "categories": [
     {
       "id": "fresques",
