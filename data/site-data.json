@@ -327,9 +327,10 @@
       "year": "2022",
       "technique": "Fresque murale monochrome & signalétique",
       "description": "Habillage mural graphique illustrant le processus de brassage artisanal de la bière (empâtage, filtration, ébullition, fermentation, mise en bouteille) entourant la verrière d'atelier.",
-      "mainImage": "assets/images/brasserie_ks_crop.jpg",
+      "mainImage": "assets/images/upload_1792505723576.jpg",
       "gallery": [
-        "assets/images/brasserie_ks_crop.jpg"
+        "assets/images/upload_1792505723576.jpg",
+        "assets/images/upload_1792505770637.jpg"
       ],
       "featured": false
     },
@@ -444,7 +445,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-20T14:13:15.915Z",
+  "lastUpdated": "2026-10-20T14:16:30.103Z",
   "categories": [
     {
       "id": "fresques",
