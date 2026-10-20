@@ -310,9 +310,26 @@
       "year": "2024",
       "technique": "Peinture acrylique intérieure",
       "description": "Création murale alliant batterie, guitares, saxophone, violon et clavier pour une chambre d'enfant. Réalisée à l'acrylique fine avec composition dynamique.",
-      "mainImage": "assets/images/instruments_griesbach_crop.jpg",
+      "mainImage": "assets/images/upload_1792505519228.jpg",
       "gallery": [
-        "assets/images/instruments_griesbach_crop.jpg"
+        "assets/images/upload_1792505519228.jpg"
+      ],
+      "featured": false
+    },
+    {
+      "id": "proj-chambre-enfants-guide",
+      "title": "Fresques pour Chambres d'Enfants & Univers Poétiques",
+      "category": "fresques",
+      "categoryLabel": "Particuliers & Résidentiel",
+      "location": "Alsace",
+      "year": "2025",
+      "technique": "Acrylique murale inodore & lavable",
+      "description": "Démarche sur-mesure pour les chambres d'enfants et de bébés : création 100% personnalisée, peintures écologiques sans solvants, maquette visuelle sur photo préalable et composition pensée en harmonie avec le mobilier.",
+      "mainImage": "assets/images/upload_1792505369894.jpg",
+      "gallery": [
+        "assets/images/upload_1792505369894.jpg",
+        "assets/images/upload_1792505373605.jpg",
+        "assets/images/upload_1792505376040.jpg"
       ],
       "featured": false
     },
@@ -343,23 +360,6 @@
       "mainImage": "assets/images/vaches_breitenbach_crop.jpg",
       "gallery": [
         "assets/images/vaches_breitenbach_crop.jpg"
-      ],
-      "featured": false
-    },
-    {
-      "id": "proj-chambre-enfants-guide",
-      "title": "Fresques pour Chambres d'Enfants & Univers Poétiques",
-      "category": "fresques",
-      "categoryLabel": "Particuliers & Résidentiel",
-      "location": "Alsace",
-      "year": "2025",
-      "technique": "Acrylique murale inodore & lavable",
-      "description": "Démarche sur-mesure pour les chambres d'enfants et de bébés : création 100% personnalisée, peintures écologiques sans solvants, maquette visuelle sur photo préalable et composition pensée en harmonie avec le mobilier.",
-      "mainImage": "assets/images/upload_1792505369894.jpg",
-      "gallery": [
-        "assets/images/upload_1792505369894.jpg",
-        "assets/images/upload_1792505373605.jpg",
-        "assets/images/upload_1792505376040.jpg"
       ],
       "featured": false
     },
@@ -445,7 +445,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-20T14:10:26.845Z",
+  "lastUpdated": "2026-10-20T14:12:13.457Z",
   "categories": [
     {
       "id": "fresques",
