@@ -39,8 +39,9 @@
   }
 
   /**
-   * Chargement des données : synchronise intelligemment entre localStorage et le serveur
-   * en priorisant toujours la version la plus récente via l'horodatage lastUpdated.
+   * Chargement des données : le serveur (GitHub) fait autorité absolue.
+   * Le cache local (localStorage) est synchronisé avec les données du serveur
+   * et ne sert de repli qu'en cas de coupure réseau hors-ligne.
    */
   async function loadSiteData() {
     let serverData = null;
@@ -53,36 +54,20 @@
       console.warn('Lecture serveur non disponible ou mode hors-ligne');
     }
 
-    let localData = null;
-    const localSaved = localStorage.getItem('sarah_site_data');
-    if (localSaved) {
-      try {
-        localData = JSON.parse(localSaved);
-      } catch (e) {
-        console.error('Erreur lecture localStorage', e);
-      }
-    }
-
-    const localTime = localData?.lastUpdated ? new Date(localData.lastUpdated).getTime() : 0;
-    const serverTime = serverData?.lastUpdated ? new Date(serverData.lastUpdated).getTime() : 0;
-    const localProjectsCount = localData?.projects?.length || 0;
-    const serverProjectsCount = serverData?.projects?.length || 0;
-
-    // Arbitrage intelligent : le serveur fait foi sauf si le serveur a moins de projets (perte éphémère)
-    if (localData && serverData && localProjectsCount > serverProjectsCount) {
-      siteData = localData;
-      try {
-        fetch('/api/rescue', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(localData)
-        }).catch(() => {});
-      } catch (e) {}
-    } else if (serverData) {
+    if (serverData && serverData.projects) {
       siteData = serverData;
-      localStorage.setItem('sarah_site_data', JSON.stringify(serverData));
-    } else if (localData) {
-      siteData = localData;
+      try {
+        localStorage.setItem('sarah_site_data', JSON.stringify(serverData));
+      } catch (e) {}
+    } else {
+      const localSaved = localStorage.getItem('sarah_site_data');
+      if (localSaved) {
+        try {
+          siteData = JSON.parse(localSaved);
+        } catch (e) {
+          console.error('Erreur lecture localStorage', e);
+        }
+      }
     }
 
     if (!siteData) {

@@ -20,7 +20,9 @@
   }
 
   /**
-   * Chargement des données (arbitrage intelligent par horodatage)
+   * Chargement des données : le serveur (GitHub) fait autorité absolue.
+   * Le cache local (localStorage) est synchronisé avec les données du serveur
+   * et ne sert de repli qu'en cas de coupure réseau hors-ligne.
    */
   async function loadSiteData() {
     let serverData = null;
@@ -33,55 +35,28 @@
       console.warn('Lecture serveur non disponible');
     }
 
-    let localData = null;
-    const local = localStorage.getItem('sarah_site_data');
-    if (local) {
-      try {
-        localData = JSON.parse(local);
-      } catch (e) {
-        console.error('Erreur lecture localStorage', e);
-      }
-    }
-
-    const localTime = localData?.lastUpdated ? new Date(localData.lastUpdated).getTime() : 0;
-    const serverTime = serverData?.lastUpdated ? new Date(serverData.lastUpdated).getTime() : 0;
-    const localProjectsCount = localData?.projects?.length || 0;
-    const serverProjectsCount = serverData?.projects?.length || 0;
-
-    let hasRescuedLocal = false;
-
-    // Le sauvetage de secours ne se déclenche QUE si le serveur a perdu des créations (ex: container réinitialisé)
-    if (localData && serverData && localProjectsCount > serverProjectsCount) {
-      siteData = localData;
-      hasRescuedLocal = true;
-      try {
-        fetch('/api/rescue', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(localData)
-        }).then(r => r.json()).then(res => {
-          if (res.success) {
-            console.log('✅ Données locales synchronisées sur le serveur avec succès');
-          }
-        }).catch(err => console.warn('Échec envoi rescue:', err));
-      } catch (e) {}
-    } else if (serverData) {
+    if (serverData && serverData.projects) {
       // Le serveur fait foi : on adopte la version du serveur et met à jour le cache local
       siteData = serverData;
-      localStorage.setItem('sarah_site_data', JSON.stringify(serverData));
-    } else if (localData) {
-      siteData = localData;
+      try {
+        localStorage.setItem('sarah_site_data', JSON.stringify(serverData));
+      } catch (e) {}
+    } else {
+      // Mode hors-ligne / serveur inaccessible : on utilise le cache local
+      const local = localStorage.getItem('sarah_site_data');
+      if (local) {
+        try {
+          siteData = JSON.parse(local);
+        } catch (e) {
+          console.error('Erreur lecture localStorage', e);
+        }
+      }
     }
 
     if (!siteData) {
       alert('Impossible de charger les données du site.');
     } else {
       ensureCategoriesInitialized();
-      if (hasRescuedLocal && localProjectsCount > serverProjectsCount) {
-        setTimeout(() => {
-          showToast(`✨ Vos travaux ont été récupérés (${localProjectsCount} créations). Cliquez sur « Copie de secours » pour télécharger votre fichier de sécurité.`, 'success');
-        }, 1200);
-      }
     }
   }
 

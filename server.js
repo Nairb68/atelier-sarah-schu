@@ -142,45 +142,6 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
     return;
   }
 
-  // --- API : Réception d'urgence des données locales du navigateur de l'artiste ---
-  if (pathname === '/api/rescue' && req.method === 'POST') {
-    let body = '';
-    req.on('data', chunk => { body += chunk; });
-    req.on('end', async () => {
-      try {
-        const data = JSON.parse(body);
-        const incomingData = data.siteData || data;
-        if (!incomingData || !incomingData.projects) {
-          throw new Error('Données invalides');
-        }
-
-        const jsonStr = JSON.stringify(incomingData, null, 2);
-        fs.writeFileSync(DATA_FILE, jsonStr, 'utf-8');
-        const RESCUE_FILE = path.join(ROOT, 'data', 'site-data.rescue.json');
-        try { fs.writeFileSync(RESCUE_FILE, jsonStr, 'utf-8'); } catch(e) {}
-        console.log(`🚨 Données de secours reçues de l'artiste ! (${(incomingData.projects || []).length} projets)`);
-
-        let githubCommitted = false;
-        if (getGitHubToken()) {
-          const ghRes = await commitToGitHub('data/site-data.json', jsonStr, 'Récupération auto: données de secours artiste');
-          githubCommitted = ghRes.success;
-        }
-
-        res.writeHead(200, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ 
-          success: true, 
-          message: 'Données de secours enregistrées avec succès', 
-          committedToGithub: githubCommitted,
-          hasGithubToken: !!getGitHubToken()
-        }));
-      } catch (err) {
-        console.error('Erreur rescue:', err);
-        res.writeHead(500, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ success: false, error: err.message }));
-      }
-    });
-    return;
-  }
 
   // --- API : Téléchargement du fichier de sauvegarde JSON actuel ---
   if (pathname === '/api/backup/download' && req.method === 'GET') {
