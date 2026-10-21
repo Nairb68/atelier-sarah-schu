@@ -388,7 +388,7 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
 
     const headers = { 'Content-Type': contentType };
-    if (ext === '.json' || ext === '.html' || ext === '.js') {
+    if (ext === '.json' || ext === '.html' || ext === '.js' || ext === '.css') {
       headers['Cache-Control'] = 'no-cache, no-store, must-revalidate';
       headers['Pragma'] = 'no-cache';
       headers['Expires'] = '0';

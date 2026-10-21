@@ -265,6 +265,34 @@
 
     initDrawerListeners();
     initInboxHandlers();
+
+    // Actualisation automatique en arrière-plan lorsque l'artiste revient sur l'onglet (si aucune modif en cours)
+    let isCheckingAdminUpdate = false;
+    async function checkServerUpdateForAdmin() {
+      if (isCheckingAdminUpdate || isDirty) return;
+      isCheckingAdminUpdate = true;
+      try {
+        const resp = await fetch('data/site-data.json?v=' + Date.now(), { cache: 'no-store' });
+        if (resp.ok) {
+          const fresh = await resp.json();
+          if (fresh && fresh.lastUpdated && siteData && fresh.lastUpdated !== siteData.lastUpdated) {
+            console.log('🔄 Mise à jour détectée depuis un autre appareil...');
+            siteData = fresh;
+            try { localStorage.setItem('sarah_site_data', JSON.stringify(fresh)); } catch (e) {}
+            renderAllSiteSections();
+            showToast('Données synchronisées avec les modifications faites sur votre autre appareil !', 'info');
+          }
+        }
+      } catch (e) {
+      } finally {
+        isCheckingAdminUpdate = false;
+      }
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') checkServerUpdateForAdmin();
+    });
+    window.addEventListener('focus', checkServerUpdateForAdmin);
   }
 
   /**

@@ -36,6 +36,33 @@
         }
       }
     });
+
+    // Actualisation automatique en arrière-plan lorsque l'utilisateur revient sur l'onglet (mobile/bureau)
+    let isCheckingUpdate = false;
+    async function checkServerUpdate() {
+      if (isCheckingUpdate) return;
+      isCheckingUpdate = true;
+      try {
+        const resp = await fetch('data/site-data.json?v=' + Date.now(), { cache: 'no-store' });
+        if (resp.ok) {
+          const fresh = await resp.json();
+          if (fresh && fresh.lastUpdated && siteData && fresh.lastUpdated !== siteData.lastUpdated) {
+            siteData = fresh;
+            try { localStorage.setItem('sarah_site_data', JSON.stringify(fresh)); } catch (e) {}
+            renderSite();
+            console.log('🔄 Données mises à jour depuis le serveur');
+          }
+        }
+      } catch (e) {
+      } finally {
+        isCheckingUpdate = false;
+      }
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') checkServerUpdate();
+    });
+    window.addEventListener('focus', checkServerUpdate);
   }
 
   /**
