@@ -162,7 +162,7 @@
   "projects": [
     {
       "id": "proj-ehpad-vallee-munster",
-      "title": "Fresque Zen apaisante en EHPAD",
+      "title": "Fresque Zen en EHPAD",
       "category": "collectivites",
       "categoryLabel": "Professionnels & Santé",
       "location": "Vallée de Munster",
@@ -173,7 +173,8 @@
       "gallery": [
         "assets/images/upload_1792404580812.jpg",
         "assets/images/upload_1792404576929.jpg",
-        "assets/images/upload_1792404584092.jpg"
+        "assets/images/upload_1792404584092.jpg",
+        "assets/images/upload_1793100536073.jpg"
       ],
       "featured": true
     },
@@ -274,7 +275,7 @@
     },
     {
       "id": "proj-parcharmonie-lyon",
-      "title": "Fresque monumentale « La Nature Pop du Parcharmonie",
+      "title": "Fresque monumentale La Nature Pop du Parcharmonie",
       "category": "fresques",
       "categoryLabel": "Particuliers & Résidentiel",
       "location": "Lyon 3e (Résidence Studilodge)",
@@ -310,7 +311,7 @@
     },
     {
       "id": "proj-chambre-enfant-musique",
-      "title": "Fresque Murale « Les Instruments de Musique",
+      "title": "Fresque Murale Les Instruments de Musique",
       "category": "fresques",
       "categoryLabel": "Particuliers & Résidentiel",
       "location": "Griesbach (Alsace)",
@@ -343,7 +344,7 @@
     },
     {
       "id": "proj-couturiere-breitenbach",
-      "title": "Trompe-l'œil « La Couturière à la Perle",
+      "title": "Trompe-l'œil La Couturière à la Perle",
       "category": "peintures",
       "categoryLabel": "Trompe-l'œil & Peintures",
       "location": "Breitenbach (Alsace)",
@@ -494,7 +495,7 @@
       "answer": "Je suis basée à Zimmerbach près de Colmar et Munster, et j'interviens dans toute l'Alsace (Haut-Rhin et Bas-Rhin). Je me déplace également partout en France pour des projets d'envergure ou pour des résidences artistiques."
     }
   ],
-  "lastUpdated": "2026-10-27T11:24:54.872Z",
+  "lastUpdated": "2026-10-27T11:29:06.525Z",
   "categories": [
     {
       "id": "fresques",
