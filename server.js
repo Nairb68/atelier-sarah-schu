@@ -7,11 +7,38 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
+const crypto = require('crypto');
 
 const PORT = process.env.PORT || 3000;
 const ROOT = __dirname;
 const DATA_FILE = path.join(ROOT, 'data', 'site-data.json');
 const IMAGES_DIR = path.join(ROOT, 'assets', 'images');
+
+// Sécurité admin : mot de passe côté serveur (modifiable via variable d'environnement ADMIN_PASSWORD)
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'sarah2024';
+
+function createSessionToken() {
+  const ts = Date.now().toString();
+  const sig = crypto.createHmac('sha256', ADMIN_PASSWORD).update(ts).digest('hex');
+  return `${ts}.${sig}`;
+}
+
+function verifySessionToken(token) {
+  if (!token || typeof token !== 'string') return false;
+  const parts = token.split('.');
+  if (parts.length !== 2) return false;
+  const [ts, sig] = parts;
+  const expectedSig = crypto.createHmac('sha256', ADMIN_PASSWORD).update(ts).digest('hex');
+  if (sig !== expectedSig) return false;
+  const age = Date.now() - parseInt(ts, 10);
+  return age >= 0 && age < (30 * 24 * 60 * 60 * 1000); // Valide 30 jours
+}
+
+function isAuthorized(req) {
+  const auth = req.headers['authorization'] || '';
+  const token = auth.replace(/^Bearer\s+/i, '').trim();
+  return verifySessionToken(token);
+}
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -32,10 +59,10 @@ const server = http.createServer((req, res) => {
   const parsedUrl = url.parse(req.url, true);
   let pathname = parsedUrl.pathname;
 
-  // CORS headers pour faciliter l'accès local
+  // CORS headers pour faciliter l'accès local et sécurisé
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
@@ -105,13 +132,54 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
   }
 }
 
+  // --- API : Authentification sécurisée de l'artiste ---
+  if (pathname === '/api/login' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const { password } = JSON.parse(body);
+        if (password && password === ADMIN_PASSWORD) {
+          const token = createSessionToken();
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: true, token }));
+        } else {
+          res.writeHead(401, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: false, error: 'Mot de passe incorrect' }));
+        }
+      } catch (err) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, error: 'Format de requête invalide' }));
+      }
+    });
+    return;
+  }
+
+  // --- API : Vérification du statut de connexion ---
+  if (pathname === '/api/auth-verify' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ authenticated: isAuthorized(req) }));
+    return;
+  }
+
   // --- API : Sauvegarde des données ---
   if (pathname === '/api/save' && req.method === 'POST') {
+    if (!isAuthorized(req)) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: 'Accès non autorisé. Veuillez vous connecter.' }));
+      return;
+    }
+
     let body = '';
     req.on('data', chunk => { body += chunk; });
     req.on('end', async () => {
       try {
         const json = JSON.parse(body);
+        // Sécurité absolue : s'assurer qu'aucun hash de mot de passe ne subsiste dans le fichier JSON
+        if (json.artist && json.artist.adminPasswordHash) {
+          delete json.artist.adminPasswordHash;
+        }
+
         const jsonStr = JSON.stringify(json, null, 2);
         fs.writeFileSync(DATA_FILE, jsonStr, 'utf-8');
         console.log('✅ data/site-data.json mis à jour localement');
@@ -145,6 +213,12 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
 
   // --- API : Téléchargement du fichier de sauvegarde JSON actuel ---
   if (pathname === '/api/backup/download' && req.method === 'GET') {
+    if (!isAuthorized(req)) {
+      res.writeHead(401, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end('Accès réservé à l\'administrateur');
+      return;
+    }
+
     if (fs.existsSync(DATA_FILE)) {
       const content = fs.readFileSync(DATA_FILE, 'utf-8');
       res.writeHead(200, {
@@ -173,6 +247,12 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
 
   // --- API : Téléversement d'image Base64 ---
   if (pathname === '/api/upload' && req.method === 'POST') {
+    if (!isAuthorized(req)) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: 'Accès non autorisé. Veuillez vous connecter.' }));
+      return;
+    }
+
     let body = '';
     req.on('data', chunk => { body += chunk; });
     req.on('end', async () => {
@@ -255,6 +335,12 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
 
   // --- API : Lecture de la liste des demandes de projet (Espace Admin) ---
   if (pathname === '/api/messages' && req.method === 'GET') {
+    if (!isAuthorized(req)) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: 'Accès non autorisé' }));
+      return;
+    }
+
     const MESSAGES_FILE = path.join(ROOT, 'data', 'messages.json');
     let messages = [];
     if (fs.existsSync(MESSAGES_FILE)) {
@@ -272,6 +358,12 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
 
   // --- API : Suppression d'une demande de projet & nettoyage de la photo associée ---
   if (pathname === '/api/messages/delete' && req.method === 'POST') {
+    if (!isAuthorized(req)) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ success: false, error: 'Accès non autorisé' }));
+      return;
+    }
+
     let body = '';
     req.on('data', chunk => { body += chunk; });
     req.on('end', () => {

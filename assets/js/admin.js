@@ -82,14 +82,25 @@
       return;
     }
 
-    authBtn.addEventListener('click', () => {
+    authBtn.addEventListener('click', async () => {
       const pass = authInput.value.trim();
-      const expected = siteData?.artist?.adminPasswordHash || 'sarah2024';
-      if (pass === expected) {
-        sessionStorage.setItem('sarah_admin_auth', 'true');
-        authOverlay.classList.add('hidden');
-      } else {
-        alert('Mot de passe incorrect. (Par défaut : sarah2024)');
+      if (!pass) return;
+      try {
+        const resp = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pass })
+        });
+        const data = await resp.json();
+        if (resp.ok && data.success && data.token) {
+          sessionStorage.setItem('sarah_admin_token', data.token);
+          sessionStorage.setItem('sarah_admin_auth', 'true');
+          authOverlay.classList.add('hidden');
+        } else {
+          alert(data.error || 'Mot de passe incorrect.');
+        }
+      } catch (e) {
+        alert('Erreur de connexion au serveur.');
       }
     });
 
@@ -141,7 +152,6 @@
     setValue('#input-hero-bio', a.heroBio || '');
     setValue('#input-bio-short', a.bioShort);
     setValue('#input-bio-full', a.bioFull);
-    setValue('#input-admin-pass', a.adminPasswordHash || 'sarah2024');
 
     // Photo de profil
     const avatarImg = document.getElementById('admin-profile-avatar-preview');
@@ -523,7 +533,6 @@
     siteData.artist.heroBio = getValue('#input-hero-bio');
     siteData.artist.bioShort = getValue('#input-bio-short');
     siteData.artist.bioFull = getValue('#input-bio-full');
-    siteData.artist.adminPasswordHash = getValue('#input-admin-pass');
 
     // Stats
     if (siteData.stats && siteData.stats.length >= 4) {

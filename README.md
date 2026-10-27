@@ -7,7 +7,7 @@ Site vitrine officiel de l'artiste peintre muraliste et aquarelliste : **Sarah S
 ## 🌟 Nouveautés & Points Forts
 
 ### 1. Éditeur Visuel en « Vue Réelle » (Zéro boîte de dialogue abstraite)
-* Accessible sur **`admin.html`** (mot de passe initial : `sarah2024`).
+* Accessible sur **`admin.html`** (sécurisé par mot de passe serveur, modifiable via la variable d'environnement `ADMIN_PASSWORD`).
 * Sarah Schu voit directement le **vrai site en situation réelle** :
   * **Édition directe de tous les textes** : cliquez directement sur un titre, une description, un tarif ou un numéro de téléphone pour le modifier au clavier (`contenteditable`).
   * **Remplacement direct des photos** : survolez n'importe quelle photo (fresque dans l'arche, portrait d'artiste, ou œuvres du catalogue) pour afficher le bouton `📷 Changer la photo`.
@@ -58,4 +58,4 @@ node server.js
 ```
 
 * **Site public** : [http://localhost:3000/](http://localhost:3000/)
-* **Éditeur en vue réelle** : [http://localhost:3000/admin.html](http://localhost:3000/admin.html) (mot de passe : `sarah2024`)
+* **Éditeur en vue réelle** : [http://localhost:3000/admin.html](http://localhost:3000/admin.html) (mot de passe sécurisé côté serveur)

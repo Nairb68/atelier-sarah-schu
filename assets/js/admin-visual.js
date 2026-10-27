@@ -60,16 +60,21 @@
     }
   }
 
+  function getAuthHeaders() {
+    const token = sessionStorage.getItem('sarah_admin_token') || '';
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
+  }
+
   /**
-   * Sécurité par mot de passe
+   * Sécurité par mot de passe (Validation 100% côté serveur)
    */
   function checkAuth() {
-    const isAuth = sessionStorage.getItem('sarah_admin_auth') === 'true';
+    const token = sessionStorage.getItem('sarah_admin_token');
     const authScreen = document.getElementById('admin-auth-screen');
     const authBtn = document.getElementById('admin-auth-btn');
     const authInput = document.getElementById('admin-auth-input');
 
-    if (isAuth) {
+    if (token) {
       if (authScreen) authScreen.classList.add('hidden');
       document.body.classList.add('admin-mode');
       setupEditablePage();
@@ -77,16 +82,38 @@
     }
 
     if (authBtn && authInput) {
-      const submitAuth = () => {
+      const submitAuth = async () => {
         const pass = authInput.value.trim();
-        const expected = siteData?.artist?.adminPasswordHash || 'sarah2024';
-        if (pass === expected) {
-          sessionStorage.setItem('sarah_admin_auth', 'true');
-          authScreen.classList.add('hidden');
-          document.body.classList.add('admin-mode');
-          setupEditablePage();
-        } else {
-          alert('Mot de passe incorrect. (Par défaut : sarah2024)');
+        if (!pass) return;
+
+        authBtn.disabled = true;
+        const originalText = authBtn.innerHTML;
+        authBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Connexion...';
+
+        try {
+          const resp = await fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password: pass })
+          });
+          const data = await resp.json();
+
+          if (resp.ok && data.success && data.token) {
+            sessionStorage.setItem('sarah_admin_token', data.token);
+            sessionStorage.setItem('sarah_admin_auth', 'true');
+            if (authScreen) authScreen.classList.add('hidden');
+            document.body.classList.add('admin-mode');
+            setupEditablePage();
+          } else {
+            alert(data.error || 'Mot de passe incorrect.');
+            authInput.value = '';
+            authInput.focus();
+          }
+        } catch (err) {
+          alert('Impossible de joindre le serveur pour vérifier le mot de passe.');
+        } finally {
+          authBtn.disabled = false;
+          authBtn.innerHTML = originalText;
         }
       };
 
@@ -216,7 +243,7 @@
             try {
               await fetch('/api/save', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
                 body: JSON.stringify(siteData)
               });
             } catch(e) {}
@@ -1484,7 +1511,7 @@
     try {
       const resp = await fetch('/api/upload', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
         body: JSON.stringify({ image: base64Data, filename: cleanFileName })
       });
       if (resp.ok) {
@@ -2185,7 +2212,9 @@
     let serverOk = false;
 
     try {
-      const resp = await fetch('/api/messages?v=' + Date.now());
+      const resp = await fetch('/api/messages?v=' + Date.now(), {
+        headers: getAuthHeaders()
+      });
       if (resp.ok) {
         serverMsgs = await resp.json();
         serverOk = true;
@@ -2382,7 +2411,7 @@
         try {
           await fetch('/api/messages/delete', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
             body: JSON.stringify({ id })
           });
         } catch(e) {}
@@ -2421,7 +2450,7 @@
     try {
       await fetch('/api/save', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
         body: JSON.stringify(siteData)
       });
     } catch (e) {
