@@ -368,6 +368,31 @@ async function commitToGitHub(repoFilePath, bufferOrString, commitMessage) {
     pathname = '/index.html';
   }
 
+  // Pour index.html, adapter automatiquement le domaine pour Open Graph si servi sur un hôte personnalisé
+  if (pathname === '/index.html') {
+    const indexPath = path.join(ROOT, 'index.html');
+    fs.readFile(indexPath, 'utf-8', (err, html) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+        return res.end('Erreur de lecture');
+      }
+      const host = req.headers['x-forwarded-host'] || req.headers.host;
+      if (host && !host.includes('localhost') && !host.includes('127.0.0.1')) {
+        const proto = req.headers['x-forwarded-proto'] || (req.connection && req.connection.encrypted ? 'https' : 'https');
+        const currentOrigin = `${proto}://${host}`;
+        html = html.split('https://atelier-sarah-schu.onrender.com').join(currentOrigin);
+      }
+      res.writeHead(200, {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      });
+      res.end(html);
+    });
+    return;
+  }
+
   const filePath = path.join(ROOT, pathname);
 
   // Sécurité traversée de répertoire
